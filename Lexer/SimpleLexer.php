@@ -13,14 +13,17 @@ class SimpleLexer extends Lexer
 	private $end;
 	private $token_starts;
 
+	private $current_char;
+	private $last_char_pos;
+	private $current_value = '';
+
 	private $token_stream;
 
 	const MODE_ALL = 0;
-
-	public function __construct()
-	{
-		define( 'REGEX_TOKEN_START', '@(' . Token::$token_regexes[ Token::T_OPENING_TAG ] . ')|(' . Token::$token_regexes[ Token::T_CLOSING_TAG ] . ')@s' );
-	}
+	const MODE_INSIDE_TAG = 1;
+	const MODE_VAR = 2;
+	const MODE_STRING = 3;
+	const MODE_IDENT = 4;
 
 	public function tokenize( $input )
 	{
@@ -31,7 +34,7 @@ class SimpleLexer extends Lexer
 		$this->input = str_replace( [ "\n\r", "\r" ], "\n", $input );
 
 		// Set mode
-		$this->mode = self::MODE_ALL;
+		$this->setMode( self::MODE_ALL );
 
 		// Set start position
 		$this->setCursor( 0 );
@@ -39,65 +42,202 @@ class SimpleLexer extends Lexer
 		// Set end position
 		$this->end = strlen( $this->input );
 
-		// Find positions of tags
-		preg_match_all( REGEX_TOKEN_START, $this->input, $m, PREG_OFFSET_CAPTURE );
-		$this->token_starts = $m;
+		$this->last_char_pos = $this->end - 1;
 
 		// Loop each character
 		while( $this->cursor < $this->end )
 		{
+			$this->current_char = $this->getCharAtCursor();
+
 			switch( $this->mode )
 			{
 				case self::MODE_ALL:
-					$this->all();
+					$this->lexAll();
+					break;
+				case self::MODE_INSIDE_TAG:
+					$this->lexInsideTag();
+					break;
+				case self::MODE_IDENT:
+					$this->lexIdent();
+					break;
+				case self::MODE_VAR:
+					$this->lexVar();
+					break;
+				case self::MODE_STRING:
+					$this->lexString();
 					break;
 			}
-
-			// Advance the cursor
-			$this->cursor++;
 		}
 
 		return $this->token_stream;
 	}
 
-	private function all()
+	private function getCharAtCursor()
 	{
-		$next_token_offset = $this->findNextTokenOffset();
-		$text_token_value = substr( $this->input, $this->cursor, $next_token_offset );
-		$text_token = new Token( Token::T_TEXT, $text_token_value );
-
-		$this->advanceCursor( strlen( $text_token_value ) );
-
-		$this->token_stream->addToken( $text_token );
+		return $this->input[ $this->cursor ];
 	}
 
-	private function findNextTokenOffset()
+	private function getNextChar()
 	{
-		foreach( $this->token_starts[ 0 ] as $t )
+		return $this->input[ $this->cursor + 1 ];
+	}
+
+	private function setMode( $mode )
+	{
+		$this->mode = $mode;
+	}
+
+	private function debug()
+	{
+		echo $this->cursor . ' > "' . $this->current_char . '"<br />';
+		echo $this->end . '<br />';
+	}
+
+	private function lexAll()
+	{
+		// If were at the end of the file, write a text token with the remaining text
+		if( $this->cursor + 1 === $this->end )
 		{
-			if( isset( $t[ 1 ] ) )
+			if( $this->current_value !== '' )
 			{
-				$offset = $t[ 1 ] - 1;
-
-				if( $offset > $this->cursor )
-				{
-					return $offset;
-				}
+				$this->token_stream->addToken( new Token( Token::T_TEXT, $this->current_value ) );
 			}
+			$this->advanceCursor(); // Advance one last time so the while loops stops running
+			return;
 		}
+
+		if( $this->current_char === '{' && $this->getNextChar() === '{' )
+		{
+			// Add text until now to the token stream
+			if( $this->current_value !== '' )
+			{
+				$this->token_stream->addToken( new Token( Token::T_TEXT, $this->current_value ) );
+				$this->current_value = '';
+			}
+
+			// Add the opening tag to the stream
+			$this->token_stream->addToken( new Token( Token::T_OPENING_TAG, '{{' ) );
+			$this->advanceCursor( 2 );
+			$this->setMode( self::MODE_INSIDE_TAG );
+			return;
+		}
+
+		// Write text to temp token
+		$this->current_value .= $this->current_char;
+		$this->advanceCursor();
 	}
 
-	private function setCursorAtNextToken()
+	private function lexInsideTag()
 	{
-		$this->setCursor( $this->findNextTokenOffset() );
+		if( $this->current_char === '}' && $this->getNextChar() === '}' )
+		{
+			$this->token_stream->addToken( new Token( Token::T_CLOSING_TAG, '}}' ) );
+			$this->advanceCursor( 2 );
+
+			$this->setMode( self::MODE_ALL );
+			return;
+		}
+		else if( preg_match( '@' . Token::$token_regexes[ Token::T_IDENT ] . '@i', $this->current_char ) )
+		{
+			$this->setMode( self::MODE_IDENT );
+			return;
+		}
+		else if( $this->current_char === '"' )
+		{
+			$this->setMode( self::MODE_STRING );
+			$this->advanceCursor();
+			return;
+		}
+		else if( $this->current_char === '@' )
+		{
+			$this->setMode( self::MODE_VAR );
+			$this->advanceCursor();
+			return;
+		}
+		else if( preg_match( '@' . Token::$token_regexes[ Token::T_OP ] . '@', $this->current_char ) )
+		{
+			$this->token_stream->addToken( new Token( Token::T_OP, $this->current_char ) );
+			$this->advanceCursor();
+			return;
+		}
+
+		$this->advanceCursor();
+/*
+		else if( preg_match( '@' . Token::$token_regexes[ Token::T_IDENT ] . '@i', $char ) )
+		{
+			$this->setMode( self::MODE_IDENT );
+		}
+		else if( $char === '"' )
+		{
+			$this->setMode( self::MODE_STRING );
+		}
+*/
 	}
+
+	// MODE IDENT
+	private function lexIdent()
+	{
+		if( $this->current_char === ' ' )
+		{
+			$this->token_stream->addToken( new Token( Token::T_IDENT, $this->current_value ) );
+			$this->current_value = '';
+			$this->setMode( self::MODE_INSIDE_TAG );
+			return;
+		}
+
+		$this->current_value .= $this->current_char;
+		$this->advanceCursor();
+	}
+
+	// MODE STRING
+	private function lexString()
+	{
+		if( $this->current_char === '"' )
+		{
+			$this->advanceCursor();
+			$this->token_stream->addToken( new Token( Token::T_STRING, $this->current_value ) );
+			$this->current_value = '';
+			$this->setMode( self::MODE_INSIDE_TAG );
+			return;
+		}
+
+		$this->current_value .= $this->current_char;
+		$this->advanceCursor();
+	}
+
+	// MODE VAR
+	private function lexVar()
+	{
+		if( $this->current_char === ' ' ) // Var is ended with a space
+		{
+			$this->advanceCursor();
+			$this->token_stream->addToken( new Token( Token::T_VAR, $this->current_value ) );
+			$this->current_value = '';
+			$this->setMode( self::MODE_INSIDE_TAG );
+			return;
+		}
+		else if( preg_match( '@' . Token::$token_regexes[ Token::T_OP ] . '@', $this->current_char ) )
+		{
+			$this->advanceCursor();
+			$this->token_stream->addToken( new Token( Token::T_VAR, $this->current_value ) );
+			$this->current_value = '';
+
+			$this->token_stream->addToken( new Token( Token::T_OP, $this->current_char ) );
+			$this->setMode( self::MODE_INSIDE_TAG );
+			return;
+		}
+
+		$this->current_value .= $this->current_char;
+		$this->advanceCursor();
+	}
+
 
 	private function setCursor( $n )
 	{
 		$this->cursor = $n;
 	}
 
-	private function advanceCursor( $n )
+	private function advanceCursor( $n = 1 )
 	{
 		$this->cursor += $n;
 	}

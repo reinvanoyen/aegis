@@ -1,12 +1,27 @@
-DIT IS TEKST
-{%%}
-DIT OOK
+{{ extends "base.tpl" + }}
 
-{% skip this shit %}
+Here there should be some text reinvanoyen@gmail.com
 
-{OK}
+{{ raw @body }}
 
-{%test%}
-sss
+This should be a text token
 
-{% TEST teststtstst %}
+{{ for @item in @items }}
+
+	This is another text token {{ @item.title }} This is a text token
+
+{{ /for }}
+
+{{ block "main" }}
+
+	And this
+
+	{{ for @item in @items }}
+
+		{{ @item.title }}
+
+	{{ /for }}
+
+{{ /block }}
+
+{{ raw @title+"test" }}

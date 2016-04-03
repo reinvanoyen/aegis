@@ -7,22 +7,32 @@ class Token
 
 	const PHP_EXPR = '(?:[^\']|\\\'.*?\\\')+?';
 
-	const T_EOF = 0;
-	const T_TEXT = 2;
-	const T_OPENING_TAG = 3;
-	const T_CLOSING_TAG = 4;
+	const T_EOL = 0;
+	const T_TEXT = 1;
+	const T_OPENING_TAG = 2;
+	const T_CLOSING_TAG = 3;
+	const T_IDENT = 4;
+	const T_VAR = 5;
+	const T_STRING = 6;
+	const T_OP = 7;
 
 	protected static $token_names = [
-		self::T_EOF => 'EOF_TOKEN',
-		self::T_TEXT => 'TEXT_TOKEN',
-		self::T_OPENING_TAG => 'OPENING_TAG_TOKEN',
-		self::T_CLOSING_TAG => 'CLOSING_TAG_TOKEN',
+		self::T_EOL => 'EOL',
+		self::T_TEXT => 'TEXT',
+		self::T_OPENING_TAG => 'OPENING_TAG',
+		self::T_CLOSING_TAG => 'CLOSING_TAG',
+		self::T_IDENT => 'IDENT',
+		self::T_VAR => 'VAR',
+		self::T_STRING => 'STRING',
+		self::T_OP => 'OPERATOR',
 	];
 
 	public static $token_regexes = [
-		self::T_EOF => '[\n\r]',
-		self::T_OPENING_TAG => '{%',
-		self::T_CLOSING_TAG => '%}',
+		self::T_EOL => '[\n\r]',
+		self::T_OPENING_TAG => '{{',
+		self::T_CLOSING_TAG => '}}',
+		self::T_IDENT => '[a-z]',
+		self::T_OP => '\+|\-',
 	];
 
 	public function __construct( $type, $value )
@@ -43,6 +53,6 @@ class Token
 
 	public function __toString()
 	{
-		return $this->getName() . '(' . $this->value . ')';
+		return $this->getName() . '(<strong>' . $this->value . '</strong>)' . "<br />";
 	}
 }

@@ -1,0 +1,27 @@
+{{ extends "base.tpl" }}
+
+Here there should be some text
+
+{{ raw @body }}
+
+This could also be a text token
+
+{{ for @item in @items }}
+
+	{{ @item.title }}
+
+{{ /for }}
+
+{{ block "main" }}
+
+	And this
+
+	{{ for @item in @items }}
+
+		{{ @item.title }}
+
+	{{ /for }}
+
+{{ /block }}
+
+{{ raw "test" + @title }}
