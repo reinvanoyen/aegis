@@ -22,4 +22,14 @@ class TokenStream
 
 		return $string;
 	}
+
+	public function getTokens()
+	{
+		return $this->tokens;
+	}
+
+	public function getToken( $i )
+	{
+		return $this->tokens[ $i ];
+	}
 }

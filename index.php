@@ -3,8 +3,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once 'Lexer/SimpleLexer.php';
+require_once 'Lexer/Lexer.php';
 
-$lexer = new SimpleLexer();
+$lexer = new Lexer();
 
 echo $lexer->tokenize( file_get_contents( 'input.txt' ) );

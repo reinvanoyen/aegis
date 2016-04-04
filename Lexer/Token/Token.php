@@ -32,6 +32,7 @@ class Token
 		self::T_OPENING_TAG => '{{',
 		self::T_CLOSING_TAG => '}}',
 		self::T_IDENT => '[a-z]',
+		self::T_VAR => '^[a-zA-Z._-]+',
 		self::T_OP => '\+|\-',
 	];
 
@@ -51,8 +52,18 @@ class Token
 		return 'T_UNKNOWN';
 	}
 
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	public function getValue()
+	{
+		return $this->value;
+	}
+
 	public function __toString()
 	{
-		return $this->getName() . '(<strong>' . $this->value . '</strong>)' . "<br />";
+		return $this->getName() . '(' . $this->value . ')' . "\n";
 	}
 }
