@@ -1,6 +1,6 @@
 <?php
 
-class Token
+class Token implements \JsonSerializable
 {
 	public $type;
 	public $value;
@@ -16,24 +16,22 @@ class Token
 	const T_STRING = 6;
 	const T_OP = 7;
 
-	protected static $token_names = [
-		self::T_EOL => 'EOL',
-		self::T_TEXT => 'TEXT',
-		self::T_OPENING_TAG => 'OPENING_TAG',
-		self::T_CLOSING_TAG => 'CLOSING_TAG',
-		self::T_IDENT => 'IDENT',
-		self::T_VAR => 'VAR',
-		self::T_STRING => 'STRING',
-		self::T_OP => 'OPERATOR',
-	];
+	const REGEX_T_EOL = '[\n\r]';
+	const REGEX_T_OPENING_TAG = '{{';
+	const REGEX_T_CLOSING_TAG = '}}';
+	const REGEX_T_IDENT = '[a-zA-Z]';
+	const REGEX_T_VAR = '^[a-zA-Z._-]+';
+	const REGEX_T_OP = '\+|\-';
 
-	public static $token_regexes = [
-		self::T_EOL => '[\n\r]',
-		self::T_OPENING_TAG => '{{',
-		self::T_CLOSING_TAG => '}}',
-		self::T_IDENT => '[a-z]',
-		self::T_VAR => '^[a-zA-Z._-]+',
-		self::T_OP => '\+|\-',
+	private static $token_names = [
+		self::T_EOL => 'T_EOL',
+		self::T_TEXT => 'T_TEXT',
+		self::T_OPENING_TAG => 'T_OPENING_TAG',
+		self::T_CLOSING_TAG => 'T_CLOSING_TAG',
+		self::T_IDENT => 'T_IDENT',
+		self::T_VAR => 'T_VAR',
+		self::T_STRING => 'T_STRING',
+		self::T_OP => 'T_OP',
 	];
 
 	public function __construct( $type, $value )
@@ -65,5 +63,13 @@ class Token
 	public function __toString()
 	{
 		return $this->getName() . '(' . $this->value . ')' . "\n";
+	}
+
+	public function jsonSerialize()
+	{
+		return [
+			'type' => $this->getName(),
+			'value' => $this->getValue(),
+		];
 	}
 }

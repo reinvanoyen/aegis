@@ -7,4 +7,4 @@ require_once 'Lexer/Lexer.php';
 
 $lexer = new Lexer();
 
-echo $lexer->tokenize( file_get_contents( 'input.txt' ) );
+var_dump( $lexer->tokenize( file_get_contents( 'input.txt' ) ) );

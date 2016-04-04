@@ -2,13 +2,23 @@
 
 require_once 'Token/Token.php';
 
-class TokenStream
+class TokenStream implements \JsonSerializable
 {
 	private $tokens = [];
 
 	public function addToken( Token $token )
 	{
 		$this->tokens[] = $token;
+	}
+
+	public function getToken( $i )
+	{
+		return $this->tokens[ $i ];
+	}
+
+	public function getTokens()
+	{
+		return $this->tokens;
 	}
 
 	public function __toString()
@@ -23,13 +33,8 @@ class TokenStream
 		return $string;
 	}
 
-	public function getTokens()
+	public function jsonSerialize()
 	{
 		return $this->tokens;
-	}
-
-	public function getToken( $i )
-	{
-		return $this->tokens[ $i ];
 	}
 }

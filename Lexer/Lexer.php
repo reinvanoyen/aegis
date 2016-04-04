@@ -72,27 +72,6 @@ class Lexer implements LexerInterface
 		return $this->token_stream;
 	}
 
-	private function getCharAtCursor()
-	{
-		return $this->input[ $this->cursor ];
-	}
-
-	private function getNextChar()
-	{
-		return $this->input[ $this->cursor + 1 ];
-	}
-
-	private function setMode( $mode )
-	{
-		$this->mode = $mode;
-	}
-
-	private function debug()
-	{
-		echo $this->cursor . ' > "' . $this->current_char . '"<br />';
-		echo $this->end . '<br />';
-	}
-
 	private function lexAll()
 	{
 		// If were at the end of the file, write a text token with the remaining text
@@ -137,7 +116,7 @@ class Lexer implements LexerInterface
 			$this->setMode( self::MODE_ALL );
 			return;
 		}
-		else if( preg_match( '@' . Token::$token_regexes[ Token::T_IDENT ] . '@i', $this->current_char ) )
+		else if( preg_match( '@' . Token::REGEX_T_IDENT . '@', $this->current_char ) )
 		{
 			$this->setMode( self::MODE_IDENT );
 			return;
@@ -154,7 +133,7 @@ class Lexer implements LexerInterface
 			$this->advanceCursor();
 			return;
 		}
-		else if( preg_match( '@' . Token::$token_regexes[ Token::T_OP ] . '@', $this->current_char ) )
+		else if( preg_match( '@' . Token::REGEX_T_OP . '@', $this->current_char ) )
 		{
 			$this->token_stream->addToken( new Token( Token::T_OP, $this->current_char ) );
 			$this->advanceCursor();
@@ -162,16 +141,6 @@ class Lexer implements LexerInterface
 		}
 
 		$this->advanceCursor();
-/*
-		else if( preg_match( '@' . Token::$token_regexes[ Token::T_IDENT ] . '@i', $char ) )
-		{
-			$this->setMode( self::MODE_IDENT );
-		}
-		else if( $char === '"' )
-		{
-			$this->setMode( self::MODE_STRING );
-		}
-*/
 	}
 
 	// MODE IDENT
@@ -208,7 +177,7 @@ class Lexer implements LexerInterface
 	// MODE VAR
 	private function lexVar()
 	{
-		if( preg_match( '@' . Token::$token_regexes[ Token::T_VAR ] . '@', substr( $this->input, $this->cursor ), $matches ) )
+		if( preg_match( '@' . Token::REGEX_T_VAR . '@', substr( $this->input, $this->cursor ), $matches ) )
 		{
 			$variable_name = $matches[ 0 ];
 			$this->token_stream->addToken( new Token( Token::T_VAR, $variable_name ) );
@@ -216,6 +185,27 @@ class Lexer implements LexerInterface
 			$this->setMode( self::MODE_INSIDE_TAG );
 			return;
 		}
+	}
+
+	private function debug()
+	{
+		echo $this->cursor . ' > "' . $this->current_char . '"<br />';
+		echo $this->end . '<br />';
+	}
+
+	private function getCharAtCursor()
+	{
+		return $this->input[ $this->cursor ];
+	}
+
+	private function getNextChar()
+	{
+		return $this->input[ $this->cursor + 1 ];
+	}
+
+	private function setMode( $mode )
+	{
+		$this->mode = $mode;
 	}
 
 	private function setCursor( $n )
