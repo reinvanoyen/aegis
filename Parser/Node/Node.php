@@ -4,7 +4,7 @@ abstract class Node
 {
 	private $token;
 
-	private $parent = NULL;
+	public $parent = NULL;
 	private $children = [];
 
 	public function __construct( Token $token )
@@ -17,6 +17,16 @@ abstract class Node
 		return $this->children;
 	}
 
+	public function getChild( $i )
+	{
+		return $this->children[ $i ];
+	}
+
+	public function getLastChild()
+	{
+		return end( $this->children );
+	}
+
 	public function getSiblings()
 	{
 		return $this->parent->children;
@@ -25,5 +35,10 @@ abstract class Node
 	public function appendNode( Node $node )
 	{
 		$this->children[] = $node;
+	}
+
+	public function getToken()
+	{
+		return $this->token;
 	}
 }

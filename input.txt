@@ -1,27 +1,18 @@
-{{ extends "base.tpl" + }}
+{{ extends "base.tpl" }}
 
-Here there should be some text reinvanoyen@gmail.com
+{{ @variable }}
+{{ @var }}
+some line
+{{ @another }}
+{{ raw "string" }}
 
-{{ raw @body }}
+{{ block "olala" }}
 
-This should be a text token
-
-{{ for @item in @items }}
-
-	This is another text token {{ @item.title }} This is a text token
-
-{{ /for }}
-
-{{ block "main" }}
-
-	And this
-
-	{{ for @item in @items }}
-
-		{{ @item.title }}
-
-	{{ /for }}
+	test omg ok
+	test
 
 {{ /block }}
 
-{{ raw @title+"test" }}
+test
+{{ @title.test }}
+
