@@ -1,18 +1,16 @@
+test
+
 {{ extends "base.tpl" }}
 
-{{ @variable }}
-{{ @var }}
-some line
-{{ @another }}
-{{ raw "string" }}
+{{ @variable + "some test string" + "another string" + @variable - "string" }}
 
-{{ block "olala" }}
-
-	test omg ok
-	test
-
+{{ block "name" }}
+	dtet
 {{ /block }}
 
-test
-{{ @title.test }}
+{{ if "lol" }}
 
+	Something inside an if statement
+
+{{ /if }}
+test

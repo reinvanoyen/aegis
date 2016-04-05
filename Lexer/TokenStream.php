@@ -27,7 +27,7 @@ class TokenStream implements \JsonSerializable
 
 		foreach( $this->tokens as $t )
 		{
-			$string .= $t . "\n";
+			$string .= $t . "<br />";
 		}
 
 		return $string;

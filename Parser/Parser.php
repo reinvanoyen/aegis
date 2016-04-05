@@ -3,6 +3,7 @@
 require_once 'ParserInterface.php';
 require_once 'SyntaxError.php';
 require_once 'Node/Root.php';
+require_once 'Node/Expression.php';
 require_once 'Node/ExtendNode.php';
 require_once 'Node/Text.php';
 require_once 'Node/Block.php';
@@ -14,6 +15,7 @@ class Parser implements ParserInterface
 
 	private $tokens;
 	private $cursor;
+	private $last_token_index;
 
 	public function parse( TokenStream $stream )
 	{
@@ -21,6 +23,7 @@ class Parser implements ParserInterface
 		$this->scope = $this->root;
 		$this->cursor = 0;
 		$this->tokens = $stream->getTokens();
+		$this->last_token_index = count( $this->tokens ) - 1;
 
 		$this->parseOutsideTag();
 
@@ -33,34 +36,48 @@ class Parser implements ParserInterface
 
 		if( $this->skip( Token::T_OPENING_TAG ) )
 		{
-			$this->parseInsideTag();
-		}
-
-		if( $this->skip( Token::T_CLOSING_TAG ) )
-		{
-			$this->parseOutsideTag();
+			$this->parseStatement();
 		}
 	}
 
-	private function parseInsideTag()
+	private function parseStatement()
 	{
-		$this->accept( Token::T_VAR );
-		$this->parseRaw();
-		$this->parseBlock();
 		$this->parseExtends();
+		$this->parseBlock();
+		$this->parseIf();
+		$this->parseRaw();
+		$this->parseExpression();
+	}
+
+	private function parseExpression()
+	{
+		// @TODO make nodes from expressions
+
+		if( $this->accept( Token::T_VAR ) || $this->accept( Token::T_STRING ) )
+		{
+			if( $this->accept( Token::T_OP ) )
+			{
+				$this->parseExpression();
+			}
+
+			if( $this->skip( Token::T_CLOSING_TAG ) )
+			{
+				$this->parseOutsideTag();
+			}
+		}
 	}
 
 	private function parseRaw()
 	{
 		if( $this->accept( Token::T_IDENT, 'raw' ) )
 		{
-			$this->setScopeToLastAccepted();
+			$this->traverseUp();
 			$this->accept( Token::T_STRING );
 			$this->accept( Token::T_IDENT );
 
 			if( $this->skip( Token::T_CLOSING_TAG ) )
 			{
-				$this->returnOne();
+				$this->traverseDown();
 				$this->parseOutsideTag();
 			}
 		}
@@ -70,12 +87,12 @@ class Parser implements ParserInterface
 	{
 		if( $this->accept( Token::T_IDENT, 'extends' ) )
 		{
-			$this->setScopeToLastAccepted();
+			$this->traverseUp();
 			$this->expect( Token::T_STRING );
 
 			if( $this->skip( Token::T_CLOSING_TAG ) )
 			{
-				$this->returnOne();
+				$this->traverseDown();
 				$this->parseOutsideTag();
 			}
 		}
@@ -85,7 +102,7 @@ class Parser implements ParserInterface
 	{
 		if( $this->accept( Token::T_IDENT, 'block' ) )
 		{
-			$this->setScopeToLastAccepted();
+			$this->traverseUp();
 
 			$this->expect( Token::T_STRING );
 			$this->skip( Token::T_CLOSING_TAG );
@@ -96,7 +113,27 @@ class Parser implements ParserInterface
 			$this->skip( Token::T_IDENT, 'block' );
 			$this->skip( Token::T_CLOSING_TAG );
 
-			$this->returnOne();
+			$this->traverseDown();
+			$this->parseOutsideTag();
+		}
+	}
+
+	private function parseIf()
+	{
+		if( $this->accept( Token::T_IDENT, 'if' ) )
+		{
+			$this->traverseUp();
+
+			$this->expect( Token::T_STRING );
+			$this->skip( Token::T_CLOSING_TAG );
+
+			$this->accept( Token::T_TEXT );
+
+			$this->skip( Token::T_OPENING_TAG );
+			$this->skip( Token::T_IDENT, 'if' );
+			$this->skip( Token::T_CLOSING_TAG );
+
+			$this->traverseDown();
 			$this->parseOutsideTag();
 		}
 	}
@@ -164,6 +201,26 @@ class Parser implements ParserInterface
 		return $this->tokens[ $this->cursor ];
 	}
 
+	private function setScope( Node $scope )
+	{
+		$this->scope = $scope;
+	}
+
+	private function traverseUp()
+	{
+		$this->scope = $this->scope->getLastChild();
+	}
+
+	private function traverseDown()
+	{
+		if( ! $this->scope->parent )
+		{
+			throw new Exception( 'Could not return from scope because scope is already on root level' );
+		}
+
+		$this->scope = $this->scope->parent;
+	}
+
 	private function advance()
 	{
 		if( $this->cursor < count( $this->tokens ) - 1 )
@@ -172,29 +229,9 @@ class Parser implements ParserInterface
 		}
 	}
 
-	private function setScope( Node $scope )
-	{
-		$this->scope = $scope;
-	}
-
-	private function setScopeToLastAccepted()
-	{
-		$this->scope = $this->scope->getLastChild();
-	}
-
-	private function returnAll()
+	private function root()
 	{
 		$this->scope = $this->root;
-	}
-
-	private function returnOne()
-	{
-		if( ! $this->scope->parent )
-		{
-			throw new Exception( 'Could not return from scope because scope is already on root level' );
-		}
-
-		$this->scope = $this->scope->parent;
 	}
 
 	private function appendNode( Node $node )

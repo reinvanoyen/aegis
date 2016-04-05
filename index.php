@@ -16,10 +16,19 @@ function renderTree( $p, $c = '' )
 {
 	foreach( $p->getChildren() as $n )
 	{
-		echo $c . ' ' . $n->getToken() . '<br />';
+		echo $c . $n->getToken() . '<br />';
 
-		renderTree( $n, $c . '+++' );
+		renderTree( $n, $c . '&nbsp;&nbsp;&nbsp;&nbsp;|__&nbsp;' );
 	}
 }
 
-renderTree( $parsed );
+echo '<table style="font-family: monospace;">';
+echo '<tr>';
+echo '<td width="50%" valign="top">';
+echo $stream;
+echo '</td>';
+echo '<td width="50%" valign="top">';
+echo renderTree( $parsed );
+echo '</td>';
+echo '</tr>';
+echo '</table>';
