@@ -22,7 +22,7 @@ class NodeFactory
 
 			case Token::T_STRING:
 
-				return new String();
+				return new String( $value );
 				break;
 
 			case Token::T_IDENT:
@@ -45,13 +45,12 @@ class NodeFactory
 				break;
 
 			case Token::T_VAR:
-
-				return new Variable();
+				return new Variable( $value );
 				break;
 
 			case Token::T_OP:
 
-				return new Operator();
+				return new Operator( $value );
 				break;
 		}
 

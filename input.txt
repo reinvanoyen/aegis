@@ -1,18 +1,47 @@
-test
+{{ "Welcome to " + @page.title }}
+{{ @page.intro }}
 
-{{ extends "base.tpl" }}
+{{ if "text" }}
 
-{{ @variable + "some test string" + "another string" + @variable - "string" }}
-ok it works
-{{ block "name" }}
-	dtet
-{{ /block }}
+	something {{ "wuk " + @title }}
 
-{{ "LOL" }}
+	{{ if "text" }}
 
-{{ if "lol" }}
+		{{ if "text" }}
 
-	Something inside an if statement
+			{{ "Welcome to " + @page.title }}
+
+			Bonjorno.
+
+			{{ "As string" + "a string" }}
+
+			{{ block "content" }}
+
+				Its a block! {{ @andavariable }}
+
+				{{ block "content" }}
+
+					IT WORKS AMAZINGLY WELL.
+					The code is not really great yet. But once we add enough abstraction it will shine like a diamond.
+					{{ @somevariable + " ok its nice" }}
+
+				{{ /block }}
+
+			{{ /block }}
+
+		{{ /if }}
+
+	{{ /if }}
 
 {{ /if }}
-test
+
+{{ block "content" }}
+
+	IT WORKS AMAZINGLY WELL.
+	The code is not really great yet. But once we add enough abstraction it will shine like a diamond.
+	{{ @somevariable + " ok its nice" }}
+
+{{ /block }}
+
+ARE THERE ANY ERRORS
+DOES'NT LOOK LIKE IT

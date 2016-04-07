@@ -42,7 +42,6 @@ class Parser implements ParserInterface
 		$this->parseExtends();
 		$this->parseBlock();
 		$this->parseIf();
-		$this->parseRaw();
 		$this->parseExpression();
 	}
 
@@ -62,23 +61,10 @@ class Parser implements ParserInterface
 
 			if( $this->skip( Token::T_CLOSING_TAG ) )
 			{
-				$this->traverseDown();
-				$this->parseOutsideTag();
-			}
-		}
-	}
-
-	private function parseRaw()
-	{
-		if( $this->accept( Token::T_IDENT, 'raw' ) )
-		{
-			$this->traverseUp();
-			$this->accept( Token::T_STRING );
-			$this->accept( Token::T_IDENT );
-
-			if( $this->skip( Token::T_CLOSING_TAG ) )
-			{
-				$this->traverseDown();
+				if( $this->scope instanceof Expression )
+				{
+					$this->traverseDown();
+				}
 				$this->parseOutsideTag();
 			}
 		}
@@ -89,8 +75,9 @@ class Parser implements ParserInterface
 		if( $this->accept( Token::T_IDENT, 'extends' ) )
 		{
 			$this->traverseUp();
-			$this->expect( Token::T_STRING );
 
+			$this->expect( Token::T_STRING );
+			
 			if( $this->skip( Token::T_CLOSING_TAG ) )
 			{
 				$this->traverseDown();
@@ -104,14 +91,13 @@ class Parser implements ParserInterface
 		if( $this->accept( Token::T_IDENT, 'block' ) )
 		{
 			$this->traverseUp();
-
 			$this->expect( Token::T_STRING );
 			$this->skip( Token::T_CLOSING_TAG );
 
-			$this->accept( Token::T_TEXT );
+			$this->parseOutsideTag();
 
 			$this->skip( Token::T_OPENING_TAG );
-			$this->skip( Token::T_IDENT, 'block' );
+			$this->skip( Token::T_IDENT, '/block' );
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->traverseDown();
@@ -124,14 +110,14 @@ class Parser implements ParserInterface
 		if( $this->accept( Token::T_IDENT, 'if' ) )
 		{
 			$this->traverseUp();
-
 			$this->expect( Token::T_STRING );
 			$this->skip( Token::T_CLOSING_TAG );
 
-			$this->accept( Token::T_TEXT );
+			//$this->accept( Token::T_TEXT );
+			$this->parseOutsideTag();
 
 			$this->skip( Token::T_OPENING_TAG );
-			$this->skip( Token::T_IDENT, 'if' );
+			$this->skip( Token::T_IDENT, '/if' );
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->traverseDown();
@@ -179,7 +165,7 @@ class Parser implements ParserInterface
 			{
 				if( $this->getCurrentToken()->getValue() === $value )
 				{
-					$this->insert( NodeFactory::create( $type, $value ) );
+					$this->insert( NodeFactory::create( $type, $this->getCurrentToken()->getValue() ) );
 					$this->advance();
 					return TRUE;
 				}
@@ -189,7 +175,7 @@ class Parser implements ParserInterface
 				}
 			}
 			
-			$this->insert( NodeFactory::create( $type, $value ) );
+			$this->insert( NodeFactory::create( $type, $this->getCurrentToken()->getValue() ) );
 			$this->advance();
 			return TRUE;
 		}

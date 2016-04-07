@@ -17,6 +17,6 @@ class Expression extends Node
 			$output .= $c->compile();
 		}
 
-		return $output;
+		return '<?php echo ' . $output . '; ?>';
 	}
 }

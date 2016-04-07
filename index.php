@@ -34,7 +34,7 @@ echo '<td width="33.33%" valign="top">';
 echo renderTree( $parsed );
 echo '</td>';
 echo '<td width="33.33%" valign="top">';
-echo $compiler->compile( $parsed );
+echo htmlspecialchars( $compiler->compile( $parsed ) );
 echo '</td>';
 echo '</tr>';
 echo '</table>';

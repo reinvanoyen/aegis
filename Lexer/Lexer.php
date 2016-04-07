@@ -116,7 +116,10 @@ class Lexer implements LexerInterface
 			$this->setMode( self::MODE_ALL );
 			return;
 		}
-		else if( preg_match( '@' . Token::REGEX_T_IDENT . '@', $this->current_char ) )
+		else if(
+			$this->current_char === '/' && preg_match( '@' . Token::REGEX_T_IDENT . '@', $this->getNextChar() ) ||
+			preg_match( '@' . Token::REGEX_T_IDENT . '@', $this->current_char )
+		)
 		{
 			$this->setMode( self::MODE_IDENT );
 			return;

@@ -6,6 +6,6 @@ class ExtendNode extends Node
 {
 	public function compile()
 	{
-		return 'extends';
+		return '<?php $this->extends(' . $this->getChild( 0 )->compile() . '); ?>';
 	}
 }

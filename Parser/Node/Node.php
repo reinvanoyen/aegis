@@ -4,6 +4,12 @@ abstract class Node
 {
 	public $parent = NULL;
 	private $children = [];
+	private $attributes = [];
+
+	public function setAttribute( $k, $v )
+	{
+		$this->attributes[ $k ] = $v;
+	}
 
 	public function getChildren()
 	{
@@ -23,11 +29,12 @@ abstract class Node
 	public function removeChild( $i )
 	{
 		unset( $this->children[ $i ] );
+
 	}
 
 	public function removeLastChild()
 	{
-		$this->removeChild( count( $this->children ) - 1 );
+		array_pop( $this->children );
 	}
 
 	public function getSiblings()
