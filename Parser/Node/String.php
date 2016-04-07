@@ -2,10 +2,10 @@
 
 require_once 'Node.php';
 
-class ExtendNode extends Node
+class String extends Node
 {
 	public function compile()
 	{
-		return 'extends';
+		return 'str';
 	}
 }

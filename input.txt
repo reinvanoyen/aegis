@@ -3,10 +3,12 @@ test
 {{ extends "base.tpl" }}
 
 {{ @variable + "some test string" + "another string" + @variable - "string" }}
-
+ok it works
 {{ block "name" }}
 	dtet
 {{ /block }}
+
+{{ "LOL" }}
 
 {{ if "lol" }}
 

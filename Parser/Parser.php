@@ -3,10 +3,7 @@
 require_once 'ParserInterface.php';
 require_once 'SyntaxError.php';
 require_once 'Node/Root.php';
-require_once 'Node/Expression.php';
-require_once 'Node/ExtendNode.php';
-require_once 'Node/Text.php';
-require_once 'Node/Block.php';
+require_once 'NodeFactory.php';
 
 class Parser implements ParserInterface
 {
@@ -51,10 +48,13 @@ class Parser implements ParserInterface
 
 	private function parseExpression()
 	{
-		// @TODO make nodes from expressions
-
 		if( $this->accept( Token::T_VAR ) || $this->accept( Token::T_STRING ) )
 		{
+			if( ! $this->scope instanceof Expression )
+			{
+				$this->wrap( new Expression() );
+			}
+
 			if( $this->accept( Token::T_OP ) )
 			{
 				$this->parseExpression();
@@ -62,6 +62,7 @@ class Parser implements ParserInterface
 
 			if( $this->skip( Token::T_CLOSING_TAG ) )
 			{
+				$this->traverseDown();
 				$this->parseOutsideTag();
 			}
 		}
@@ -178,7 +179,7 @@ class Parser implements ParserInterface
 			{
 				if( $this->getCurrentToken()->getValue() === $value )
 				{
-					$this->appendNode( new Text( $this->getCurrentToken() ) );
+					$this->insert( NodeFactory::create( $type, $value ) );
 					$this->advance();
 					return TRUE;
 				}
@@ -188,7 +189,7 @@ class Parser implements ParserInterface
 				}
 			}
 			
-			$this->appendNode( new Text( $this->getCurrentToken() ) );
+			$this->insert( NodeFactory::create( $type, $value ) );
 			$this->advance();
 			return TRUE;
 		}
@@ -234,10 +235,20 @@ class Parser implements ParserInterface
 		$this->scope = $this->root;
 	}
 
-	private function appendNode( Node $node )
+	private function wrap( Node $node )
+	{
+		$last = $this->scope->getLastChild(); // Get the last insert node
+		$this->scope->removeLastChild(); // Remove it
+
+		$this->insert( $node );
+		$this->traverseUp();
+		$this->insert( $last );
+	}
+
+	private function insert( Node $node )
 	{
 		$node->parent = $this->scope;
-		$this->scope->appendNode( $node );
+		$this->scope->insert( $node );
 	}
 
 	public function getRoot()
