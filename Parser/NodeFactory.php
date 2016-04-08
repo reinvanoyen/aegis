@@ -8,6 +8,7 @@ require_once 'Node/Block.php';
 require_once 'Node/Variable.php';
 require_once 'Node/Operator.php';
 require_once 'Node/String.php';
+require_once 'Node/Number.php';
 
 class NodeFactory
 {
@@ -23,6 +24,11 @@ class NodeFactory
 			case Token::T_STRING:
 
 				return new String( $value );
+				break;
+
+			case Token::T_NUMBER:
+
+				return new Number( $value );
 				break;
 
 			case Token::T_IDENT:

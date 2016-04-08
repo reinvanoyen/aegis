@@ -47,7 +47,11 @@ class Parser implements ParserInterface
 
 	private function parseExpression()
 	{
-		if( $this->accept( Token::T_VAR ) || $this->accept( Token::T_STRING ) )
+		if(
+			$this->accept( Token::T_VAR ) ||
+			$this->accept( Token::T_STRING ) ||
+			$this->accept( Token::T_NUMBER )
+		)
 		{
 			if( ! $this->scope instanceof Expression )
 			{

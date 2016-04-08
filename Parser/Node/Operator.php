@@ -13,7 +13,7 @@ class Operator extends Node
 
 	public function compile()
 	{
-		if( $this->type = '+' )
+		if( $this->type === '+' )
 		{
 			return '.';
 		}

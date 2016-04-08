@@ -1,47 +1,16 @@
-{{ "Welcome to " + @page.title }}
-{{ @page.intro }}
+test {{ @test + "test" }}
 
-{{ if "text" }}
+{{ block "test" }}
 
-	something {{ "wuk " + @title }}
-
-	{{ if "text" }}
-
-		{{ if "text" }}
-
-			{{ "Welcome to " + @page.title }}
-
-			Bonjorno.
-
-			{{ "As string" + "a string" }}
-
-			{{ block "content" }}
-
-				Its a block! {{ @andavariable }}
-
-				{{ block "content" }}
-
-					IT WORKS AMAZINGLY WELL.
-					The code is not really great yet. But once we add enough abstraction it will shine like a diamond.
-					{{ @somevariable + " ok its nice" }}
-
-				{{ /block }}
-
-			{{ /block }}
-
-		{{ /if }}
-
-	{{ /if }}
-
-{{ /if }}
-
-{{ block "content" }}
-
-	IT WORKS AMAZINGLY WELL.
-	The code is not really great yet. But once we add enough abstraction it will shine like a diamond.
-	{{ @somevariable + " ok its nice" }}
+	{{ @title }}
 
 {{ /block }}
 
-ARE THERE ANY ERRORS
-DOES'NT LOOK LIKE IT
+{{ @title }}
+{{ @introduction }}
+
+{{ block "test" }}
+
+	{{ 5 + 6 }}
+
+{{ /block }}

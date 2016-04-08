@@ -24,6 +24,7 @@ class Lexer implements LexerInterface
 	const MODE_VAR = 2;
 	const MODE_STRING = 3;
 	const MODE_IDENT = 4;
+	const MODE_NUMBER = 5;
 
 	public function tokenize( $input )
 	{
@@ -66,6 +67,9 @@ class Lexer implements LexerInterface
 				case self::MODE_STRING:
 					$this->lexString();
 					break;
+				case self::MODE_NUMBER:
+					$this->lexNumber();
+					break;
 			}
 		}
 
@@ -79,8 +83,9 @@ class Lexer implements LexerInterface
 		{
 			if( $this->current_value !== '' )
 			{
-				$this->token_stream->addToken( new Token( Token::T_TEXT, $this->current_value ) );
+				$this->token_stream->addToken( new Token( Token::T_TEXT, $this->current_value . $this->current_char ) );
 			}
+
 			$this->advanceCursor(); // Advance one last time so the while loops stops running
 			return;
 		}
@@ -130,6 +135,11 @@ class Lexer implements LexerInterface
 			$this->advanceCursor();
 			return;
 		}
+		else if( preg_match( '@' . Token::REGEX_T_NUMBER . '@', $this->current_char ) )
+		{
+			$this->setMode( self::MODE_NUMBER );
+			return;
+		}
 		else if( $this->current_char === '@' )
 		{
 			$this->setMode( self::MODE_VAR );
@@ -168,6 +178,21 @@ class Lexer implements LexerInterface
 		{
 			$this->advanceCursor();
 			$this->token_stream->addToken( new Token( Token::T_STRING, $this->current_value ) );
+			$this->current_value = '';
+			$this->setMode( self::MODE_INSIDE_TAG );
+			return;
+		}
+
+		$this->current_value .= $this->current_char;
+		$this->advanceCursor();
+	}
+
+	// MODE NUMBER
+	private function lexNumber()
+	{
+		if( $this->current_char === ' ' )
+		{
+			$this->token_stream->addToken( new Token( Token::T_NUMBER, $this->current_value ) );
 			$this->current_value = '';
 			$this->setMode( self::MODE_INSIDE_TAG );
 			return;

@@ -15,6 +15,7 @@ class Token implements \JsonSerializable
 	const T_VAR = 5;
 	const T_STRING = 6;
 	const T_OP = 7;
+	const T_NUMBER = 8;
 
 	const REGEX_T_EOL = '[\n\r]';
 	const REGEX_T_OPENING_TAG = '{{';
@@ -22,6 +23,7 @@ class Token implements \JsonSerializable
 	const REGEX_T_IDENT = '[a-zA-Z]';
 	const REGEX_T_VAR = '^[a-zA-Z._-]+';
 	const REGEX_T_OP = '\+|\-';
+	const REGEX_T_NUMBER = '[0-9.]';
 
 	private static $token_names = [
 		self::T_EOL => 'T_EOL',
@@ -32,6 +34,7 @@ class Token implements \JsonSerializable
 		self::T_VAR => 'T_VAR',
 		self::T_STRING => 'T_STRING',
 		self::T_OP => 'T_OP',
+		self::T_NUMBER => 'T_NUMBER',
 	];
 
 	public function __construct( $type, $value )
