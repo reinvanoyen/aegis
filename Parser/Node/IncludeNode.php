@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Node.php';
-require_once 'Template.php';
+require_once 'Template/Renderer.php';
 
 class IncludeNode extends Node
 {

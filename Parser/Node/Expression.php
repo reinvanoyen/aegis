@@ -4,10 +4,6 @@ require_once 'Node.php';
 
 class Expression extends Node
 {
-	public function __construct()
-	{
-	}
-
 	public function compile()
 	{
 		if( $this->isAttribute() )

@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once 'Template.php';
+require_once 'Template/Renderer.php';
 
 class Page
 {
@@ -13,6 +13,6 @@ class Page
 	public $count = 5;
 }
 
-$tpl = new Template();
+$tpl = new Renderer();
 $tpl->page = new Page();
 $tpl->render( 'example.tpl' );
