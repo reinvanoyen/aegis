@@ -5,15 +5,32 @@ abstract class Node
 	public $parent = NULL;
 	private $children = [];
 	private $attributes = [];
+	private $isAttribute;
 
-	public function setAttribute( $k, $v )
+	public function setAttribute( Node $n )
 	{
-		$this->attributes[ $k ] = $v;
+		$n->isAttribute = TRUE;
+		$this->attributes[] = $n;
+	}
+
+	public function isAttribute()
+	{
+		return $this->isAttribute;
+	}
+
+	public function getAttributes()
+	{
+		return $this->attributes;
 	}
 
 	public function getChildren()
 	{
 		return $this->children;
+	}
+
+	public function getParent()
+	{
+		return $this->parent;
 	}
 
 	public function getChild( $i )
@@ -29,7 +46,6 @@ abstract class Node
 	public function removeChild( $i )
 	{
 		unset( $this->children[ $i ] );
-
 	}
 
 	public function removeLastChild()
@@ -47,5 +63,29 @@ abstract class Node
 		$this->children[] = $node;
 	}
 
+	public function getCompiledChildren()
+	{
+		$output = '';
+
+		foreach( $this->getChildren() as $c )
+		{
+			$output .= $c->compile();
+		}
+
+		return $output;
+	}
+
+	public function getCompiledAttributes()
+	{
+		$output = '';
+
+		foreach( $this->getAttributes() as $a )
+		{
+			$output .= $a->compile();
+		}
+
+		return $output;
+	}
+	
 	abstract public function compile();
 }

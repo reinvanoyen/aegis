@@ -22,7 +22,7 @@ class Token implements \JsonSerializable
 	const REGEX_T_CLOSING_TAG = '}}';
 	const REGEX_T_IDENT = '[a-zA-Z]';
 	const REGEX_T_VAR = '^[a-zA-Z._-]+';
-	const REGEX_T_OP = '\+|\-';
+	const REGEX_T_OP = '\+|\-|\=|\!';
 	const REGEX_T_NUMBER = '[0-9.]';
 
 	private static $token_names = [

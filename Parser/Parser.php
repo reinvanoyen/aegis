@@ -42,6 +42,9 @@ class Parser implements ParserInterface
 		$this->parseExtends();
 		$this->parseBlock();
 		$this->parseIf();
+		$this->parseLoop();
+		$this->parseRaw();
+		$this->parseInclude();
 		$this->parseExpression();
 	}
 
@@ -69,8 +72,102 @@ class Parser implements ParserInterface
 				{
 					$this->traverseDown();
 				}
+
 				$this->parseOutsideTag();
 			}
+		}
+	}
+
+	private function parseAttribute()
+	{
+		if(
+			$this->accept( Token::T_VAR ) ||
+			$this->accept( Token::T_STRING ) ||
+			$this->accept( Token::T_NUMBER )
+		)
+		{
+			if( ! $this->scope instanceof Expression )
+			{
+				$this->wrap( new Expression() );
+			}
+
+			if( $this->accept( Token::T_OP ) )
+			{
+				$this->parseAttribute();
+			}
+			else
+			{
+				if( $this->scope instanceof Expression )
+				{
+					$this->traverseDown();
+				}
+			}
+		}
+	}
+
+	private function parseRaw()
+	{
+		if( $this->accept( Token::T_IDENT, 'raw' ) || $this->accept( Token::T_IDENT, 'r' ) )
+		{
+			$this->traverseUp();
+			$this->parseAttribute();
+			$this->setAttribute();
+			$this->skip( Token::T_CLOSING_TAG );
+			$this->traverseDown();
+			$this->parseOutsideTag();
+		}
+	}
+
+	private function parseInclude()
+	{
+		if( $this->accept( Token::T_IDENT, 'include' ) )
+		{
+			$this->traverseUp();
+			$this->parseAttribute();
+			$this->setAttribute();
+			$this->skip( Token::T_CLOSING_TAG );
+			$this->traverseDown();
+			$this->parseOutsideTag();
+		}
+	}
+
+	private function parseIf()
+	{
+		if( $this->accept( Token::T_IDENT, 'if' ) )
+		{
+			$this->traverseUp();
+			$this->parseAttribute();
+			$this->setAttribute();
+			$this->skip( Token::T_CLOSING_TAG );
+
+			$this->parseOutsideTag();
+
+			$this->skip( Token::T_OPENING_TAG );
+			$this->skip( Token::T_IDENT, '/if' );
+			$this->skip( Token::T_CLOSING_TAG );
+
+			$this->traverseDown();
+			$this->parseOutsideTag();
+		}
+	}
+
+	private function parseLoop()
+	{
+		if( $this->accept( Token::T_IDENT, 'loop' ) )
+		{
+			$this->traverseUp();
+			$this->parseAttribute();
+			$this->setAttribute();
+			$this->skip( Token::T_CLOSING_TAG );
+
+			$this->parseOutsideTag();
+
+			$this->skip( Token::T_OPENING_TAG );
+			$this->skip( Token::T_IDENT, '/loop' );
+			$this->skip( Token::T_CLOSING_TAG );
+
+			$this->traverseDown();
+			$this->parseOutsideTag();
 		}
 	}
 
@@ -81,7 +178,7 @@ class Parser implements ParserInterface
 			$this->traverseUp();
 
 			$this->expect( Token::T_STRING );
-			
+
 			if( $this->skip( Token::T_CLOSING_TAG ) )
 			{
 				$this->traverseDown();
@@ -95,33 +192,14 @@ class Parser implements ParserInterface
 		if( $this->accept( Token::T_IDENT, 'block' ) )
 		{
 			$this->traverseUp();
-			$this->expect( Token::T_STRING );
+			$this->parseAttribute();
+			$this->setAttribute();
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->parseOutsideTag();
 
 			$this->skip( Token::T_OPENING_TAG );
 			$this->skip( Token::T_IDENT, '/block' );
-			$this->skip( Token::T_CLOSING_TAG );
-
-			$this->traverseDown();
-			$this->parseOutsideTag();
-		}
-	}
-
-	private function parseIf()
-	{
-		if( $this->accept( Token::T_IDENT, 'if' ) )
-		{
-			$this->traverseUp();
-			$this->expect( Token::T_STRING );
-			$this->skip( Token::T_CLOSING_TAG );
-
-			//$this->accept( Token::T_TEXT );
-			$this->parseOutsideTag();
-
-			$this->skip( Token::T_OPENING_TAG );
-			$this->skip( Token::T_IDENT, '/if' );
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->traverseDown();
@@ -233,6 +311,13 @@ class Parser implements ParserInterface
 		$this->insert( $node );
 		$this->traverseUp();
 		$this->insert( $last );
+	}
+
+	private function setAttribute()
+	{
+		$last = $this->scope->getLastChild(); // Get the last inserted node
+		$this->scope->removeLastChild(); // Remove it
+		$this->scope->setAttribute( $last );
 	}
 
 	private function insert( Node $node )

@@ -15,8 +15,9 @@ class Operator extends Node
 	{
 		if( $this->type === '+' )
 		{
-			return '.';
+			return ' . ';
 		}
-		return $this->type;
+
+		return ' ' . $this->type . ' ';
 	}
 }

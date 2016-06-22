@@ -6,17 +6,9 @@ class IfNode extends Node
 {
 	public function compile()
 	{
-		$output = '<?php if( ' . $this->getChild( 0 )->compile() . ' ): ?>';
+		$output = '<?php if( ' . $this->getCompiledAttributes() . ' ): ?>';
 
-		$i = 0;
-		foreach( $this->getChildren() as $c )
-		{
-			if( $i !== 0 )
-			{
-				$output .= $c->compile();
-			}
-			$i++;
-		}
+		$output .= $this->getCompiledChildren();
 
 		$output .= '<?php endif; ?>';
 

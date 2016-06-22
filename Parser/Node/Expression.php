@@ -10,13 +10,11 @@ class Expression extends Node
 
 	public function compile()
 	{
-		$output = '';
-
-		foreach( $this->getChildren() as $c )
+		if( $this->isAttribute() )
 		{
-			$output .= $c->compile();
+			return $this->getCompiledChildren();
 		}
-
-		return '<?php echo ' . $output . '; ?>';
+		
+		return '<?php echo htmlspecialchars(' . $this->getCompiledChildren() . '); ?>';
 	}
 }

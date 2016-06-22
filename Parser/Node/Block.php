@@ -6,6 +6,6 @@ class Block extends Node
 {
 	public function compile()
 	{
-		return ' (block) ';
+		return $this->getCompiledChildren();
 	}
 }

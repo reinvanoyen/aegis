@@ -9,6 +9,9 @@ require_once 'Node/Variable.php';
 require_once 'Node/Operator.php';
 require_once 'Node/String.php';
 require_once 'Node/Number.php';
+require_once 'Node/Raw.php';
+require_once 'Node/IncludeNode.php';
+require_once 'Node/LoopNode.php';
 
 class NodeFactory
 {
@@ -46,6 +49,21 @@ class NodeFactory
 				if( $value === 'if' )
 				{
 					return new IfNode();
+				}
+
+				if( $value === 'raw' || $value === 'r' )
+				{
+					return new Raw();
+				}
+
+				if( $value === 'include' )
+				{
+					return new IncludeNode();
+				}
+
+				if( $value === 'loop' )
+				{
+					return new LoopNode();
 				}
 
 				break;
