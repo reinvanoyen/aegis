@@ -1,12 +1,10 @@
 <h1>{{ @page.title }}</h1>
 
 <ul>
-	{{ loop 5 }}
-		<li>{{ @page.title + " " + @i }}</li>
+	{{ loop @page.count }}
+		<li>{{ @page.title }}</li>
 	{{ /loop }}
 </ul>
-
-{{ @i }}
 
 {{ if @page.title === "Blog" }}
 

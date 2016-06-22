@@ -1,5 +1,5 @@
-<h2><?php echo htmlspecialchars($page->subtitle); ?></h2>
+<h2><?php echo htmlspecialchars($this->page->subtitle); ?></h2>
 
 <p>
-	We are now rendering the template "<?php echo htmlspecialchars($page->template . '.tpl'); ?>"
+	We are now rendering the template "<?php echo htmlspecialchars($this->page->template . '.tpl'); ?>"
 </p>

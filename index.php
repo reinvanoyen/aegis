@@ -10,6 +10,7 @@ class Page
 	public $title = 'Blog';
 	public $subtitle = 'This is a nice blog';
 	public $template = 'blog';
+	public $count = 5;
 }
 
 $tpl = new Template();

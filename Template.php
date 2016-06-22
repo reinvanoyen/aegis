@@ -6,12 +6,17 @@ require_once 'Compiler/Compiler.php';
 
 class Template
 {
-	private $data = [];
+	private $variables = [];
 	private $cached_filename;
 
 	public function __set( $k, $v )
 	{
-		$this->data[ $k ] = $v;
+		$this->variables[ $k ] = $v;
+	}
+
+	public function __get( $k )
+	{
+		return $this->variables[ $k ];
 	}
 
 	public function get( $filename )
@@ -48,7 +53,6 @@ class Template
 			echo 'TEMPLATE error';
 		}
 
-		extract( $this->data );
 		require $this->cached_filename;
 	}
 }

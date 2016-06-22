@@ -221,7 +221,7 @@ class Lexer implements LexerInterface
 	// MODE OPERATOR
 	private function lexOperator()
 	{
-		if( $this->current_char === ' ' )
+		if( ! preg_match( '@' . Token::REGEX_T_OP . '@', $this->current_char ) )
 		{
 			$this->token_stream->addToken( new Token( Token::T_OP, $this->current_value ) );
 			$this->current_value = '';

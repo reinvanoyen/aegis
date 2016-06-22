@@ -1,15 +1,13 @@
-<h1><?php echo htmlspecialchars($page->title); ?></h1>
+<h1><?php echo htmlspecialchars($this->page->title); ?></h1>
 
 <ul>
-	<?php for( $i = 0; $i < 5; $i++ ): ?>
-		<li><?php echo htmlspecialchars($page->title . ' ' . $i); ?></li>
-	<?php endfor; ?>
+	<?php call_user_func( function() { ?><?php for( $i = 0; $i < $this->page->count; $i++ ): ?>
+		<li><?php echo htmlspecialchars($this->page->title); ?></li>
+	<?php endfor; ?><?php } ); ?>
 </ul>
 
-<?php echo htmlspecialchars($i); ?>
+<?php if( $this->page->title === 'Blog' ): ?>
 
-<?php if( $page->title === 'Blog' ): ?>
-
-	<?php $this->render($page->template . '.tpl'); ?>
+	<?php $this->render($this->page->template . '.tpl'); ?>
 
 <?php endif; ?>

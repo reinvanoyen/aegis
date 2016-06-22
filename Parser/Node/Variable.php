@@ -13,6 +13,6 @@ class Variable extends Node
 
 	public function compile()
 	{
-		return '$' . str_replace( '.', '->', $this->name );
+		return '$this->' . str_replace( '.', '->', $this->name );
 	}
 }
