@@ -86,6 +86,7 @@ abstract class Node
 
 		return $output;
 	}
-	
+
 	abstract public function compile();
+	abstract public function run();
 }

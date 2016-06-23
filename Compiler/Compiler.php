@@ -2,8 +2,20 @@
 
 class Compiler
 {
-	public function compile( Node $node )
+	public $parsedTree;
+
+	public function __construct( Node $parsedTree )
 	{
-		return $node->compile();
+		$this->parsedTree = $parsedTree;
+	}
+
+	public function run()
+	{
+		$this->parsedTree->run();
+	}
+
+	public function compile()
+	{
+		return $this->parsedTree->compile();
 	}
 }

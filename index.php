@@ -7,12 +7,10 @@ require_once 'Template/Renderer.php';
 
 class Page
 {
-	public $title = 'Blog';
-	public $subtitle = 'This is a nice blog';
-	public $template = 'blog';
-	public $count = 5;
+	public $title = 'Home';
+	public $block = 'side';
 }
 
 $tpl = new Renderer();
 $tpl->page = new Page();
-$tpl->render( 'example.tpl' );
+$tpl->render( 'default2.tpl' );

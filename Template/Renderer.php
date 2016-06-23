@@ -7,80 +7,34 @@ require_once 'Template/Runtime.php';
 
 class Renderer
 {
-	public static $runtime;
+	const TPL_DIR = 'templates/';
+	const CACHE_DIR = 'cache/templates/';
 
-	public static $debug = TRUE;
-
-	public static $tpl_dir = 'templates/';
-	public static $cache_dir = 'cache/templates/';
-
-	private $cached_filename;
-
-	private $variables = [];
-	private $blocks = [];
-
-	public function __construct()
-	{
-		self::$runtime = new Runtime();
-	}
-
-	public function getCompiled( $filename )
-	{
-		// Tokenize the file
-		$lexer = new Lexer();
-		$stream = $lexer->tokenize( file_get_contents( $filename ) );
-
-		// Parse the stream
-		$parser = new Parser();
-		$parsed = $parser->parse( $stream );
-
-		// Compile the parsed node tree
-		$compiler = new Compiler();
-		$compiled = $compiler->compile( $parsed );
-
-		return $compiled;
-	}
+	private $cacheFilename;
 
 	public function render( $filename )
 	{
-		$filename = static::$tpl_dir . $filename;
+		$this->cacheFilename = static::CACHE_DIR . urlencode( $filename ) . '.php';
 
-		$this->cached_filename = static::$cache_dir . urlencode( $filename ) . '.php';
+		// Get string to render
+		$string = file_get_contents( static::TPL_DIR . $filename );
 
-		if( ! file_exists( $this->cached_filename ) || filemtime( $this->cached_filename ) <= filemtime( $filename ) || self::$debug )
-		{
-			if( ! file_exists( static::$cache_dir ) )
-			{
-				// If the cache directory doesn't exist, create it
-				mkdir( static::$cache_dir, 0777, TRUE );
-			}
+		// Tokenize the string
+		$lexer = new Lexer();
+		$tokenStream = $lexer->tokenize( $string );
 
-			// Save the compiled template
-			file_put_contents( $this->cached_filename, $this->getCompiled( $filename ) );
-		}
+		// Parse the token stream to a node tree
+		$parser = new Parser();
+		$parsedTree = $parser->parse( $tokenStream );
 
-		$this->execute();
-	}
+		// Create the compiler
+		$compiler = new Compiler( $parsedTree );
 
-	private function execute()
-	{
-		if( ! $this->cached_filename )
-		{
-			echo 'TEMPLATE error';
-		}
+		// Run the code
+		$compiler->run();
 
-		require $this->cached_filename;
-	}
+		file_put_contents( $this->cacheFilename, $compiler->compile() );
 
-	// Runtime functions
-
-	public function __set( $k, $v )
-	{
-		self::$runtime->setVariable( $k, $v );
-	}
-
-	public function __get( $k )
-	{
-		return self::$runtime->variables[ $k ];
+		require $this->cacheFilename;
 	}
 }

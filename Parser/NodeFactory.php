@@ -4,7 +4,7 @@ require_once 'Node/Expression.php';
 require_once 'Node/ExtendNode.php';
 require_once 'Node/IfNode.php';
 require_once 'Node/Text.php';
-require_once 'Node/Block.php';
+require_once 'Node/BlockNode.php';
 require_once 'Node/Variable.php';
 require_once 'Node/Operator.php';
 require_once 'Node/String.php';
@@ -43,7 +43,7 @@ class NodeFactory
 
 				if( $value === 'block' )
 				{
-					return new Block();
+					return new BlockNode();
 				}
 
 				if( $value === 'if' )

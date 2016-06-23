@@ -4,8 +4,12 @@ require_once 'Node.php';
 
 class Root extends Node
 {
-	public function __construct()
+	public function run()
 	{
+		foreach( $this->getChildren() as $c )
+		{
+			$c->run();
+		}
 	}
 
 	public function compile()

@@ -16,11 +16,27 @@ class Runtime
 		return $this->variables[ $k ];
 	}
 
-	public function setBlock( $k, $v )
+	public function setBlock( $id, $filename )
 	{
-		$this->blocks[ $k ] = $v;
-		return $this->blocks[ $k ];
+		$this->blocks[ $id ] = $filename;
 	}
+
+	public function getBlock( $id )
+	{
+		return $this->blocks[ $id ];
+	}
+
+//	public function setBlock( $k, $v )
+//	{
+//		$this->blocks[ $k ] = $v;
+//
+//		return $this->blocks[ $k ];
+//	}
+//
+//	public function getBlock( $k )
+//	{
+//		return $this->blocks[ $k ];
+//	}
 
 	public function appendBlock( $k, $v )
 	{
@@ -30,11 +46,6 @@ class Runtime
 	public function prependBlock( $k, $v )
 	{
 		$this->blocks[ $k ] = $v . $this->getBlock( $k );
-	}
-
-	public function getBlock( $k )
-	{
-		return $this->blocks[ $k ];
 	}
 
 	public function evaluateExpression( $expr )

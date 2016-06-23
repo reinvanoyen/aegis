@@ -11,6 +11,11 @@ class Text extends Node
 		$this->value = $value;
 	}
 
+	public function run()
+	{
+
+	}
+
 	public function compile()
 	{
 		return $this->value;

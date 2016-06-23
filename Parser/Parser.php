@@ -176,14 +176,18 @@ class Parser implements ParserInterface
 		if( $this->accept( Token::T_IDENT, 'extends' ) )
 		{
 			$this->traverseUp();
+			$this->parseAttribute();
+			$this->setAttribute();
+			$this->skip( Token::T_CLOSING_TAG );
 
-			$this->expect( Token::T_STRING );
+			$this->parseOutsideTag();
 
-			if( $this->skip( Token::T_CLOSING_TAG ) )
-			{
-				$this->traverseDown();
-				$this->parseOutsideTag();
-			}
+			$this->skip( Token::T_OPENING_TAG );
+			$this->skip( Token::T_IDENT, '/extends' );
+			$this->skip( Token::T_CLOSING_TAG );
+
+			$this->traverseDown();
+			$this->parseOutsideTag();
 		}
 	}
 

@@ -8,7 +8,7 @@ require_once 'Parser/Parser.php';
 require_once 'Compiler/Compiler.php';
 
 $lexer = new Lexer();
-$stream = $lexer->tokenize( file_get_contents( 'example.tpl' ) );
+$stream = $lexer->tokenize( file_get_contents( 'templates/example.tpl' ) );
 
 $parser = new Parser();
 $parsed = $parser->parse( $stream );

@@ -1,4 +1,3 @@
 <?php
 
-class SyntaxError extends Exception
-{}
+class SyntaxError extends Exception {}

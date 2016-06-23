@@ -11,6 +11,11 @@ class Operator extends Node
 		$this->type = $type;
 	}
 
+	public function run()
+	{
+
+	}
+
 	public function compile()
 	{
 		if( $this->type === '+' )
