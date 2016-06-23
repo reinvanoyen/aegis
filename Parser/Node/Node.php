@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Compiler/Compiler.php';
+
 abstract class Node
 {
 	public $parent = NULL;
@@ -63,30 +65,5 @@ abstract class Node
 		$this->children[] = $node;
 	}
 
-	public function getCompiledChildren()
-	{
-		$output = '';
-
-		foreach( $this->getChildren() as $c )
-		{
-			$output .= $c->compile();
-		}
-
-		return $output;
-	}
-
-	public function getCompiledAttributes()
-	{
-		$output = '';
-
-		foreach( $this->getAttributes() as $a )
-		{
-			$output .= $a->compile();
-		}
-
-		return $output;
-	}
-
-	abstract public function compile();
-	abstract public function run();
+	abstract public function compile( $compiler );
 }

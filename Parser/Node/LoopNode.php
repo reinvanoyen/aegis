@@ -4,21 +4,24 @@ require_once 'Node.php';
 
 class LoopNode extends Node
 {
-	public function run()
+	public function compile( $compiler )
 	{
+		$compiler->write( '<?php call_user_func( function() { ?>' );
+		$compiler->write( '<?php for( $i = 0; $i < ' );
+
+		foreach( $this->getAttributes() as $a )
+		{
+			$a->compile( $compiler );
+		}
+
+		$compiler->write( '; $i++ ): ?>' );
+
 		foreach( $this->getChildren() as $c )
 		{
-			$c->run();
+			$c->compile( $compiler );
 		}
-	}
-	
-	public function compile()
-	{
-		$output = '<?php call_user_func( function() { ?>';
-		$output .= '<?php for( $i = 0; $i < ' . $this->getCompiledAttributes() . '; $i++ ): ?>';
-		$output .= $this->getCompiledChildren();
-		$output .= '<?php endfor; ?>';
-		$output .= '<?php } ); ?>';
-		return $output;
+
+		$compiler->write( '<?php endfor; ?>' );
+		$compiler->write( '<?php } ); ?>' );
 	}
 }

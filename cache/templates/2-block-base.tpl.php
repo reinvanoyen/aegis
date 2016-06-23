@@ -1,4 +1,0 @@
-
-
-	Rendering in variable block
-

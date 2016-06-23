@@ -11,13 +11,8 @@ class String extends Node
 		$this->value = $value;
 	}
 
-	public function run()
+	public function compile( $compiler )
 	{
-
-	}
-
-	public function compile()
-	{
-		return '\'' . $this->value . '\'';
+		$compiler->write( '\'' . $this->value . '\'' );
 	}
 }

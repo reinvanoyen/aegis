@@ -11,10 +11,8 @@ class Variable extends Node
 		$this->name = $name;
 	}
 
-	public function run() {}
-
-	public function compile()
+	public function compile( $compiler )
 	{
-		return '$this->' . str_replace( '.', '->', $this->name );
+		$compiler->write( '$this->' . str_replace( '.', '->', $this->name ) );
 	}
 }

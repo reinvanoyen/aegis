@@ -4,13 +4,8 @@ require_once 'Node.php';
 
 class Raw extends Node
 {
-	public function run()
+	public function compile( $compiler )
 	{
-
-	}
-	
-	public function compile()
-	{
-		return '<?php echo ' . $this->getCompiledAttributes() . '; ?>';
+		$compiler->write( '<?php echo ' . $this->getCompiledAttributes() . '; ?>' );
 	}
 }
