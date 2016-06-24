@@ -3,12 +3,11 @@
 <head>
 	<base href="http://rein.tnt.lan/aegis/" />
 	<title>{{ block "title" }}{{ /block }}</title>
+	{{ block "stylesheets" }}{{ /block }}
 </head>
 
 <body>
-	
-	DIT IS DE DEAFUL!!isdjshjh
-	
+		
 	{{ block "body" }}{{ /block }}
 	
 </body>

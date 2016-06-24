@@ -10,7 +10,7 @@ class Page
 	public $title = 'Home';
 	public $include = 'main';
 	public $count = 10;
-	public $base = 'base2';
+	public $base = 'base';
 
 	public function __construct( $title = 'Home', $inc = 'main', $count = 10 )
 	{

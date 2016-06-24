@@ -1,1 +1,1 @@
-<?php $this->setBlock( 'title', function() { ?><?php } ) ?><?php $this->setBlock( 'body', function() { ?><?php } ) ?>
+<?php $this->setBlock( 'title', function() { ?><?php } ) ?><?php $this->setBlock( 'stylesheets', function() { ?><?php } ) ?><?php $this->setBlock( 'body', function() { ?><?php } ) ?>

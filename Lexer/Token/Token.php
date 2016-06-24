@@ -4,6 +4,7 @@ class Token implements \JsonSerializable
 {
 	public $type;
 	public $value;
+	public $line;
 
 	const PHP_EXPR = '(?:[^\']|\\\'.*?\\\')+?';
 
@@ -37,10 +38,11 @@ class Token implements \JsonSerializable
 		self::T_NUMBER => 'T_NUMBER',
 	];
 
-	public function __construct( $type, $value )
+	public function __construct( $type, $value, $line = 0 )
 	{
 		$this->type = $type;
 		$this->value = $value;
+		$this->line = $line;
 	}
 
 	public function getName()
