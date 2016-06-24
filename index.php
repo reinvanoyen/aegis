@@ -8,11 +8,10 @@ require_once 'Template/Template.php';
 class Page
 {
 	public $title = 'Home';
-	public $inc = 'side';
+	public $inc = 'main';
 	public $count = 10;
 }
 
 $tpl = new Template();
 $tpl->page = new Page();
-$tpl->inc = 'side';
 $tpl->render( 'default.tpl' );

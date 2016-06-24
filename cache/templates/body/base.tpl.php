@@ -1,3 +1,12 @@
-<h1><?php echo htmlspecialchars($this->page->title); ?></h1>
+<html>
 
-<?php $this->getBlock( 'main') ?>
+<head>
+	<base href="http://rein.tnt.lan/herman/" />
+	<title><?php $this->getBlock( 'title') ?></title>
+</head>
+
+<body>
+	<?php $this->getBlock( 'body') ?>
+</body>
+
+</html>

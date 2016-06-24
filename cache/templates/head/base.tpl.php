@@ -1,5 +1,1 @@
-<?php $this->setBlock( 'main', function() { ?>
-
-	Something
-
-<?php } ) ?>
+<?php $this->setBlock( 'title', function() { ?><?php } ) ?><?php $this->setBlock( 'body', function() { ?><?php } ) ?>

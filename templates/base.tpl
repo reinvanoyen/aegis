@@ -1,7 +1,12 @@
-<h1>{{ @page.title }}</h1>
+<html>
 
-{{ block "main" }}
+<head>
+	<base href="http://rein.tnt.lan/herman/" />
+	<title>{{ block "title" }}{{ /block }}</title>
+</head>
 
-	Something
+<body>
+	{{ block "body" }}{{ /block }}
+</body>
 
-{{ /block }}
+</html>

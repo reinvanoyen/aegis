@@ -1,16 +1,26 @@
 {{ extends "base.tpl" }}
 
-	{{ block "main" }}
+	{{ block "title" }}Welcome to my webpage{{ /block }}
 
-		<h2>block main {{ @page.title }}</h2>
+	{{ block "body" }}
 
-		{{ include @page.inc + ".tpl" }}
+		<div id="wrapper">
 
-		{{ if @page.title === "Home" }}
+			{{ extends "header.tpl" }}
 
-			<br />OK NICE
+				{{ block "title" }}{{ @page.title }}{{ /block }}
 
-		{{ /if }}
+			{{ /extends }}
+
+			{{ block "main" }}
+				<div id="main">
+					{{ include @page.inc + ".tpl" }}
+				</div>
+			{{ /block }}
+
+			{{ extends "footer.tpl" }}{{ /extends }}
+
+		</div>
 
 	{{ /block }}
 
