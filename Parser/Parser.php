@@ -2,7 +2,7 @@
 
 require_once 'ParserInterface.php';
 require_once 'SyntaxError.php';
-require_once 'Node/Root.php';
+require_once 'Node/RootNode.php';
 require_once 'NodeFactory.php';
 
 class Parser implements ParserInterface
@@ -16,7 +16,7 @@ class Parser implements ParserInterface
 
 	public function parse( TokenStream $stream )
 	{
-		$this->root = new Root();
+		$this->root = new RootNode();
 		$this->scope = $this->root;
 		$this->cursor = 0;
 		$this->tokens = $stream->getTokens();
@@ -248,7 +248,7 @@ class Parser implements ParserInterface
 	{
 		if( ! $this->accept( $type, $value ) )
 		{
-			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken()->getName() . ' (' . $this->getCurrentToken()->getType() . ')' );
+			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken() );
 		}
 	}
 

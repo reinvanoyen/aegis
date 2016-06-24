@@ -10,7 +10,7 @@
 	<h1>Dit is een uitgebreidere base!</h1>
 	
 	{{ block "body" }}{{ /block }}
-	
+
 </body>
 
 </html>

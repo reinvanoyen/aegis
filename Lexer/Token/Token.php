@@ -65,7 +65,7 @@ class Token implements \JsonSerializable
 
 	public function __toString()
 	{
-		return $this->getName() . '(' . $this->value . ')' . "\n";
+		return $this->getName() . ' - ' . $this->getType() . ' (' . $this->getValue() . ')' . "\n";
 	}
 
 	public function jsonSerialize()
