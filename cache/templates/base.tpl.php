@@ -1,7 +1,7 @@
-<?php $this->setBlock( 'id', function() { ?>
+<?php $this->setBlock( 'main', function() { ?>
 
 	Something
 
 <?php } ) ?><h1><?php echo htmlspecialchars($this->page->title); ?></h1>
 
-<?php $this->getBlock('id') ?>
+<?php $this->getBlock( 'main') ?>
