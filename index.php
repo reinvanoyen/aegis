@@ -28,4 +28,4 @@ $tpl->pages = [
 	new Page( 'Contact' ),
 ];
 $tpl->sitename = 'Aegis';
-$tpl->render( 'default.tpl' );
+$tpl->render( 'default' );

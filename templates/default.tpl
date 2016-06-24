@@ -1,4 +1,4 @@
-{{ extends @page.basetpl + ".tpl" }}
+{{ extends @page.basetpl }}
 
 	{{ block "title" }}Welcome to my webpage{{ /block }}
 
@@ -6,7 +6,7 @@
 
 		<div id="wrapper">
 			
-			{{ extends "header.tpl" }}
+			{{ extends "header" }}
 			
 				{{ block "title" append }}: {{ @page.title }}{{ /block }}
 			
@@ -26,13 +26,13 @@
 
 				<div id="main">
 					
-					{{ include @page.inc + ".tpl" }}
+					{{ include @page.inc }}
 					
 				</div>
 
 			{{ /block }}
 
-			{{ extends "footer.tpl" }}
+			{{ extends "footer" }}
 			
 				{{ block "copyright" append }}
 			

@@ -6,6 +6,8 @@ require_once 'Compiler/Compiler.php';
 
 class Template
 {
+	const TPL_EXT = '.tpl';
+	
 	const TPL_DIR = 'templates/';
 	const CACHE_DIR = 'cache/templates/';
 
@@ -22,7 +24,7 @@ class Template
 		$this->cacheFilename = static::CACHE_DIR . urlencode( $filename ) . '.php';
 
 		// Get string to render
-		$string = file_get_contents( static::TPL_DIR . $filename );
+		$string = file_get_contents( static::TPL_DIR . $filename . static::TPL_EXT );
 
 		// Tokenize the string
 		$lexer = new Lexer();
@@ -47,7 +49,7 @@ class Template
 		$this->cacheFilename = static::HEAD_DIR . urlencode( $filename ) . '.php';
 
 		// Get string to render
-		$string = file_get_contents( static::TPL_DIR . $filename );
+		$string = file_get_contents( static::TPL_DIR . $filename . static::TPL_EXT );
 
 		// Tokenize the string
 		$lexer = new Lexer();
@@ -75,7 +77,7 @@ class Template
 		$this->cacheFilename = static::BODY_DIR . urlencode( $filename ) . '.php';
 
 		// Get string to render
-		$string = file_get_contents( static::TPL_DIR . $filename );
+		$string = file_get_contents( static::TPL_DIR . $filename . static::TPL_EXT );
 
 		// Tokenize the string
 		$lexer = new Lexer();
