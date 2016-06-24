@@ -2,6 +2,10 @@
 
 	<h1><?php $this->getBlock( 'title') ?></h1>
 
-	<?php $this->getBlock( 'nav') ?>
-
+	<nav>
+		<ul>
+			<?php $this->getBlock( 'nav') ?>
+		</ul>
+	</nav>
+	
 </header>

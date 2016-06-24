@@ -42,6 +42,7 @@ class Parser implements ParserInterface
 		$this->parseExtends();
 		$this->parseBlock();
 		$this->parseIf();
+		$this->parseFor();
 		$this->parseLoop();
 		$this->parseRaw();
 		$this->parseInclude();
@@ -151,6 +152,32 @@ class Parser implements ParserInterface
 		}
 	}
 
+	private function parseFor()
+	{
+		if( $this->accept( Token::T_IDENT, 'for' ) )
+		{
+			$this->traverseUp();
+			$this->accept( Token::T_VAR );
+			$this->setAttribute();
+			
+			$this->skip( Token::T_IDENT, 'in' );
+			
+			$this->accept( Token::T_VAR );
+			$this->setAttribute();
+			
+			$this->skip( Token::T_CLOSING_TAG );
+			
+			$this->parseOutsideTag();
+
+			$this->skip( Token::T_OPENING_TAG );
+			$this->skip( Token::T_IDENT, '/for' );
+			$this->skip( Token::T_CLOSING_TAG );
+			
+			$this->traverseDown();
+			$this->parseOutsideTag();
+		}
+	}
+	
 	private function parseLoop()
 	{
 		if( $this->accept( Token::T_IDENT, 'loop' ) )

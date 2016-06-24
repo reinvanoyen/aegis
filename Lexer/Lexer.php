@@ -233,12 +233,6 @@ class Lexer implements LexerInterface
 		$this->advanceCursor();
 	}
 
-	private function debug()
-	{
-		echo $this->cursor . ' > "' . $this->current_char . '"<br />';
-		echo $this->end . '<br />';
-	}
-
 	private function getCharAtCursor()
 	{
 		return $this->input[ $this->cursor ];

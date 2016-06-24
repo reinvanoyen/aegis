@@ -1,28 +1,46 @@
-{{ extends "base.tpl" }}
+{{ extends @page.basetpl + ".tpl" }}
 
 	{{ block "title" }}Welcome to my webpage{{ /block }}
 
 	{{ block "body" }}
 
 		<div id="wrapper">
-
+			
 			{{ extends "header.tpl" }}
-
-				{{ block "title" prepend }}{{ @page.title }} - {{ /block }}
-
+			
+				{{ block "title" append }}: {{ @page.title }}{{ /block }}
+			
+				{{ block "nav" }}
+			
+					{{ for @p in @pages }}
+			
+						<li><a href="#" title="{{ @p.title }}">{{ @p.title }}</a></li>
+			
+					{{ /for }}
+			
+				{{ /block }}
+			
 			{{ /extends }}
-
+			
 			{{ block "main" }}
+
 				<div id="main">
+					
 					{{ include @page.inc + ".tpl" }}
+					
 				</div>
+
 			{{ /block }}
 
 			{{ extends "footer.tpl" }}
-
+			
 				{{ block "copyright" append }}
-
-					{{ loop 5 }} - <a href="#">{{ @page.title }}</a>{{ /loop }}
+			
+					{{ for @p in @pages }}
+			
+						- <a href="#" title="{{ @p.title }}">{{ @p.title }}</a>
+			
+					{{ /for }}
 
 				{{ /block }}
 

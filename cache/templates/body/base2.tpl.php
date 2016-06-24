@@ -6,7 +6,11 @@
 </head>
 
 <body>
+	
+	<h1>Dit is een uitgebreidere base!</h1>
+	
 	<?php $this->getBlock( 'body') ?>
+	
 </body>
 
 </html>
