@@ -2,7 +2,7 @@
 
 require_once 'Node.php';
 
-class Text extends Node
+class StringNode extends Node
 {
 	private $value;
 
@@ -13,6 +13,6 @@ class Text extends Node
 
 	public function compile( $compiler )
 	{
-		$compiler->write( $this->value );
+		$compiler->write( '\'' . $this->value . '\'' );
 	}
 }

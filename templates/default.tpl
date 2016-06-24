@@ -24,15 +24,24 @@
 			
 			{{ block "main" }}
 				<div id="main">
+					
+					{{ if @page.include === "main" }}
+						
+						{{ @page.include }}
+					
+					{{ /if }}
+					
 					{{ include @page.include }}
+					
 				</div>
+			
 			{{ /block }}
 
 			{{ extends "footer" }}
 			
 				{{ block "copyright" append }}
 			
-					{{ for @page in @pages }}
+					{{ for @p in @pages }}
 			
 						- <a href="#" title="{{ @p.title }}">{{ @p.title }}</a>
 			

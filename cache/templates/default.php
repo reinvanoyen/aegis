@@ -14,13 +14,22 @@
 			
 			<?php $this->setBlock( 'main', function() { ?>
 				<div id="main">
+					
+					<?php if( $this->page->include === 'main' ): ?>
+						
+						<?php echo htmlspecialchars($this->page->include); ?>
+					
+					<?php endif; ?>
+					
 					<?php $this->render($this->page->include); ?>
+					
 				</div>
+			
 			<?php } ) ?><?php $this->getBlock( 'main') ?>
 
 			<?php $this->renderHead( 'footer'); ?><?php $this->appendBlock( 'copyright', function() { ?>
 			
-					<?php foreach($this->pages as $this->page): ?>
+					<?php foreach($this->pages as $this->p): ?>
 			
 						- <a href="#" title="<?php echo htmlspecialchars($this->p->title); ?>"><?php echo htmlspecialchars($this->p->title); ?></a>
 			

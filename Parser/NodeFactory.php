@@ -3,12 +3,12 @@
 require_once 'Node/Expression.php';
 require_once 'Node/ExtendNode.php';
 require_once 'Node/IfNode.php';
-require_once 'Node/Text.php';
+require_once 'Node/TextNode.php';
 require_once 'Node/BlockNode.php';
 require_once 'Node/OptionNode.php';
 require_once 'Node/Variable.php';
 require_once 'Node/Operator.php';
-require_once 'Node/String.php';
+require_once 'Node/StringNode.php';
 require_once 'Node/Number.php';
 require_once 'Node/RawNode.php';
 require_once 'Node/IncludeNode.php';
@@ -23,12 +23,12 @@ class NodeFactory
 		{
 			case Token::T_TEXT:
 
-				return new Text( $value );
+				return new TextNode( $value );
 				break;
 
 			case Token::T_STRING:
 
-				return new String( $value );
+				return new StringNode( $value );
 				break;
 
 			case Token::T_NUMBER:
