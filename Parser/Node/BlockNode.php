@@ -7,14 +7,28 @@ class BlockNode extends Node
 {
 	public function compile( $compiler )
 	{
-		$compiler->head( '<?php $this->setBlock( ' );
+		$nameAttr = $this->getAttribute( 0 );
+		$subcompiler = new Compiler( $nameAttr );
+		$name = $subcompiler->compile();
 
-		foreach( $this->getAttributes() as $a )
+		$blockHeadFunction = 'setBlock';
+
+		if( $this->getAttribute( 1 ) )
 		{
-			$subcompiler = new Compiler( $a );
-			$compiler->head( $subcompiler->compile() );
+			$optionAttr = $this->getAttribute( 1 );
+
+			if( $optionAttr->value === 'prepend' )
+			{
+				$blockHeadFunction = 'prependBlock';
+			}
+			else if( $optionAttr->value === 'append' )
+			{
+				$blockHeadFunction = 'appendBlock';
+			}
 		}
 
+		$compiler->head( '<?php $this->' . $blockHeadFunction . '( ' );
+		$compiler->head( $name );
 		$compiler->head( ', function() { ?>' );
 
 		foreach( $this->getChildren() as $c )
@@ -26,13 +40,7 @@ class BlockNode extends Node
 		$compiler->head( '<?php } ) ?>' );
 
 		$compiler->write( '<?php $this->getBlock( ' );
-
-		foreach( $this->getAttributes() as $a )
-		{
-			$subcompiler = new Compiler( $a );
-			$compiler->write( $subcompiler->compile() );
-		}
-
+		$compiler->write( $name );
 		$compiler->write( ') ?>' );
 	}
 }

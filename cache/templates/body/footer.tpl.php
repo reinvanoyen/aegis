@@ -4,6 +4,8 @@
 
 	<?php $this->getBlock( 'footer') ?>
 
-	<?php $this->getBlock( 'copyright') ?>
+	<div id="bottom">
+		<?php $this->getBlock( 'copyright') ?>
+	</div>
 
 </footer>

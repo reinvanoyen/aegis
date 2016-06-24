@@ -198,6 +198,12 @@ class Parser implements ParserInterface
 			$this->traverseUp();
 			$this->parseAttribute();
 			$this->setAttribute();
+
+			if( $this->accept( Token::T_IDENT, 'prepend' ) || $this->accept( Token::T_IDENT, 'append' ) )
+			{
+				$this->setAttribute();
+			}
+
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->parseOutsideTag();

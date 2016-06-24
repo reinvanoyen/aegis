@@ -8,7 +8,7 @@
 
 			{{ extends "header.tpl" }}
 
-				{{ block "title" }}{{ @page.title }}{{ /block }}
+				{{ block "title" prepend }}{{ @page.title }} - {{ /block }}
 
 			{{ /extends }}
 
@@ -18,7 +18,15 @@
 				</div>
 			{{ /block }}
 
-			{{ extends "footer.tpl" }}{{ /extends }}
+			{{ extends "footer.tpl" }}
+
+				{{ block "copyright" append }}
+
+					{{ loop 5 }} - <a href="#">{{ @page.title }}</a>{{ /loop }}
+
+				{{ /block }}
+
+			{{ /extends }}
 
 		</div>
 

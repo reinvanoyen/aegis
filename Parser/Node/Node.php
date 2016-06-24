@@ -20,6 +20,11 @@ abstract class Node
 		return $this->isAttribute;
 	}
 
+	public function getAttribute( $i )
+	{
+		return ( isset( $this->attributes[ $i ] ) ? $this->attributes[ $i ] : NULL );
+	}
+
 	public function getAttributes()
 	{
 		return $this->attributes;

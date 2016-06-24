@@ -6,10 +6,10 @@
 		Ok this is epic
 	{{ /block }}
 
-	{{ block "copyright" }}
-		<div id="bottom">
+	<div id="bottom">
+		{{ block "copyright" }}
 			&copy; {{ @page.title }}
-		</div>
-	{{ /block }}
+		{{ /block }}
+	</div>
 
 </footer>

@@ -117,11 +117,24 @@ class Template
 
 	public function setBlock( $id, $callable )
 	{
-		$this->blocks[ $id ] = $callable;
+		$this->blocks[ $id ] = [ $callable ];
+	}
+
+	public function appendBlock( $id, $callable )
+	{
+		$this->blocks[ $id ][] = $callable;
+	}
+
+	public function prependBlock( $id, $callable )
+	{
+		array_unshift( $this->blocks[ $id ], $callable );
 	}
 
 	public function getBlock( $id )
 	{
-		$this->blocks[ $id ]();
+		foreach( $this->blocks[ $id ] as $callable )
+		{
+			$callable();
+		}
 	}
 }

@@ -1,10 +1,12 @@
 <header>
 
-	<h1>{{ block "title" }}Default title{{ /block }}</h1>
+	<h1>{{ block "title" }}Website name{{ /block }}</h1>
 
 	{{ block "nav" }}
 
-		Hello dit is de navigatie block!
+		<ul>
+			{{ loop 5 }}<li>Dit is default</li>{{ /loop }}
+		</ul>
 
 	{{ /block }}
 
