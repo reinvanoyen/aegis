@@ -12,14 +12,22 @@ class IfNode extends Node
 		}
 	}
 	
-	public function compile()
+	public function compile( $compiler )
 	{
-		$output = '<?php if( ' . $this->getCompiledAttributes() . ' ): ?>';
+		$compiler->write('<?php if( ' );
 
-		$output .= $this->getCompiledChildren();
+		foreach( $this->getAttributes() as $a )
+		{
+			$a->compile( $compiler );
+		}
 
-		$output .= '<?php endif; ?>';
+		$compiler->write( ' ): ?>');
+		
+		foreach( $this->getChildren() as $c )
+		{
+			$c->compile( $compiler );
+		}
 
-		return $output;
+		$compiler->write( '<?php endif; ?>' );
 	}
 }

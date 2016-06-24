@@ -2,20 +2,40 @@
 
 class Compiler
 {
-	public $parsedTree;
+	private $input;
 
-	public function __construct( Node $parsedTree )
-	{
-		$this->parsedTree = $parsedTree;
-	}
+	private $head = '';
+	private $body = '';
 
-	public function run()
+	public function __construct( Node $input )
 	{
-		$this->parsedTree->run();
+		$this->input = $input;
 	}
 
 	public function compile()
 	{
-		return $this->parsedTree->compile();
+		$this->input->compile( $this );
+
+		return $this->getHead() . $this->getBody();
+	}
+
+	public function getHead()
+	{
+		return $this->head;
+	}
+
+	public function getBody()
+	{
+		return $this->body;
+	}
+
+	public function head( $string )
+	{
+		$this->head .= $string;
+	}
+
+	public function write( $string )
+	{
+		$this->body .= $string;
 	}
 }

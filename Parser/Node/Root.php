@@ -12,15 +12,11 @@ class Root extends Node
 		}
 	}
 
-	public function compile()
+	public function compile( $compiler )
 	{
-		$output = '';
-
 		foreach( $this->getChildren() as $c )
 		{
-			$output .= $c->compile();
+			$c->compile( $compiler );
 		}
-
-		return $output;
 	}
 }

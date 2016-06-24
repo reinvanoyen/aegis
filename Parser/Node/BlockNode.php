@@ -1,28 +1,38 @@
 <?php
 
 require_once 'Node.php';
-require_once 'Template/Renderer.php';
+require_once 'Compiler/Compiler.php';
 
 class BlockNode extends Node
 {
-	public $id;
-
-	public function run()
+	public function compile( $compiler )
 	{
-		$runtime = Renderer::$runtime;
+		$compiler->head( '<?php $this->setBlock( ' );
 
-		$expr = $this->getCompiledAttributes();
-		$this->id = $runtime->evaluateExpression( $expr );
+		foreach( $this->getAttributes() as $a )
+		{
+			$subcompiler = new Compiler( $a );
+			$compiler->head( $subcompiler->compile() );
+		}
 
-		$filename = Renderer::$cache_dir . count( $runtime->blocks ) . '-' . urlencode( 'block-' . Renderer::$filename ) . '.php';
-		$runtime->setBlock( $this->id, $filename );
+		$compiler->head( ', function() { ?>' );
 
-		$content = $this->getCompiledChildren();
-		file_put_contents( $filename, $content );
-	}
+		foreach( $this->getChildren() as $c )
+		{
+			$subcompiler = new Compiler( $c );
+			$compiler->head( $subcompiler->compile() );
+		}
 
-	public function compile()
-	{
-		return '<?php require $this->getBlock( \'' . $this->id . '\' ) ?>';
+		$compiler->head( '<?php } ) ?>' );
+
+		$compiler->write( '<?php $this->getBlock( ' );
+
+		foreach( $this->getAttributes() as $a )
+		{
+			$subcompiler = new Compiler( $a );
+			$compiler->write( $subcompiler->compile() );
+		}
+
+		$compiler->write( ') ?>' );
 	}
 }

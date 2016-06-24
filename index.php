@@ -3,14 +3,16 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once 'Template/Renderer.php';
+require_once 'Template/Template.php';
 
 class Page
 {
 	public $title = 'Home';
-	public $block = 'side';
+	public $inc = 'side';
+	public $count = 10;
 }
 
-$tpl = new Renderer();
+$tpl = new Template();
 $tpl->page = new Page();
-$tpl->render( 'default2.tpl' );
+$tpl->inc = 'side';
+$tpl->render( 'default.tpl' );

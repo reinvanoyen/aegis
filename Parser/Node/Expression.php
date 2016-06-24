@@ -4,17 +4,25 @@ require_once 'Node.php';
 
 class Expression extends Node
 {
-	public function run()
-	{
-	}
-	
-	public function compile()
+	public function compile( $compiler )
 	{
 		if( $this->isAttribute() )
 		{
-			return $this->getCompiledChildren();
+			foreach( $this->getChildren() as $c )
+			{
+				$c->compile( $compiler );
+			}
 		}
-		
-		return '<?php echo htmlspecialchars(' . $this->getCompiledChildren() . '); ?>';
+		else
+		{
+			$compiler->write( '<?php echo htmlspecialchars(' );
+
+			foreach( $this->getChildren() as $c )
+			{
+				$c->compile( $compiler );
+			}
+
+			$compiler->write( '); ?>' );
+		}
 	}
 }

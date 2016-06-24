@@ -1,11 +1,15 @@
-{{ extends "base.tpl" }}
+<h1>Rendering {{ @page.title }}</h1>
 
-{{ block @page.block }}
+{{ block "main" }}
 
-	rendering in {{ @page.block }}
+	<h2>block main {{ @page.title }}</h2>
 
-	{{ loop 5 }}
-		{{ @page.title }}
-	{{ /loop }}
+	{{ include @page.inc + ".tpl" }}
+
+	{{ if @page.title === "Home" }}
+
+		<br />OK NICE
+
+	{{ /if }}
 
 {{ /block }}

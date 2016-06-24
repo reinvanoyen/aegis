@@ -3,14 +3,16 @@
 require_once 'Lexer/Lexer.php';
 require_once 'Parser/Parser.php';
 require_once 'Compiler/Compiler.php';
-require_once 'Template/Runtime.php';
 
-class Renderer
+class Template
 {
 	const TPL_DIR = 'templates/';
 	const CACHE_DIR = 'cache/templates/';
 
 	private $cacheFilename;
+
+	private $variables = [];
+	private $blocks = [];
 
 	public function render( $filename )
 	{
@@ -30,11 +32,42 @@ class Renderer
 		// Create the compiler
 		$compiler = new Compiler( $parsedTree );
 
-		// Run the code
-		$compiler->run();
-
+		// Compile and save
 		file_put_contents( $this->cacheFilename, $compiler->compile() );
 
+		// Execute
+		$this->execute();
+	}
+
+	private function execute()
+	{
 		require $this->cacheFilename;
+	}
+	
+	// Runtime
+
+	public function __get( $k )
+	{
+		return $this->variables[ $k ];
+	}
+
+	public function __set( $k, $v )
+	{
+		$this->variables[ $k ] = $v;
+	}
+
+	public function setBlock( $id, $callable )
+	{
+		$this->blocks[ $id ] = $callable;
+	}
+
+	public function getBlock( $id )
+	{
+		$this->blocks[ $id ]();
+	}
+	
+	public function extend( $filename )
+	{
+		$this->render( $filename );
 	}
 }
