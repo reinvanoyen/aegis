@@ -102,7 +102,13 @@ class Parser implements ParserInterface
 				{
 					$this->traverseDown();
 				}
+				
+				$this->setAttribute();
 			}
+		}
+		else
+		{
+			throw new SyntaxError( 'Missing attribute for node ' . $this->scope->getName() . ', got ' . $this->getCurrentToken()->getName() );
 		}
 	}
 
@@ -112,7 +118,6 @@ class Parser implements ParserInterface
 		{
 			$this->traverseUp();
 			$this->parseAttribute();
-			$this->setAttribute();
 			$this->skip( Token::T_CLOSING_TAG );
 			$this->traverseDown();
 			$this->parseOutsideTag();
@@ -125,7 +130,6 @@ class Parser implements ParserInterface
 		{
 			$this->traverseUp();
 			$this->parseAttribute();
-			$this->setAttribute();
 			$this->skip( Token::T_CLOSING_TAG );
 			$this->traverseDown();
 			$this->parseOutsideTag();
@@ -138,7 +142,6 @@ class Parser implements ParserInterface
 		{
 			$this->traverseUp();
 			$this->parseAttribute();
-			$this->setAttribute();
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->parseOutsideTag();
@@ -157,12 +160,12 @@ class Parser implements ParserInterface
 		if( $this->accept( Token::T_IDENT, 'for' ) )
 		{
 			$this->traverseUp();
-			$this->accept( Token::T_VAR );
+			$this->expect( Token::T_VAR );
 			$this->setAttribute();
 			
 			$this->skip( Token::T_IDENT, 'in' );
 			
-			$this->accept( Token::T_VAR );
+			$this->expect( Token::T_VAR );
 			$this->setAttribute();
 			
 			$this->skip( Token::T_CLOSING_TAG );
@@ -184,7 +187,6 @@ class Parser implements ParserInterface
 		{
 			$this->traverseUp();
 			$this->parseAttribute();
-			$this->setAttribute();
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->parseOutsideTag();
@@ -204,7 +206,6 @@ class Parser implements ParserInterface
 		{
 			$this->traverseUp();
 			$this->parseAttribute();
-			$this->setAttribute();
 			$this->skip( Token::T_CLOSING_TAG );
 
 			$this->parseOutsideTag();
@@ -224,7 +225,6 @@ class Parser implements ParserInterface
 		{
 			$this->traverseUp();
 			$this->parseAttribute();
-			$this->setAttribute();
 
 			if( $this->accept( Token::T_IDENT, 'prepend' ) || $this->accept( Token::T_IDENT, 'append' ) )
 			{
@@ -248,7 +248,7 @@ class Parser implements ParserInterface
 	{
 		if( ! $this->accept( $type, $value ) )
 		{
-			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken()->getType() );
+			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken()->getName() . ' (' . $this->getCurrentToken()->getType() . ')' );
 		}
 	}
 

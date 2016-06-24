@@ -1,0 +1,1 @@
+<?php $this->setBlock( 'title', function() { ?><?php } ) ?><?php $this->setBlock( 'body', function() { ?><?php } ) ?>

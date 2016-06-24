@@ -1,4 +1,4 @@
-{{ extends @page.basetpl }}
+{{ extends @page.base }}
 
 	{{ block "title" }}Welcome to my webpage{{ /block }}
 
@@ -23,20 +23,16 @@
 			{{ /extends }}
 			
 			{{ block "main" }}
-
 				<div id="main">
-					
-					{{ include @page.inc }}
-					
+					{{ include @page.include }}
 				</div>
-
 			{{ /block }}
 
 			{{ extends "footer" }}
 			
 				{{ block "copyright" append }}
 			
-					{{ for @p in @pages }}
+					{{ for @page in @pages }}
 			
 						- <a href="#" title="{{ @p.title }}">{{ @p.title }}</a>
 			

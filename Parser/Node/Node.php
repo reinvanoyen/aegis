@@ -70,5 +70,10 @@ abstract class Node
 		$this->children[] = $node;
 	}
 
+	public function getName()
+	{
+		return get_class( $this );
+	}
+	
 	abstract public function compile( $compiler );
 }
