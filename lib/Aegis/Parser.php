@@ -43,8 +43,6 @@ class Parser implements ParserInterface
 			$node::parse( $this );
 		}
 
-		$this->parseFor();
-		$this->parseLoop();
 		$this->parseRaw();
 		$this->parseInclude();
 		$this->parseExpression();
@@ -132,51 +130,6 @@ class Parser implements ParserInterface
 			$this->traverseUp();
 			$this->parseAttribute();
 			$this->skip( Token::T_CLOSING_TAG );
-			$this->traverseDown();
-			$this->parseOutsideTag();
-		}
-	}
-
-	private function parseFor()
-	{
-		if( $this->accept( Token::T_IDENT, 'for' ) )
-		{
-			$this->traverseUp();
-			$this->expect( Token::T_VAR );
-			$this->setAttribute();
-			
-			$this->skip( Token::T_IDENT, 'in' );
-			
-			$this->expect( Token::T_VAR );
-			$this->setAttribute();
-			
-			$this->skip( Token::T_CLOSING_TAG );
-			
-			$this->parseOutsideTag();
-
-			$this->skip( Token::T_OPENING_TAG );
-			$this->skip( Token::T_IDENT, '/for' );
-			$this->skip( Token::T_CLOSING_TAG );
-			
-			$this->traverseDown();
-			$this->parseOutsideTag();
-		}
-	}
-	
-	private function parseLoop()
-	{
-		if( $this->accept( Token::T_IDENT, 'loop' ) )
-		{
-			$this->traverseUp();
-			$this->parseAttribute();
-			$this->skip( Token::T_CLOSING_TAG );
-
-			$this->parseOutsideTag();
-
-			$this->skip( Token::T_OPENING_TAG );
-			$this->skip( Token::T_IDENT, '/loop' );
-			$this->skip( Token::T_CLOSING_TAG );
-
 			$this->traverseDown();
 			$this->parseOutsideTag();
 		}

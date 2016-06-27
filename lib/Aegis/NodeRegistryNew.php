@@ -8,6 +8,8 @@ class NodeRegistryNew
 		'Aegis\\Node\\ExtendNode',
 		'Aegis\\Node\\BlockNode',
 		'Aegis\\Node\\IfNode',
+		'Aegis\\Node\\LoopNode',
+
 		/*
 		'Aegis\\Node\\Expression',
 		'Aegis\\Node\\ForNode',
