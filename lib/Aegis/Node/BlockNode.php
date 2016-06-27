@@ -3,9 +3,34 @@
 namespace Aegis\Node;
 
 use Aegis\Compiler;
+use Aegis\Token;
 
 class BlockNode extends Node
 {
+	public static function parse( $parser )
+	{
+		if( $parser->accept( Token::T_IDENT, 'block' ) ) {
+
+			$parser->traverseUp();
+			$parser->parseAttribute();
+
+			if( $parser->accept( Token::T_IDENT, 'prepend' ) || $parser->accept( Token::T_IDENT, 'append' ) ) {
+				$parser->setAttribute();
+			}
+
+			$parser->skip( Token::T_CLOSING_TAG );
+
+			$parser->parseOutsideTag();
+
+			$parser->skip( Token::T_OPENING_TAG );
+			$parser->skip( Token::T_IDENT, '/block' );
+			$parser->skip( Token::T_CLOSING_TAG );
+
+			$parser->traverseDown();
+			$parser->parseOutsideTag();
+		}
+	}
+
 	public function compile( $compiler )
 	{
 		$nameAttr = $this->getAttribute( 0 );

@@ -6,3 +6,6 @@ ini_set( 'display_errors', 1 );
 require 'autoload.php';
 
 // Your playground
+
+$tpl = new \Aegis\Template();
+$tpl->render( 'test' );

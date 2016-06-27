@@ -2,6 +2,8 @@
 
 namespace Aegis\Node;
 
+use Aegis\Compiler;
+
 abstract class Node
 {
 	public $parent = NULL;
@@ -74,6 +76,6 @@ abstract class Node
 	{
 		return get_class( $this );
 	}
-	
+
 	abstract public function compile( $compiler );
 }
