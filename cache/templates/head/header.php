@@ -1,1 +1,0 @@
-<?php $this->setBlock( 'title', function() { ?><?php echo htmlspecialchars($this->sitename); ?><?php } ) ?><?php $this->setBlock( 'nav', function() { ?><?php } ) ?>

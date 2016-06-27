@@ -1,5 +1,19 @@
 {
-	"require-dev": {
-		"phpunit/phpunit": "5.0.*"
-	}
+    "name": "reinvanoyen/aegis",
+    "type": "library",
+    "description": "Extendable template engine",
+    "keywords": [ "template engine", "templating" ],
+    "authors": [
+      {
+        "name": "Rein Van Oyen",
+        "email": "reinvanoyen@gmail.com",
+        "role": "Developer"
+      }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "5.0.*"
+    },
+    "autoload": {
+      "psr-4": { "Aegis\\": "lib" }
+    }
 }
