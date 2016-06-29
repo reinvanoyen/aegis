@@ -7,6 +7,10 @@ require 'autoload.php';
 
 // Your playground
 
+require 'TestNode.php';
+
+\Aegis\NodeRegistry::register( 'TestNode' );
+
 $tpl = new \Aegis\Template();
 $tpl->title = 'test';
 $tpl->render( 'test' );
