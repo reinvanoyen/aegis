@@ -2,7 +2,13 @@
 
 	{{ block "main" prepend }}
 
-		nice
+		nice {{ "something " + 5 }}
+
+		{{ loop 5 }}
+
+			{{ raw "<strong>ok</strong>" }}
+
+		{{ /loop }}
 
 	{{ /block }}
 

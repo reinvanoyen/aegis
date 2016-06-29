@@ -9,12 +9,13 @@ class NodeRegistryNew
 		'Aegis\\Node\\BlockNode',
 		'Aegis\\Node\\IfNode',
 		'Aegis\\Node\\LoopNode',
-
-		/*
-		'Aegis\\Node\\Expression',
+		'Aegis\\Node\\RawNode',
 		'Aegis\\Node\\ForNode',
+		'Aegis\\Node\\Expression',
+		/*
 		'Aegis\\Node\\LoopNode',
-		'Aegis\\Node\\Number',*/
+		'Aegis\\Node\\Number',
+		*/
 	];
 
 	public static function register( $mixed )

@@ -11,7 +11,7 @@ class Parser implements ParserInterface
 
 	private $tokens;
 	private $cursor;
-	private $last_token_index;
+	private $lastTokenIndex;
 
 	public function parse( TokenStream $stream )
 	{
@@ -19,7 +19,7 @@ class Parser implements ParserInterface
 		$this->scope = $this->root;
 		$this->cursor = 0;
 		$this->tokens = $stream->getTokens();
-		$this->last_token_index = count( $this->tokens ) - 1;
+		$this->lastTokenIndex = count( $this->tokens ) - 1;
 
 		$this->parseOutsideTag();
 
@@ -30,8 +30,8 @@ class Parser implements ParserInterface
 	{
 		$this->accept( Token::T_TEXT );
 
-		if( $this->skip( Token::T_OPENING_TAG ) )
-		{
+		if( $this->skip( Token::T_OPENING_TAG ) ) {
+
 			$this->parseStatement();
 		}
 	}
@@ -41,40 +41,6 @@ class Parser implements ParserInterface
 		foreach( NodeRegistryNew::getNodes() as $node ) {
 
 			$node::parse( $this );
-		}
-
-		$this->parseRaw();
-		$this->parseInclude();
-		$this->parseExpression();
-	}
-
-	private function parseExpression()
-	{
-		if(
-			$this->accept( Token::T_VAR ) ||
-			$this->accept( Token::T_STRING ) ||
-			$this->accept( Token::T_NUMBER )
-		)
-		{
-			if( ! $this->scope instanceof Expression )
-			{
-				$this->wrap( new Node\Expression() );
-			}
-
-			if( $this->accept( Token::T_OP ) )
-			{
-				$this->parseExpression();
-			}
-
-			if( $this->skip( Token::T_CLOSING_TAG ) )
-			{
-				if( $this->scope instanceof Node\Expression )
-				{
-					$this->traverseDown();
-				}
-
-				$this->parseOutsideTag();
-			}
 		}
 	}
 
@@ -86,78 +52,52 @@ class Parser implements ParserInterface
 			$this->accept( Token::T_NUMBER )
 		)
 		{
-			if( ! $this->scope instanceof Node\Expression )
-			{
+			if( ! $this->scope instanceof Node\Expression ) {
+
 				$this->wrap( new Node\Expression() );
 			}
 
-			if( $this->accept( Token::T_OP ) )
-			{
+			if( $this->accept( Token::T_OP ) ) {
+
 				$this->parseAttribute();
-			}
-			else
-			{
-				if( $this->scope instanceof Node\Expression )
-				{
+
+			} else {
+
+				if( $this->scope instanceof Node\Expression ) {
+
 					$this->traverseDown();
 				}
 				
 				$this->setAttribute();
 			}
-		}
-		else
-		{
+
+		} else {
+
 			throw new SyntaxError( 'Missing attribute for node ' . $this->scope->getName() . ', got ' . $this->getCurrentToken()->getName() );
-		}
-	}
-
-	private function parseRaw()
-	{
-		if( $this->accept( Token::T_IDENT, 'raw' ) || $this->accept( Token::T_IDENT, 'r' ) )
-		{
-			$this->traverseUp();
-			$this->parseAttribute();
-			$this->skip( Token::T_CLOSING_TAG );
-			$this->traverseDown();
-			$this->parseOutsideTag();
-		}
-	}
-
-	private function parseInclude()
-	{
-		if( $this->accept( Token::T_IDENT, 'include' ) )
-		{
-			$this->traverseUp();
-			$this->parseAttribute();
-			$this->skip( Token::T_CLOSING_TAG );
-			$this->traverseDown();
-			$this->parseOutsideTag();
 		}
 	}
 
 	public function expect( $type, $value = NULL )
 	{
-		if( ! $this->accept( $type, $value ) )
-		{
+		if( ! $this->accept( $type, $value ) ) {
+
 			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken() );
 		}
 	}
 
 	public function skip( $type, $value = NULL )
 	{
-		if( $this->getCurrentToken()->getType() === $type )
-		{
-			if( $value )
-			{
-				if( $this->getCurrentToken()->getValue() === $value )
-				{
+		if( $this->getCurrentToken()->getType() === $type ) {
+
+			if( $value ) {
+
+				if( $this->getCurrentToken()->getValue() === $value ) {
+
 					$this->advance();
 					return TRUE;
 				}
-				else
-				{
-					return FALSE;
-				}
+
+				return FALSE;
 			}
 			
 			$this->advance();
@@ -169,22 +109,20 @@ class Parser implements ParserInterface
 
 	public function accept( $type, $value = NULL )
 	{
-		if( $this->getCurrentToken()->getType() === $type )
-		{
-			if( $value )
-			{
-				if( $this->getCurrentToken()->getValue() === $value )
-				{
+		if( $this->getCurrentToken()->getType() === $type ) {
+
+			if( $value ) {
+
+				if( $this->getCurrentToken()->getValue() === $value ) {
+
 					//NodeRegistryNew::create( $type, $this->getCurrentToken()->getValue() );
 
 					$this->insert( NodeRegistry::create( $type, $this->getCurrentToken()->getValue() ) );
 					$this->advance();
 					return TRUE;
 				}
-				else
-				{
-					return FALSE;
-				}
+
+				return FALSE;
 			}
 
 			//NodeRegistryNew::create( $type, $this->getCurrentToken()->getValue() );
@@ -207,6 +145,16 @@ class Parser implements ParserInterface
 		$this->scope = $scope;
 	}
 
+	public function getScope()
+	{
+		return $this->scope;
+	}
+
+	public function getRoot()
+	{
+		return $this->root;
+	}
+
 	public function traverseUp()
 	{
 		$this->scope = $this->scope->getLastChild();
@@ -224,8 +172,8 @@ class Parser implements ParserInterface
 
 	public function advance()
 	{
-		if( $this->cursor < count( $this->tokens ) - 1 )
-		{
+		if( $this->cursor < count( $this->tokens ) - 1 ) {
+
 			$this->cursor++;
 		}
 	}
@@ -256,10 +204,5 @@ class Parser implements ParserInterface
 	{
 		$node->parent = $this->scope;
 		$this->scope->insert( $node );
-	}
-
-	public function getRoot()
-	{
-		return $this->root;
 	}
 }
