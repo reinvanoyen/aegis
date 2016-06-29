@@ -10,6 +10,9 @@ class RawNode extends Node
 	{
 		if( $parser->accept( Token::T_IDENT, 'raw' ) || $parser->accept( Token::T_IDENT, 'r' ) ) {
 
+			$parser->insert( new static() );
+			$parser->advance();
+
 			$parser->traverseUp();
 			$parser->parseAttribute();
 			$parser->skip( Token::T_CLOSING_TAG );

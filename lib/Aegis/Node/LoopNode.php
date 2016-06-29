@@ -10,6 +10,9 @@ class LoopNode extends Node
 	{
 		if( $parser->accept( Token::T_IDENT, 'loop' ) ) {
 
+			$parser->insert( new static() );
+			$parser->advance();
+
 			$parser->traverseUp();
 			$parser->parseAttribute();
 			$parser->skip( Token::T_CLOSING_TAG );

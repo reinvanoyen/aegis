@@ -28,7 +28,11 @@ class Parser implements ParserInterface
 
 	public function parseOutsideTag()
 	{
-		$this->accept( Token::T_TEXT );
+		if( $this->accept( Token::T_TEXT ) ) {
+
+			$this->insert( new Node\TextNode( $this->getCurrentToken()->getValue() ) );
+			$this->advance();
+		}
 
 		if( $this->skip( Token::T_OPENING_TAG ) ) {
 
@@ -38,7 +42,7 @@ class Parser implements ParserInterface
 
 	private function parseStatement()
 	{
-		foreach( NodeRegistryNew::getNodes() as $node ) {
+		foreach( NodeRegistry::getNodes() as $node ) {
 
 			$node::parse( $this );
 		}
@@ -52,28 +56,47 @@ class Parser implements ParserInterface
 			$this->accept( Token::T_NUMBER )
 		)
 		{
-			if( ! $this->scope instanceof Node\Expression ) {
+			if( $this->getCurrentToken()->getType() === Token::T_VAR ) {
+
+				$this->insert( new Node\VariableNode( $this->getCurrentToken()->getValue() ) );
+				$this->advance();
+
+			} else if( $this->getCurrentToken()->getType() === Token::T_STRING ) {
+
+				$this->insert( new Node\StringNode( $this->getCurrentToken()->getValue() ) );
+				$this->advance();
+
+			} else if( $this->getCurrentToken()->getType() === Token::T_NUMBER ) {
+
+				$this->insert( new Node\Number( $this->getCurrentToken()->getValue() ) );
+				$this->advance();
+			}
+
+			if( ! $this->getScope() instanceof Node\Expression ) {
 
 				$this->wrap( new Node\Expression() );
 			}
 
 			if( $this->accept( Token::T_OP ) ) {
 
+				$this->insert( new Node\Operator( $this->getCurrentToken()->getValue() ) );
+				$this->advance();
+
 				$this->parseAttribute();
 
 			} else {
 
-				if( $this->scope instanceof Node\Expression ) {
+				if( $this->getScope() instanceof Node\Expression ) {
 
 					$this->traverseDown();
 				}
-				
+
 				$this->setAttribute();
 			}
 
 		} else {
 
-			throw new SyntaxError( 'Missing attribute for node ' . $this->scope->getName() . ', got ' . $this->getCurrentToken()->getName() );
+			throw new SyntaxError( 'Missing attribute for node ' . $this->getScope()->getName() . ', got ' . $this->getCurrentToken()->getName() );
 		}
 	}
 
@@ -83,8 +106,10 @@ class Parser implements ParserInterface
 
 			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken() );
 		}
-	}
 
+		return TRUE;
+	}
+	
 	public function skip( $type, $value = NULL )
 	{
 		if( $this->getCurrentToken()->getType() === $type ) {
@@ -115,20 +140,12 @@ class Parser implements ParserInterface
 
 				if( $this->getCurrentToken()->getValue() === $value ) {
 
-					//NodeRegistryNew::create( $type, $this->getCurrentToken()->getValue() );
-
-					$this->insert( NodeRegistry::create( $type, $this->getCurrentToken()->getValue() ) );
-					$this->advance();
 					return TRUE;
 				}
 
 				return FALSE;
 			}
-
-			//NodeRegistryNew::create( $type, $this->getCurrentToken()->getValue() );
-
-			$this->insert( NodeRegistry::create( $type, $this->getCurrentToken()->getValue() ) );
-			$this->advance();
+			
 			return TRUE;
 		}
 

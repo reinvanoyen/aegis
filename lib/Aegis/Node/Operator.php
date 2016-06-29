@@ -13,12 +13,12 @@ class Operator extends Node
 
 	public function compile( $compiler )
 	{
-		if( $this->type === '+' )
-		{
+		if( $this->type === '+' ) {
+
 			$compiler->write( ' . ' );
-		}
-		else
-		{
+
+		} else {
+
 			$compiler->write( ' ' . $this->type . ' ' );
 		}
 	}

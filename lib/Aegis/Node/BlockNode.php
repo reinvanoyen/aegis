@@ -11,11 +11,17 @@ class BlockNode extends Node
 	{
 		if( $parser->accept( Token::T_IDENT, 'block' ) ) {
 
+			$parser->insert( new static() );
+			$parser->advance();
+
 			$parser->traverseUp();
 			$parser->parseAttribute();
 
 			if( $parser->accept( Token::T_IDENT, 'prepend' ) || $parser->accept( Token::T_IDENT, 'append' ) ) {
+
+				$parser->insert( new OptionNode( $parser->getCurrentToken()->getValue() ) );
 				$parser->setAttribute();
+				$parser->advance();
 			}
 
 			$parser->skip( Token::T_CLOSING_TAG );
@@ -39,16 +45,16 @@ class BlockNode extends Node
 
 		$blockHeadFunction = 'setBlock';
 
-		if( $this->getAttribute( 1 ) )
-		{
+		if( $this->getAttribute( 1 ) ) {
+
 			$optionAttr = $this->getAttribute( 1 );
 
-			if( $optionAttr->value === 'prepend' )
-			{
+			if( $optionAttr->value === 'prepend' ) {
+
 				$blockHeadFunction = 'prependBlock';
-			}
-			else if( $optionAttr->value === 'append' )
-			{
+
+			} else if( $optionAttr->value === 'append' ) {
+
 				$blockHeadFunction = 'appendBlock';
 			}
 		}
@@ -57,8 +63,8 @@ class BlockNode extends Node
 		$compiler->head( $name );
 		$compiler->head( ', function() { ?>' );
 
-		foreach( $this->getChildren() as $c )
-		{
+		foreach( $this->getChildren() as $c ) {
+
 			$subcompiler = new Compiler( $c );
 			$compiler->head( $subcompiler->compile() );
 		}
@@ -67,6 +73,6 @@ class BlockNode extends Node
 
 		$compiler->write( '<?php $this->getBlock( ' );
 		$compiler->write( $name );
-		$compiler->write( ') ?>' );
+		$compiler->write( '); ?>' );
 	}
 }

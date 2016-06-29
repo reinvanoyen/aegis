@@ -1,14 +1,10 @@
 {{ extends "base" }}
 
-	{{ block "main" prepend }}
+	{{ block "main" append }}
 
-		nice {{ "something " + 5 }}
+		Does it work?<br />
 
-		{{ loop 5 }}
-
-			{{ raw "<strong>ok</strong>" }}
-
-		{{ /loop }}
+		{{ loop 5 }}{{ raw "<strong>bold</strong><br />" }}{{ /loop }}
 
 	{{ /block }}
 

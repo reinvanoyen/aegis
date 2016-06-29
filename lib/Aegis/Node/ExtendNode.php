@@ -17,6 +17,9 @@ class ExtendNode extends Node
 	{
 		if( $parser->accept( Token::T_IDENT, 'extends' ) ) {
 			
+			$parser->insert( new static() );
+			$parser->advance();
+			
 			$parser->traverseUp();
 			$parser->parseAttribute();
 			$parser->skip( Token::T_CLOSING_TAG );

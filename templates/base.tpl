@@ -1,5 +1,5 @@
 {{ block "main" }}
 
-	Ok, it works
+	{{ @title + " - something" }}
 
 {{ /block }}

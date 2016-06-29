@@ -8,4 +8,5 @@ require 'autoload.php';
 // Your playground
 
 $tpl = new \Aegis\Template();
+$tpl->title = 'test';
 $tpl->render( 'test' );
