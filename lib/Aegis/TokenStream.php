@@ -20,16 +20,4 @@ class TokenStream
 	{
 		return $this->tokens;
 	}
-
-	public function __toString()
-	{
-		$string = '';
-
-		foreach( $this->tokens as $t ) {
-			
-			$string .= $t . "<br />";
-		}
-
-		return $string;
-	}
 }
