@@ -1,14 +1,15 @@
 <?php
 
-namespace Aegis\Node;
+namespace Wireframer;
 
 use Aegis\Token;
+use Aegis\Node\Node;
 
-class RawNode extends Node
+class ButtonNode extends Node
 {
 	public static function parse( $parser )
 	{
-		if( $parser->accept( Token::T_IDENT, 'raw' ) || $parser->accept( Token::T_IDENT, 'r' ) ) {
+		if( $parser->accept( Token::T_IDENT, 'button' ) ) {
 
 			$parser->insert( new static() );
 			$parser->advance();
@@ -20,16 +21,18 @@ class RawNode extends Node
 			$parser->parseOutsideTag();
 		}
 	}
-	
+
 	public function compile( $compiler )
 	{
+		$compiler->write( '<button>' );
 		$compiler->write( '<?php echo ' );
 
 		foreach( $this->getAttributes() as $a ) {
-			
+
 			$a->compile( $compiler );
 		}
 
 		$compiler->write( '; ?>' );
+		$compiler->write( '</button>' );
 	}
 }

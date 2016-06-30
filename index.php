@@ -7,10 +7,35 @@ require 'autoload.php';
 
 // Your playground
 
-require 'TestNode.php';
+//require 'TestNode.php';
+//
+//\Aegis\NodeRegistry::register( 'TestNode' );
+//
+//$tpl = new \Aegis\Template();
+//$tpl->title = 'test';
+//$tpl->render( 'test' );
 
-\Aegis\NodeRegistry::register( 'TestNode' );
+require 'Wireframer/PageNode.php';
+require 'Wireframer/BoxNode.php';
+require 'Wireframer/HeaderNode.php';
+require 'Wireframer/NavNode.php';
+require 'Wireframer/ButtonNode.php';
+require 'Wireframer/ParagraphNode.php';
+require 'Wireframer/GridNode.php';
+require 'Wireframer/CardNode.php';
+require 'Wireframer/ImgNode.php';
+
+\Aegis\NodeRegistry::register( [
+	'Wireframer\PageNode',
+	'Wireframer\BoxNode',
+	'Wireframer\HeaderNode',
+	'Wireframer\NavNode',
+	'Wireframer\ButtonNode',
+	'Wireframer\ParagraphNode',
+	'Wireframer\GridNode',
+	'Wireframer\CardNode',
+	'Wireframer\ImgNode',
+] );
 
 $tpl = new \Aegis\Template();
-$tpl->title = 'test';
-$tpl->render( 'test' );
+$tpl->render( 'wireframer/draft' );

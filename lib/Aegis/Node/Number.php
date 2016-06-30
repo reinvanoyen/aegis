@@ -11,8 +11,13 @@ class Number extends Node
 		$this->value = $value;
 	}
 
+	public function getValue()
+	{
+		return $this->value;
+	}
+
 	public function compile( $compiler )
 	{
-		$compiler->write( $this->value );
+		$compiler->write( $this->getValue() );
 	}
 }
