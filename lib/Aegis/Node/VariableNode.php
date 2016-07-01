@@ -2,6 +2,8 @@
 
 namespace Aegis\Node;
 
+use Aegis\Token;
+
 class VariableNode extends Node
 {
 	private $name;
@@ -9,6 +11,15 @@ class VariableNode extends Node
 	public function __construct( $name )
 	{
 		$this->name = $name;
+	}
+
+	public static function parse( $parser )
+	{
+		if( $parser->accept( Token::T_VAR ) ) {
+
+			$parser->insert( new static( $parser->getCurrentToken()->getValue() ) );
+			$parser->advance();
+		}
 	}
 
 	public function compile( $compiler )

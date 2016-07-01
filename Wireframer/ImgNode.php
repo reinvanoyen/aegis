@@ -24,6 +24,6 @@ class ImgNode extends Node
 
 	public function compile( $compiler )
 	{
-		$compiler->write( '<div style="width: 100%; padding-top: 50%; background-color: #eee; border: 2px solid #ccc;"></div>' );
+		$compiler->write( '<div class="img"></div>' );
 	}
 }

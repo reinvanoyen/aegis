@@ -7,14 +7,38 @@ require 'autoload.php';
 
 // Your playground
 
-//require 'TestNode.php';
-//
-//\Aegis\NodeRegistry::register( 'TestNode' );
-//
-//$tpl = new \Aegis\Template();
-//$tpl->title = 'test';
-//$tpl->render( 'test' );
+require 'TestNode.php';
 
+\Aegis\NodeRegistry::register( 'TestNode' );
+
+$tpl = new \Aegis\Template();
+
+$tpl->setFunction( 'slugify', function( $string )
+{
+	return trim( preg_replace( '/[^\w.]+/', '-', strtolower( $string ) ), '-' );
+} );
+
+$tpl->setFunction( 'reverse', function( $string )
+{
+	return strrev( $string );
+} );
+
+$tpl->setFunction( 'sum', function( ...$numbers ) {
+
+	$sum = 0;
+
+	foreach( $numbers as $n ) {
+
+		$sum += $n;
+	}
+
+	return $sum;
+} );
+
+$tpl->title = 'test';
+$tpl->render( 'test' );
+
+/*
 require 'Wireframer/PageNode.php';
 require 'Wireframer/BoxNode.php';
 require 'Wireframer/HeaderNode.php';
@@ -39,3 +63,4 @@ require 'Wireframer/ImgNode.php';
 
 $tpl = new \Aegis\Template();
 $tpl->render( 'wireframer/draft' );
+*/

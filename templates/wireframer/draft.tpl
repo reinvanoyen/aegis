@@ -1,75 +1,90 @@
-{{ page "index" }}
+{{ extends "wireframer/base" }}
 
-	{{ box }}
-		{{ h1 "Website name" }}
-		{{ nav }}
-			{{ "Home" }}
-			{{ "Over ons" }}
-			{{ "Diensten" }}
-			{{ "Contact" }}
-		{{ /nav }}
-	{{ /box }}
+	{{ block "main" }}
 
-	{{ box }}
+		{{ page "index" }}
 
-		{{ h2 "Onze diensten" }}
+			{{ box horizontal }}
 
-		{{ grid 3 }}
+				{{ h1 "Website name" }}
 
-			{{ card }}
-				{{ h3 "About us" }}
-				{{ img }}
-				{{ p 150 }}
-			{{ /card }}
+				{{ nav horizontal }}
+					{{ "Home" }}
+					{{ "Over ons" }}
+					{{ "Diensten" }}
+					{{ "Contact" }}
+				{{ /nav }}
 
-			{{ card }}
-				{{ h3 "About us" }}
-				{{ img }}
-				{{ p 150 }}
-			{{ /card }}
-
-			{{ card }}
-				{{ h3 "About us" }}
-				{{ img }}
-				{{ p 150 }}
-			{{ /card }}
-
-		{{ /grid }}
-
-	{{ /box }}
-
-	{{ box }}
-
-		{{ h2 "About us" }}
-
-		{{ grid 2 }}
-			{{ img }}
-			{{ box }}
-				{{ h3 "Everything you need to know about us" }}
-				{{ p 500 }}
-				{{ p 200 }}
 			{{ /box }}
-		{{ /grid }}
 
-		<br /><br />
-
-		{{ grid 3 }}
 			{{ box }}
-				{{ h3 "Everything you need to know about us" }}
-				{{ p 300 }}
-				{{ p 150 }}
-				{{ button "Read more" }}
+
+				{{ h2 "Onze diensten" }}
+
+				{{ grid 3 }}
+
+					{{ card }}
+						{{ h3 "About us" }}
+						{{ img }}
+						{{ p 150 }}
+						{{ button "Read more" }}
+					{{ /card }}
+
+					{{ card }}
+						{{ h3 "About us" }}
+						{{ img }}
+						{{ p 150 }}
+						{{ button "Read more" }}
+					{{ /card }}
+
+					{{ card }}
+						{{ h3 "About us" }}
+						{{ img }}
+						{{ p 150 }}
+						{{ button "Read more" }}
+					{{ /card }}
+
+				{{ /grid }}
+
 			{{ /box }}
-			{{ img }}
-			{{ img }}
-		{{ /grid }}
 
-	{{ /box }}
+			{{ box }}
 
-	<br /><br />
+				{{ h2 "About us" }}
 
-	{{ box }}
-		&copy; Copyright 2016
-	{{ /box }}
+				{{ grid 2 }}
+					{{ img }}
+					{{ box }}
+						{{ h3 "Everything you need to know about us" }}
+						{{ p 500 }}
+						{{ p 200 }}
+					{{ /box }}
+				{{ /grid }}
 
-{{ /page }}
+				<br /><br />
+
+				{{ grid 3 }}
+					{{ box }}
+						{{ h3 "Everything you need to know about us" }}
+						{{ p 300 }}
+						{{ p 150 }}
+						{{ button "Read more" }}
+					{{ /box }}
+					{{ img }}
+					{{ img }}
+				{{ /grid }}
+
+			{{ /box }}
+
+			<br /><br />
+
+			{{ box horizontal }}
+				&copy; Copyright 2016
+				{{ button "Contact" }}
+			{{ /box }}
+
+		{{ /page }}
+
+	{{ /block }}
+
+{{ /extends }}

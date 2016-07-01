@@ -1,16 +1,9 @@
 {{ extends "base" }}
 
-	{{ block "main" append }}
+	{{ block "main" prepend }}
 
-		Does it work?<br />
-
-		{{ loop 5 }}
-
-			{{ test }}
-
-			{{ raw "<strong>bold</strong><br />" }}
-
-		{{ /loop }}
+		{{ slugify( 'reverse me' ) }}<br />
+		{{ sum( 1, 5, 6, 8 ) }}<br />
 
 	{{ /block }}
 

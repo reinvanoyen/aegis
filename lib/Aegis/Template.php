@@ -6,7 +6,8 @@ class Template extends Renderer
 {
 	private $variables = [];
 	private $blocks = [];
-	
+	public $functions = [];
+
 	public function __get( $k )
 	{
 		return $this->variables[ $k ];
@@ -38,5 +39,10 @@ class Template extends Renderer
 
 			$callable();
 		}
+	}
+
+	public function setFunction( $funcName, $callable )
+	{
+		$this->functions[ $funcName ] = $callable;
 	}
 }

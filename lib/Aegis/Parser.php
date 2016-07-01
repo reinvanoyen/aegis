@@ -72,9 +72,9 @@ class Parser implements ParserInterface
 				$this->advance();
 			}
 
-			if( ! $this->getScope() instanceof Node\Expression ) {
+			if( ! $this->getScope() instanceof Node\ExpressionNode ) {
 
-				$this->wrap( new Node\Expression() );
+				$this->wrap( new Node\ExpressionNode() );
 			}
 
 			if( $this->accept( Token::T_OP ) ) {
@@ -86,7 +86,7 @@ class Parser implements ParserInterface
 
 			} else {
 
-				if( $this->getScope() instanceof Node\Expression ) {
+				if( $this->getScope() instanceof Node\ExpressionNode ) {
 
 					$this->traverseDown();
 				}
@@ -105,6 +105,16 @@ class Parser implements ParserInterface
 		if( ! $this->accept( $type, $value ) ) {
 
 			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken() );
+		}
+
+		return TRUE;
+	}
+
+	public function expectNext( $type, $value = NULL )
+	{
+		if( ! $this->acceptNext( $type, $value ) ) {
+
+			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getNextToken() );
 		}
 
 		return TRUE;
@@ -152,9 +162,34 @@ class Parser implements ParserInterface
 		return FALSE;
 	}
 
+	public function acceptNext( $type, $value = NULL )
+	{
+		if( $this->getNextToken()->getType() === $type ) {
+
+			if( $value ) {
+
+				if( $this->getNextToken()->getValue() === $value ) {
+
+					return TRUE;
+				}
+
+				return FALSE;
+			}
+
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
 	public function getCurrentToken()
 	{
 		return $this->tokens[ $this->cursor ];
+	}
+
+	public function getNextToken()
+	{
+		return $this->tokens[ $this->cursor + 1 ];
 	}
 
 	public function setScope( Node $scope )
@@ -207,6 +242,7 @@ class Parser implements ParserInterface
 
 		$this->insert( $node );
 		$this->traverseUp();
+
 		$this->insert( $last );
 	}
 

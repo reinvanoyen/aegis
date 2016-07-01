@@ -5,7 +5,7 @@ namespace Aegis;
 class NodeRegistry
 {
 	private static $registeredNodes = [
-		'Aegis\\Node\\Expression',
+		'Aegis\\Node\\ExpressionNode',
 		'Aegis\\Node\\ExtendNode',
 		'Aegis\\Node\\BlockNode',
 		'Aegis\\Node\\IfNode',

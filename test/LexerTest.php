@@ -6,6 +6,10 @@ class LexerTest extends PHPUnit_Framework_TestCase
 {
 	public function testText()
 	{
+		$this->tokenTypeTest( '512', [
+			\Aegis\Token::T_TEXT,
+		] );
+
 		$this->tokenTypeTest( 'test', [
 			\Aegis\Token::T_TEXT,
 		] );
@@ -23,6 +27,57 @@ class LexerTest extends PHPUnit_Framework_TestCase
 		] );
 	}
 
+	public function testFuncCall()
+	{
+		$this->tokenTypeTest( '{{ my_customfunction(  ) }}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_IDENT,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+
+		$this->tokenTypeTest( '{{ someFunction( "some string", 5, anotherfunc() ) }}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_IDENT,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_STRING,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_NUMBER,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_IDENT,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+
+		$this->tokenTypeTest( '{{ myCustomFunction() }}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_IDENT,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+
+		$this->tokenTypeTest( '{{ test() }}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_IDENT,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+
+		$this->tokenTypeTest( '{{ test("string") }}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_IDENT,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_STRING,
+			\Aegis\Token::T_SYMBOL,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+	}
+
 	public function testNumber()
 	{
 		$this->tokenTypeTest( '{{ 5 }}', [
@@ -31,9 +86,36 @@ class LexerTest extends PHPUnit_Framework_TestCase
 			\Aegis\Token::T_CLOSING_TAG,
 		] );
 
-		$this->tokenTypeTest( '{{ 5 }}', [
+		$this->tokenTypeTest( '{{ 68}}', [
 			\Aegis\Token::T_OPENING_TAG,
 			\Aegis\Token::T_NUMBER,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+
+		$this->tokenTypeTest( '{{245}}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_NUMBER,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+
+		$this->tokenTypeTest( '{{100}}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_NUMBER,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+	}
+
+	public function testString()
+	{
+		$this->tokenTypeTest( "{{ 'this is a string' }}", [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_STRING,
+			\Aegis\Token::T_CLOSING_TAG,
+		] );
+
+		$this->tokenTypeTest( '{{ "string...,"}}', [
+			\Aegis\Token::T_OPENING_TAG,
+			\Aegis\Token::T_STRING,
 			\Aegis\Token::T_CLOSING_TAG,
 		] );
 	}

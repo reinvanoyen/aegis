@@ -49,11 +49,11 @@ class BlockNode extends Node
 
 			$optionAttr = $this->getAttribute( 1 );
 
-			if( $optionAttr->value === 'prepend' ) {
+			if( $optionAttr->getValue() === 'prepend' ) {
 
 				$blockHeadFunction = 'prependBlock';
 
-			} else if( $optionAttr->value === 'append' ) {
+			} else if( $optionAttr->getValue() === 'append' ) {
 
 				$blockHeadFunction = 'appendBlock';
 			}
@@ -69,7 +69,7 @@ class BlockNode extends Node
 			$compiler->head( $subcompiler->compile() );
 		}
 
-		$compiler->head( '<?php } ) ?>' );
+		$compiler->head( '<?php } ); ?>' );
 
 		$compiler->write( '<?php $this->getBlock( ' );
 		$compiler->write( $name );

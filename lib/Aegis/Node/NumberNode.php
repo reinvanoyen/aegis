@@ -2,7 +2,9 @@
 
 namespace Aegis\Node;
 
-class Number extends Node
+use Aegis\Token;
+
+class NumberNode extends Node
 {
 	private $value;
 
@@ -14,6 +16,15 @@ class Number extends Node
 	public function getValue()
 	{
 		return $this->value;
+	}
+
+	public static function parse( $parser )
+	{
+		if( $parser->accept( Token::T_NUMBER ) ) {
+
+			$parser->insert( new static( $parser->getCurrentToken()->getValue() ) );
+			$parser->advance();
+		}
 	}
 
 	public function compile( $compiler )

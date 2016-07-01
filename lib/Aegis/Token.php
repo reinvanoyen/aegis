@@ -19,6 +19,7 @@ class Token
 	const T_STRING = 6;
 	const T_OP = 7;
 	const T_NUMBER = 8;
+	const T_SYMBOL = 9;
 
 	const REGEX_T_EOL = '[\n\r]';
 	const REGEX_T_OPENING_TAG = '{{';
@@ -27,6 +28,7 @@ class Token
 	const REGEX_T_VAR = '^[a-zA-Z._-]+';
 	const REGEX_T_OP = '\+|\-|\=|\!';
 	const REGEX_T_NUMBER = '[0-9.]';
+	const REGEX_T_SYMBOL = '\(|\)|\,';
 
 	private static $tokenNames = [
 		self::T_EOL => 'T_EOL',
@@ -38,6 +40,7 @@ class Token
 		self::T_STRING => 'T_STRING',
 		self::T_OP => 'T_OP',
 		self::T_NUMBER => 'T_NUMBER',
+		self::T_SYMBOL => 'T_SYMBOL',
 	];
 
 	public function __construct( $type, $value, $line = 0 )
@@ -50,6 +53,7 @@ class Token
 	public function getName()
 	{
 		if( isset( self::$tokenNames[ $this->type ] ) ) {
+
 			return self::$tokenNames[ $this->type ];
 		}
 

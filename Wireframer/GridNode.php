@@ -55,7 +55,7 @@ class GridNode extends Node
 
 			if( ! $c instanceof TextNode ) {
 
-				$compiler->write( '<div class="grid-item" style="box-sizing: border-box; width: ' . $width . '%; flex-grow: 1; display: flex; padding: 0 15px;">' );
+				$compiler->write( '<div class="grid-item" style="box-sizing: border-box; width: ' . $width . '%; display: flex; padding: 0 15px;">' );
 			}
 
 			$c->compile( $compiler );
