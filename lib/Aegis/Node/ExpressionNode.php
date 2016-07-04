@@ -9,25 +9,20 @@ class ExpressionNode extends Node
 	public static function parse( $parser )
 	{
 		if(
-			$parser->accept( Token::T_VAR ) ||
-			$parser->accept( Token::T_STRING ) ||
-			$parser->accept( Token::T_NUMBER ) ||
-			( $parser->accept( Token::T_IDENT ) && $parser->acceptNext( Token::T_SYMBOL, '(' ) )
+			StringNode::parse( $parser ) ||
+			VariableNode::parse( $parser ) ||
+			NumberNode::parse( $parser ) ||
+			ListNode::parse( $parser ) ||
+			FunctionCallNode::parse( $parser )
 		) {
 			if( ! $parser->getScope() instanceof ExpressionNode ) {
 
 				// Insert the expression and move inside
-				$parser->insert( new static() );
-				$parser->traverseUp();
+				$parser->wrap( new static() );
 			}
 
-			StringNode::parse( $parser );
-			NumberNode::parse( $parser );
-			VariableNode::parse( $parser );
-			FunctionCallNode::parse( $parser );
-
 			if( Operator::parse( $parser ) ) {
-
+				
 				self::parse( $parser );
 
 			} else {

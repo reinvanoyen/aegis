@@ -19,7 +19,11 @@ class VariableNode extends Node
 
 			$parser->insert( new static( $parser->getCurrentToken()->getValue() ) );
 			$parser->advance();
+
+			return TRUE;
 		}
+
+		return FALSE;
 	}
 
 	public function compile( $compiler )

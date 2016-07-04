@@ -12,8 +12,8 @@ class ForNode extends Node
 
 			$parser->insert( new static() );
 			$parser->advance();
-
 			$parser->traverseUp();
+
 			$parser->expect( Token::T_VAR );
 			$parser->insert( new VariableNode( $parser->getCurrentToken()->getValue() ) );
 			$parser->setAttribute();
@@ -21,13 +21,10 @@ class ForNode extends Node
 
 			$parser->skip( Token::T_IDENT, 'in' );
 
-			$parser->expect( Token::T_VAR );
-			$parser->insert( new VariableNode( $parser->getCurrentToken()->getValue() ) );
+			ExpressionNode::parse( $parser );
 			$parser->setAttribute();
-			$parser->advance();
 
 			$parser->skip( Token::T_CLOSING_TAG );
-
 			$parser->parseOutsideTag();
 
 			$parser->skip( Token::T_OPENING_TAG );
@@ -47,7 +44,7 @@ class ForNode extends Node
 		$compiler->write( '<?php foreach(' );
 		$arrayable->compile( $compiler );
 		$compiler->write( ' as ' );
-		$loopitem->compile( $compiler ); // @TODO this variable possibly overrides another and is globally avialable in the template, attempt to fix this!
+		$loopitem->compile( $compiler ); // @TODO this variable possibly overrides another and is globally available in the template, attempt to fix this!
 		$compiler->write( '): ?>' );
 		
 		foreach( $this->getChildren() as $c )

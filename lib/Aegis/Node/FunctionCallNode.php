@@ -32,7 +32,11 @@ class FunctionCallNode extends Node
 
 			$parser->skip( Token::T_SYMBOL, ')' );
 			$parser->traverseDown();
+
+			return TRUE;
 		}
+
+		return FALSE;
 	}
 
 	public function compile( $compiler )
