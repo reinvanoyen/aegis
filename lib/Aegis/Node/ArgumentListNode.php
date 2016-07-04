@@ -4,21 +4,24 @@ namespace Aegis\Node;
 
 use Aegis\Token;
 
-class ArgumentListNode extends Node
+class ArgumentListNode extends \Aegis\Node
 {
 	public static function parse( $parser )
 	{
 		$parser->insert( new static() );
 		$parser->traverseUp();
 
-		ExpressionNode::parse( $parser );
+		if( ExpressionNode::parse( $parser ) ) {
 
-		if( $parser->skip( Token::T_SYMBOL, ',' ) ) {
+			if( $parser->skip( Token::T_SYMBOL, ',' ) ) {
 
-			self::parse( $parser );
+				self::parse( $parser );
+			}
 		}
 
 		$parser->traverseDown();
+
+		return TRUE;
 	}
 
 	public function compile( $compiler )

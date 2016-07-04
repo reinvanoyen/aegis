@@ -4,15 +4,38 @@ namespace Aegis;
 
 class Renderer
 {
+	public static $debug = FALSE;
+
 	public static $templateExtension = 'tpl';
 	public static $templateDirectory = 'templates/';
 	public static $cacheDirectory = 'cache/templates/';
 
 	private $cacheFilename;
+	private $srcFilename;
 
 	private function generateCacheFilename( $filename, $extension = 'php', $prefix = NULL )
 	{
 		return static::$cacheDirectory . ( $prefix ? $prefix . '/' : NULL ) . urlencode( $filename ) . '.' . $extension;
+	}
+
+	private function generateSourceFilename( $filename )
+	{
+		return static::$templateDirectory . $filename . '.' . static::$templateExtension;
+	}
+
+	private function shouldRecompile()
+	{
+		if( ! file_exists( $this->cacheFilename ) || filemtime( $this->cacheFilename ) <= filemtime( $this->srcFilename ) || static::$debug ) {
+
+			if( !file_exists( static::$cacheDirectory ) ) {
+
+				mkdir( static::$cacheDirectory, 0777, TRUE );
+			}
+
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	private function getCompiler( $filename )
@@ -36,12 +59,14 @@ class Renderer
 
 	public function render( $filename )
 	{
-		$compiler = $this->getCompiler( $filename );
-
 		$this->cacheFilename = $this->generateCacheFilename( $filename );
+		$this->srcFilename = $this->generateSourceFilename( $filename );
 
-		// Compile and save
-		file_put_contents( $this->cacheFilename, $compiler->compile() );
+		if( $this->shouldRecompile() ) {
+
+			$compiler = $this->getCompiler( $filename );
+			file_put_contents( $this->cacheFilename, $compiler->compile() );
+		}
 
 		// Execute
 		$this->execute();
@@ -49,13 +74,16 @@ class Renderer
 
 	public function renderHead( $filename )
 	{
-		$compiler = $this->getCompiler( $filename );
-
 		$this->cacheFilename = $this->generateCacheFilename( $filename, 'php', 'head' );
+		$this->srcFilename = $this->generateSourceFilename( $filename );
 
-		// Compile and save
-		$compiler->compile();
-		file_put_contents( $this->cacheFilename, $compiler->getHead() );
+		if( $this->shouldRecompile() ) {
+
+			$compiler = $this->getCompiler( $filename );
+			// Compile and save
+			$compiler->compile();
+			file_put_contents( $this->cacheFilename, $compiler->getHead() );
+		}
 
 		// Execute
 		$this->execute();
@@ -63,13 +91,16 @@ class Renderer
 
 	public function renderBody( $filename )
 	{
-		$compiler = $this->getCompiler( $filename );
-
 		$this->cacheFilename = $this->generateCacheFilename( $filename, 'php', 'body' );
+		$this->srcFilename = $this->generateSourceFilename( $filename );
 
-		// Compile and save
-		$compiler->compile();
-		file_put_contents( $this->cacheFilename, $compiler->getBody() );
+		if( $this->shouldRecompile() ) {
+
+			$compiler = $this->getCompiler( $filename );
+			// Compile and save
+			$compiler->compile();
+			file_put_contents( $this->cacheFilename, $compiler->getBody() );
+		}
 
 		// Execute
 		$this->execute();

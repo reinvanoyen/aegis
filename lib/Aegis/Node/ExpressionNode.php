@@ -4,7 +4,7 @@ namespace Aegis\Node;
 
 use Aegis\Token;
 
-class ExpressionNode extends Node
+class ExpressionNode extends \Aegis\Node
 {
 	public static function parse( $parser )
 	{
@@ -21,7 +21,7 @@ class ExpressionNode extends Node
 				$parser->wrap( new static() );
 			}
 
-			if( Operator::parse( $parser ) ) {
+			if( OperatorNode::parse( $parser ) ) {
 				
 				self::parse( $parser );
 

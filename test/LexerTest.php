@@ -6,6 +6,16 @@ class LexerTest extends PHPUnit_Framework_TestCase
 {
 	public function testText()
 	{
+		$this->tokenTypeTest( '', [] );
+
+		$this->tokenTypeTest( 's', [
+			\Aegis\Token::T_TEXT,
+		] );
+
+		$this->tokenTypeTest( '1', [
+			\Aegis\Token::T_TEXT,
+		] );
+
 		$this->tokenTypeTest( '512', [
 			\Aegis\Token::T_TEXT,
 		] );

@@ -4,7 +4,7 @@ namespace Aegis\Node;
 
 use Aegis\Token;
 
-class Operator extends Node
+class OperatorNode extends \Aegis\Node
 {
 	private $type;
 	

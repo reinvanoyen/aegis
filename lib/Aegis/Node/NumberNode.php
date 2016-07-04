@@ -4,7 +4,7 @@ namespace Aegis\Node;
 
 use Aegis\Token;
 
-class NumberNode extends Node
+class NumberNode extends \Aegis\Node
 {
 	private $value;
 

@@ -4,7 +4,7 @@ namespace Aegis\Node;
 
 use Aegis\Token;
 
-class FunctionCallNode extends Node
+class FunctionCallNode extends \Aegis\Node
 {
 	private $funcName;
 

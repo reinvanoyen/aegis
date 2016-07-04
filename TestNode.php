@@ -2,9 +2,8 @@
 
 use Aegis\Compiler;
 use Aegis\Token;
-use Aegis\Node\Node;
 
-class TestNode extends Node
+class TestNode extends \Aegis\Node
 {
 	public static function parse( $parser )
 	{

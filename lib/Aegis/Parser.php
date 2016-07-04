@@ -29,7 +29,7 @@ class Parser implements ParserInterface
 	public function parseOutsideTag()
 	{
 		if( ! count( $this->tokens ) ) {
-			
+
 			return;
 		}
 
@@ -39,7 +39,7 @@ class Parser implements ParserInterface
 			$this->advance();
 		}
 
-		if( $this->skip( Token::T_OPENING_TAG ) ) {
+		if( $this->skip( Token::T_OPENING_TAG ) ) { // @TODO parse opening tag in Node
 
 			$this->parseStatement();
 		}
@@ -145,7 +145,7 @@ class Parser implements ParserInterface
 		return $this->tokens[ $this->cursor + 1 ];
 	}
 
-	public function setScope( Node $scope )
+	public function setScope( \Aegis\Node $scope )
 	{
 		$this->scope = $scope;
 	}
@@ -167,8 +167,8 @@ class Parser implements ParserInterface
 
 	public function traverseDown()
 	{
-		if( ! $this->scope->parent )
-		{
+		if( ! $this->scope->parent ) {
+
 			throw new Exception( 'Could not return from scope because scope is already on root level' );
 		}
 
@@ -188,7 +188,7 @@ class Parser implements ParserInterface
 		$this->scope = $this->root;
 	}
 
-	public function wrap( Node\Node $node )
+	public function wrap( \Aegis\Node $node )
 	{
 		$last = $this->scope->getLastChild(); // Get the last insert node
 		$this->scope->removeLastChild(); // Remove it
@@ -206,7 +206,7 @@ class Parser implements ParserInterface
 		$this->scope->setAttribute( $last );
 	}
 
-	public function insert( Node\Node $node )
+	public function insert( \Aegis\Node $node )
 	{
 		$node->parent = $this->scope;
 		$this->scope->insert( $node );

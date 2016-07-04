@@ -5,7 +5,7 @@ namespace Aegis\Node;
 use Aegis\Compiler;
 use Aegis\Token;
 
-class BlockNode extends Node
+class BlockNode extends \Aegis\Node
 {
 	public static function parse( $parser )
 	{
@@ -15,6 +15,7 @@ class BlockNode extends Node
 			$parser->advance();
 
 			$parser->traverseUp();
+
 			ExpressionNode::parse( $parser );
 			$parser->setAttribute();
 			
@@ -35,7 +36,11 @@ class BlockNode extends Node
 
 			$parser->traverseDown();
 			$parser->parseOutsideTag();
+
+			return TRUE;
 		}
+
+		return FALSE;
 	}
 
 	public function compile( $compiler )

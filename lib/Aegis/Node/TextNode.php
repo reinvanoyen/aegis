@@ -2,7 +2,7 @@
 
 namespace Aegis\Node;
 
-class TextNode extends Node
+class TextNode extends \Aegis\Node
 {
 	private $value;
 

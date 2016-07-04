@@ -4,7 +4,7 @@ namespace Aegis\Node;
 
 use Aegis\Token;
 
-class RawNode extends Node
+class RawNode extends \Aegis\Node
 {
 	public static function parse( $parser )
 	{

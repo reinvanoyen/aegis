@@ -9,7 +9,7 @@ class Compiler implements CompilerInterface
 	private $head = '';
 	private $body = '';
 
-	public function __construct( \Aegis\Node\Node $input )
+	public function __construct( Node $input )
 	{
 		$this->input = $input;
 	}

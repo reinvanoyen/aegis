@@ -5,7 +5,7 @@ namespace Aegis\Node;
 use Aegis\Compiler;
 use Aegis\Token;
 
-class ExtendNode extends Node
+class ExtendNode extends \Aegis\Node
 {
 	/*
 	 *
@@ -33,7 +33,11 @@ class ExtendNode extends Node
 
 			$parser->traverseDown();
 			$parser->parseOutsideTag();
+
+			return TRUE;
 		}
+
+		return FALSE;
 	}
 	
 	public function compile( $compiler )

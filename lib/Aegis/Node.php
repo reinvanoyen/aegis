@@ -1,8 +1,6 @@
 <?php
 
-namespace Aegis\Node;
-
-use Aegis\Compiler;
+namespace Aegis;
 
 abstract class Node
 {

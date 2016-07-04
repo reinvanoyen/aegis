@@ -2,6 +2,7 @@
 
 namespace Aegis\Node;
 
+use Aegis\Node;
 use Aegis\Token;
 
 class VariableNode extends Node

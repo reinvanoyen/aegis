@@ -4,7 +4,7 @@ namespace Aegis\Node;
 
 use Aegis\Token;
 
-class PrintNode extends Node
+class PrintNode extends \Aegis\Node
 {
 	public static function parse( $parser )
 	{
