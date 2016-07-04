@@ -76,7 +76,7 @@ class Lexer implements LexerInterface
 			}
 		}
 
-		var_dump( $this->tokenStream );
+		//var_dump( $this->tokenStream );
 
 		return $this->tokenStream;
 	}

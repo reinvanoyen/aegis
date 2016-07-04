@@ -15,8 +15,9 @@ class BlockNode extends Node
 			$parser->advance();
 
 			$parser->traverseUp();
-			$parser->parseAttribute();
-
+			ExpressionNode::parse( $parser );
+			$parser->setAttribute();
+			
 			if( $parser->accept( Token::T_IDENT, 'prepend' ) || $parser->accept( Token::T_IDENT, 'append' ) ) {
 
 				$parser->insert( new OptionNode( $parser->getCurrentToken()->getValue() ) );

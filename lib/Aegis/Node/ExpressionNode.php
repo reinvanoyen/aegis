@@ -14,7 +14,6 @@ class ExpressionNode extends Node
 			$parser->accept( Token::T_NUMBER ) ||
 			( $parser->accept( Token::T_IDENT ) && $parser->acceptNext( Token::T_SYMBOL, '(' ) )
 		) {
-
 			if( ! $parser->getScope() instanceof ExpressionNode ) {
 
 				// Insert the expression and move inside
@@ -36,16 +35,6 @@ class ExpressionNode extends Node
 				$parser->traverseDown();
 			}
 
-			if( $parser->skip( Token::T_CLOSING_TAG ) ) {
-
-				if( $parser->getScope() instanceof ExpressionNode ) {
-
-					$parser->traverseDown();
-				}
-
-				$parser->parseOutsideTag();
-			}
-
 			return TRUE;
 		}
 
@@ -54,25 +43,9 @@ class ExpressionNode extends Node
 
 	public function compile( $compiler )
 	{
-		// @TODO fix isAttribute(), this doesn't feel right
+		foreach( $this->getChildren() as $c ) {
 
-		if( $this->isAttribute() || $this->getParent() instanceof ArgumentListNode ) {
-
-			foreach( $this->getChildren() as $c ) {
-
-				$c->compile( $compiler );
-			}
-
-		} else {
-
-			$compiler->write( '<?php echo htmlspecialchars( ' );
-
-			foreach( $this->getChildren() as $c ) {
-
-				$c->compile( $compiler );
-			}
-
-			$compiler->write( ' ); ?>' );
+			$c->compile( $compiler );
 		}
 	}
 }

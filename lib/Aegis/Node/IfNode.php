@@ -10,8 +10,13 @@ class IfNode extends Node
 	{
 		if( $parser->accept( Token::T_IDENT, 'if' ) ) {
 
+			$parser->insert( new static() );
+			$parser->advance();
 			$parser->traverseUp();
-			$parser->parseAttribute();
+
+			ExpressionNode::parse( $parser );
+			$parser->setAttribute();
+
 			$parser->skip( Token::T_CLOSING_TAG );
 
 			$parser->parseOutsideTag();

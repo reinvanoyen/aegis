@@ -9,15 +9,22 @@ class ForNode extends Node
 	public static function parse( $parser )
 	{
 		if( $parser->accept( Token::T_IDENT, 'for' ) ) {
-			
+
+			$parser->insert( new static() );
+			$parser->advance();
+
 			$parser->traverseUp();
 			$parser->expect( Token::T_VAR );
+			$parser->insert( new VariableNode( $parser->getCurrentToken()->getValue() ) );
 			$parser->setAttribute();
+			$parser->advance();
 
 			$parser->skip( Token::T_IDENT, 'in' );
 
 			$parser->expect( Token::T_VAR );
+			$parser->insert( new VariableNode( $parser->getCurrentToken()->getValue() ) );
 			$parser->setAttribute();
+			$parser->advance();
 
 			$parser->skip( Token::T_CLOSING_TAG );
 

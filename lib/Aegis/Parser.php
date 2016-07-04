@@ -48,58 +48,6 @@ class Parser implements ParserInterface
 		}
 	}
 
-	public function parseAttribute()
-	{
-		if(
-			$this->accept( Token::T_VAR ) ||
-			$this->accept( Token::T_STRING ) ||
-			$this->accept( Token::T_NUMBER )
-		)
-		{
-			if( $this->getCurrentToken()->getType() === Token::T_VAR ) {
-
-				$this->insert( new Node\VariableNode( $this->getCurrentToken()->getValue() ) );
-				$this->advance();
-
-			} else if( $this->getCurrentToken()->getType() === Token::T_STRING ) {
-
-				$this->insert( new Node\StringNode( $this->getCurrentToken()->getValue() ) );
-				$this->advance();
-
-			} else if( $this->getCurrentToken()->getType() === Token::T_NUMBER ) {
-
-				$this->insert( new Node\Number( $this->getCurrentToken()->getValue() ) );
-				$this->advance();
-			}
-
-			if( ! $this->getScope() instanceof Node\ExpressionNode ) {
-
-				$this->wrap( new Node\ExpressionNode() );
-			}
-
-			if( $this->accept( Token::T_OP ) ) {
-
-				$this->insert( new Node\Operator( $this->getCurrentToken()->getValue() ) );
-				$this->advance();
-
-				$this->parseAttribute();
-
-			} else {
-
-				if( $this->getScope() instanceof Node\ExpressionNode ) {
-
-					$this->traverseDown();
-				}
-
-				$this->setAttribute();
-			}
-
-		} else {
-
-			throw new SyntaxError( 'Missing attribute for node ' . $this->getScope()->getName() . ', got ' . $this->getCurrentToken()->getName() );
-		}
-	}
-
 	public function expect( $type, $value = NULL )
 	{
 		if( ! $this->accept( $type, $value ) ) {

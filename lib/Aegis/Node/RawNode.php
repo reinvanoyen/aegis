@@ -14,7 +14,10 @@ class RawNode extends Node
 			$parser->advance();
 
 			$parser->traverseUp();
-			$parser->parseAttribute();
+
+			ExpressionNode::parse( $parser );
+			$parser->setAttribute();
+
 			$parser->skip( Token::T_CLOSING_TAG );
 			$parser->traverseDown();
 			$parser->parseOutsideTag();
