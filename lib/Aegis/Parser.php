@@ -28,6 +28,11 @@ class Parser implements ParserInterface
 
 	public function parseOutsideTag()
 	{
+		if( ! count( $this->tokens ) ) {
+			
+			return;
+		}
+
 		if( $this->accept( Token::T_TEXT ) ) {
 
 			$this->insert( new Node\TextNode( $this->getCurrentToken()->getValue() ) );
