@@ -10,17 +10,6 @@ class Token
 
 	const PHP_EXPR = '(?:[^\']|\\\'.*?\\\')+?';
 
-	const T_EOL = 0;
-	const T_TEXT = 1;
-	const T_OPENING_TAG = 2;
-	const T_CLOSING_TAG = 3;
-	const T_IDENT = 4;
-	const T_VAR = 5;
-	const T_STRING = 6;
-	const T_OP = 7;
-	const T_NUMBER = 8;
-	const T_SYMBOL = 9;
-
 	const REGEX_T_EOL = '[\n\r]';
 	const REGEX_T_OPENING_TAG = '{{'; // {{
 	const REGEX_T_CLOSING_TAG = '}}'; // }}
@@ -29,6 +18,17 @@ class Token
 	const REGEX_T_OP = '\+|\-|\=|\!'; // + - = !
 	const REGEX_T_NUMBER = '[0-9.]'; // 1 2 3 4 5 6 7 8 9
 	const REGEX_T_SYMBOL = '\(|\)|\,|\[|\]'; // ( ) , [ ]
+
+	const T_EOL = 'T_EOL';
+	const T_TEXT = 'T_TEXT';
+	const T_OPENING_TAG = 'T_OPENING_TAG';
+	const T_CLOSING_TAG = 'T_CLOSING_TAG';
+	const T_IDENT = 'T_INDENT';
+	const T_VAR = 'T_VAR';
+	const T_STRING = 'T_STRING';
+	const T_OP = 'T_OP';
+	const T_NUMBER = 'T_NUMBER';
+	const T_SYMBOL = 'T_SYMBOL';
 
 	private static $tokenNames = [
 		self::T_EOL => 'T_EOL',
@@ -65,6 +65,11 @@ class Token
 		return $this->type;
 	}
 
+	public function getLine()
+	{
+		return $this->line;
+	}
+
 	public function getValue()
 	{
 		return $this->value;
@@ -72,6 +77,6 @@ class Token
 
 	public function __toString()
 	{
-		return $this->getName() . ' - ' . $this->getType() . ' (' . $this->getValue() . ')' . "\n";
+		return strtoupper( $this->getType() . ' ' . $this->getValue() ) . "\n";
 	}
 }

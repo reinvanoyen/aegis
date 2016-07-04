@@ -39,7 +39,7 @@ class Parser implements ParserInterface
 			$this->advance();
 		}
 
-		if( $this->skip( Token::T_OPENING_TAG ) ) { // @TODO parse opening tag in Node
+		if( $this->skip( Token::T_OPENING_TAG ) ) {
 
 			$this->parseStatement();
 		}
@@ -57,7 +57,7 @@ class Parser implements ParserInterface
 	{
 		if( ! $this->accept( $type, $value ) ) {
 
-			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getCurrentToken() );
+			$this->syntaxError( $type, $value );
 		}
 
 		return TRUE;
@@ -67,7 +67,7 @@ class Parser implements ParserInterface
 	{
 		if( ! $this->acceptNext( $type, $value ) ) {
 
-			throw new SyntaxError( 'Expected ' . $type . ' got ' . $this->getNextToken() );
+			$this->syntaxError( $type, $value );
 		}
 
 		return TRUE;
@@ -75,19 +75,8 @@ class Parser implements ParserInterface
 	
 	public function skip( $type, $value = NULL )
 	{
-		if( $this->getCurrentToken()->getType() === $type ) {
+		if( $this->accept( $type, $value ) ) {
 
-			if( $value ) {
-
-				if( $this->getCurrentToken()->getValue() === $value ) {
-
-					$this->advance();
-					return TRUE;
-				}
-
-				return FALSE;
-			}
-			
 			$this->advance();
 			return TRUE;
 		}
@@ -133,6 +122,11 @@ class Parser implements ParserInterface
 		}
 
 		return FALSE;
+	}
+
+	public function syntaxError( $type, $value )
+	{
+		throw new SyntaxError( 'Expected ' . strtoupper( $type  . ' ' . $value ) . ' got ' . $this->getCurrentToken() . ' on line ' . $this->getCurrentToken()->getLine() );
 	}
 
 	public function getCurrentToken()
