@@ -65,6 +65,15 @@ class BlockNode extends \Aegis\Node
 			}
 		}
 
+		// Write the heads of the children first
+		foreach( $this->getChildren() as $c ) {
+
+			$subcompiler = new Compiler( $c );
+			$subcompiler->compile();
+			$compiler->head( $subcompiler->getHead() );
+		}
+
+		// Write head of itself
 		$compiler->head( '<?php $this->' . $blockHeadFunction . '( ' );
 		$compiler->head( $name );
 		$compiler->head( ', function() { ?>' );
@@ -72,11 +81,13 @@ class BlockNode extends \Aegis\Node
 		foreach( $this->getChildren() as $c ) {
 
 			$subcompiler = new Compiler( $c );
-			$compiler->head( $subcompiler->compile() );
+			$subcompiler->compile();
+			$compiler->head( $subcompiler->getBody() );
 		}
 
 		$compiler->head( '<?php } ); ?>' );
 
+		// Render itself
 		$compiler->write( '<?php $this->getBlock( ' );
 		$compiler->write( $name );
 		$compiler->write( '); ?>' );
