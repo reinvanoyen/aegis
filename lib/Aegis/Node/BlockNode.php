@@ -49,6 +49,7 @@ class BlockNode extends \Aegis\Node
 		$subcompiler = new Compiler( $nameAttr );
 		$name = $subcompiler->compile();
 
+		// Determine which function to use
 		$blockHeadFunction = 'setBlock';
 
 		if( $this->getAttribute( 1 ) ) {

@@ -1,8 +1,8 @@
 {{ extends "base" }}
 
-	{{ block "test" append }}
+	{{ block "header" append }}
 
-		Test appended!
+		{{ block "login" }}{{ /block }}
 
 	{{ /block }}
 

@@ -37,7 +37,7 @@ $tpl->setFunction( 'sum', function( ...$numbers ) {
 
 $tpl->title = 'test';
 $tpl->pages = [ 'test 1', 'test 2', 'test 3' ];
-$tpl->render( 'test' );
+$tpl->render( 'test2' );
 
 /*
 require 'Wireframer/PageNode.php';

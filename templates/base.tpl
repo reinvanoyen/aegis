@@ -1,9 +1,7 @@
 {{ block "main" }}
 
-	{{ block "test" }}
-
+	{{ block "header" }}
 		<h1>{{ @title + " - something" }}</h1>
-
 	{{ /block }}
 
 {{ /block }}
