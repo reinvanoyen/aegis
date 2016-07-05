@@ -36,7 +36,7 @@ class ForNode extends \Aegis\Node
 				$parser->setAttribute();
 				$parser->advance();
 
-				$parser->expect( Token::T_IDENT, 'through' );
+				$parser->expect( Token::T_IDENT, 'to' );
 				$parser->advance();
 
 				if( $parser->expect( Token::T_NUMBER ) ) {
@@ -88,7 +88,7 @@ class ForNode extends \Aegis\Node
 
 			$compiler->write( '<?php for( $i = ' );
 			$loopitem->compile( $compiler );
-			$compiler->write( '; $i < ' );
+			$compiler->write( '; $i <= ' );
 			$arrayable->compile( $compiler );
 			$compiler->write( '; $i++ ): ?>' );
 

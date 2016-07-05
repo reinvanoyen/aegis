@@ -2,11 +2,12 @@
 
 namespace Aegis\Node;
 
+use Aegis\Parser;
 use Aegis\Token;
 
 class IfNode extends \Aegis\Node
 {
-	public static function parse( $parser )
+	public static function parse( Parser $parser )
 	{
 		if( $parser->accept( Token::T_IDENT, 'if' ) ) {
 
@@ -21,13 +22,22 @@ class IfNode extends \Aegis\Node
 
 			$parser->parseOutsideTag();
 
+			if( ElseNode::parse( $parser ) ) {
+
+				$parser->parseOutsideTag();
+			}
+
 			$parser->skip( Token::T_OPENING_TAG );
 			$parser->skip( Token::T_IDENT, '/if' );
 			$parser->skip( Token::T_CLOSING_TAG );
 
 			$parser->traverseDown();
 			$parser->parseOutsideTag();
+
+			return TRUE;
 		}
+
+		return FALSE;
 	}
 
 	public function compile( $compiler )

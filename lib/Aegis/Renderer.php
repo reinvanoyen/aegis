@@ -4,7 +4,7 @@ namespace Aegis;
 
 class Renderer
 {
-	public static $debug = FALSE;
+	public static $debug = TRUE;
 
 	public static $templateExtension = 'tpl';
 	public static $templateDirectory = 'templates/';

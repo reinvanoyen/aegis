@@ -1,5 +1,5 @@
-{{ block "main" }}
+{{ block "test" }}
 
-	{{ @title + " - something" }}
+	<h1>{{ @title + " - something" }}</h1>
 
 {{ /block }}

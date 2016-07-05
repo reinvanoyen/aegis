@@ -57,7 +57,7 @@ class Parser implements ParserInterface
 	{
 		if( ! $this->accept( $type, $value ) ) {
 
-			$this->syntaxError( $type, $value );
+			$this->error( $type, $value );
 		}
 
 		return TRUE;
@@ -67,7 +67,7 @@ class Parser implements ParserInterface
 	{
 		if( ! $this->acceptNext( $type, $value ) ) {
 
-			$this->syntaxError( $type, $value );
+			$this->error( $type, $value );
 		}
 
 		return TRUE;
@@ -124,9 +124,9 @@ class Parser implements ParserInterface
 		return FALSE;
 	}
 
-	public function syntaxError( $type, $value )
+	public function error( $type, $value )
 	{
-		throw new SyntaxError( 'Expected ' . strtoupper( $type  . ' ' . $value ) . ' got ' . $this->getCurrentToken() . ' on line ' . $this->getCurrentToken()->getLine() );
+		throw new ParseError( 'Expected ' . strtoupper( $type  . ' ' . $value ) . ' got ' . $this->getCurrentToken(), $this->getCurrentToken()->getLine() );
 	}
 
 	public function getCurrentToken()
@@ -163,7 +163,7 @@ class Parser implements ParserInterface
 	{
 		if( ! $this->scope->parent ) {
 
-			throw new Exception( 'Could not return from scope because scope is already on root level' );
+			$this->error( 'Could not return from scope because scope is already on root level', $this->getCurrentToken()->getLine() );
 		}
 
 		$this->scope = $this->scope->parent;
