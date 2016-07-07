@@ -1,2 +1,2 @@
-{{ "test" }}<br />
-test 2
+{{ extends "base" }}
+{{ /extends }}

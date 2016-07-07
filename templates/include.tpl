@@ -1,2 +1,0 @@
-testje!
-{{ "hello im included" }}

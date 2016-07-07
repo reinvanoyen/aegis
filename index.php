@@ -7,9 +7,7 @@ require 'autoload.php';
 
 // Your playground
 
-require 'TestNode.php';
-
-\Aegis\NodeRegistry::register( 'TestNode' );
+\Aegis\Template::$debug = TRUE;
 
 $tpl = new \Aegis\Template();
 
@@ -36,5 +34,4 @@ $tpl->setFunction( 'sum', function( ...$numbers ) {
 } );
 
 $tpl->title = 'test';
-$tpl->pages = [ 'test 1', 'test 2', 'test 3' ];
 echo $tpl->render( 'index' );

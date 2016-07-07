@@ -44,7 +44,7 @@ class ExtendNode extends \Aegis\Node
 	{
 		// Render the head of the extended template
 
-		$compiler->head( '<?php $this->renderHead( ' );
+		$compiler->head( '<?=$this->renderHead( ' );
 
 		foreach( $this->getAttributes() as $a )
 		{
@@ -52,7 +52,7 @@ class ExtendNode extends \Aegis\Node
 			$compiler->head( $subcompiler->compile() );
 		}
 
-		$compiler->head( '); ?>' );
+		$compiler->head( ')?>' );
 
 		// Write the head of the current template
 
@@ -65,7 +65,7 @@ class ExtendNode extends \Aegis\Node
 
 		// Render the body of the extended template
 
-		$compiler->write( '<?php $this->renderBody( ' );
+		$compiler->write( '<?=$this->renderBody( ' );
 
 		foreach( $this->getAttributes() as $a )
 		{
@@ -73,6 +73,6 @@ class ExtendNode extends \Aegis\Node
 			$compiler->write( $subcompiler->compile() );
 		}
 
-		$compiler->write( '); ?>' );
+		$compiler->write( ')?>' );
 	}
 }
