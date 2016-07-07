@@ -69,7 +69,7 @@ class Renderer
 		}
 
 		// Execute
-		$this->execute();
+		return $this->execute();
 	}
 
 	public function renderHead( $filename )
@@ -86,7 +86,7 @@ class Renderer
 		}
 
 		// Execute
-		$this->execute();
+		return $this->execute();
 	}
 
 	public function renderBody( $filename )
@@ -103,11 +103,15 @@ class Renderer
 		}
 
 		// Execute
-		$this->execute();
+		return $this->execute();
 	}
 
 	private function execute()
 	{
+		ob_start();
 		require $this->cacheFilename;
+		$result = ob_get_contents();
+		ob_end_clean();
+		return $result;
 	}
 }
