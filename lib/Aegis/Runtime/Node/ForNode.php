@@ -44,6 +44,14 @@ class ForNode extends \Aegis\Node
 					$parser->insert( new NumberNode( $parser->getCurrentToken()->getValue() ) );
 					$parser->setAttribute();
 					$parser->advance();
+
+					if( $parser->accept( Token::T_IDENT, 'as' ) ) {
+						$parser->advance();
+						$parser->expect( Token::T_VAR );
+						$parser->insert( new VariableNode( $parser->getCurrentToken()->getValue() ) );
+						$parser->setAttribute();
+						$parser->advance();
+					}
 				}
 			}
 
@@ -86,11 +94,26 @@ class ForNode extends \Aegis\Node
 
 		} else if( $loopitem instanceof NumberNode ) {
 
-			$compiler->write( '<?php for( $i = ' );
+			$loopvar = NULL;
+			if( $this->getAttribute( 2 ) ) {
+				$loopvar = $this->getAttribute( 2 );
+			}
+
+			$compiler->write( '<?php for( ' );
+			$compiler->write('$i');
+			$compiler->write( ' = ' );
 			$loopitem->compile( $compiler );
-			$compiler->write( '; $i <= ' );
+			$compiler->write( '; ' );
+			$compiler->write( '$i' );
+			$compiler->write( ' <= ' );
 			$arrayable->compile( $compiler );
-			$compiler->write( '; $i++ ): ?>' );
+			$compiler->write( '; ' );
+			$compiler->write('$i');
+			$compiler->write( '++ ): ?>' );
+
+			if( $loopvar !== NULL ) {
+				$compiler->write( '<?php $this->runtime->set( \'' . $loopvar->getName() . '\', $i ); ?>' );
+			}
 
 			foreach( $this->getChildren() as $c ) {
 

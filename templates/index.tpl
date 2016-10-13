@@ -1,8 +1,14 @@
 {{ extends "base" }}
 
-	{{ block "title" }}
+	{{ block "title" }}OK sweet{{ /block }}
 
-		{{ @title }}
+	{{ block "nav" }}
+
+		<ul>
+			{{ for @item in [ 'Home', 'Over ons', 'Contact ons' ] }}
+				<li>{{ @item }}</li>
+			{{ /for }}
+		</ul>
 
 	{{ /block }}
 

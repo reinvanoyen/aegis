@@ -14,6 +14,11 @@ class VariableNode extends Node
 		$this->name = $name;
 	}
 
+	public function getName()
+	{
+		return $this->name;
+	}
+
 	public static function parse( $parser )
 	{
 		if( $parser->accept( Token::T_VAR ) ) {
@@ -27,8 +32,12 @@ class VariableNode extends Node
 		return FALSE;
 	}
 
-	public function compile( $compiler )
+	public function compile( $compiler, $local = FALSE )
 	{
-		$compiler->write( '$this->runtime->' . str_replace( '.', '->', $this->name ) );
+		if( $local ) {
+			$compiler->write( '$' . str_replace( '.', '->', $this->name ) );
+		} else {
+			$compiler->write( '$this->runtime->' . str_replace( '.', '->', $this->name ) );
+		}
 	}
 }
