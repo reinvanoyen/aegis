@@ -2,47 +2,128 @@
 
 namespace Aegis;
 
-class Template extends Renderer
+class Template
 {
-	private $variables = [];
-	private $blocks = [];
-	public $functions = [];
+	public static $debug = TRUE;
 
-	public function __get( $k )
+	public static $templateExtension = 'tpl';
+	public static $templateDirectory = 'templates/';
+	public static $cacheDirectory = 'cache/templates/';
+
+	private $cacheFilename;
+	private $srcFilename;
+
+	private $runtime;
+
+	public function setRuntime( RuntimeInterface $runtime )
 	{
-		return $this->variables[ $k ];
+		$this->runtime = $runtime;
 	}
 
 	public function __set( $k, $v )
 	{
-		$this->variables[ $k ] = $v;
+		$this->runtime->set( $k, $v );
 	}
 
-	public function setBlock( $id, $callable )
+	private function generateCacheFilename( $filename, $extension = 'php', $prefix = NULL )
 	{
-		$this->blocks[ $id ] = [ $callable ];
+		return static::$cacheDirectory . ( $prefix ? $prefix . '/' : NULL ) . urlencode( $filename ) . '.' . $extension;
 	}
 
-	public function appendBlock( $id, $callable )
+	private function generateSourceFilename( $filename )
 	{
-		$this->blocks[ $id ][] = $callable;
+		return static::$templateDirectory . $filename . '.' . static::$templateExtension;
 	}
 
-	public function prependBlock( $id, $callable )
+	private function shouldRecompile()
 	{
-		array_unshift( $this->blocks[ $id ], $callable );
-	}
+		if( ! file_exists( $this->cacheFilename ) || filemtime( $this->cacheFilename ) <= filemtime( $this->srcFilename ) || static::$debug ) {
 
-	public function getBlock( $id )
-	{
-		foreach( $this->blocks[ $id ] as $callable ) {
+			if( !file_exists( static::$cacheDirectory ) ) {
 
-			$callable();
+				mkdir( static::$cacheDirectory, 0777, TRUE );
+			}
+
+			return TRUE;
 		}
+
+		return FALSE;
 	}
 
-	public function setFunction( $funcName, $callable )
+	private function getCompiler( $filename )
 	{
-		$this->functions[ $funcName ] = $callable;
+		// Get string to render
+		$string = file_get_contents( static::$templateDirectory . $filename . '.' . static::$templateExtension );
+
+		// Tokenize the string
+		$lexer = new Lexer();
+		$tokenStream = $lexer->tokenize( $string );
+
+		// Parse the token stream to a node tree
+		$parser = new Parser();
+		$parsedTree = $parser->parse( $tokenStream );
+
+		// Create the compiler
+		$compiler = new Compiler( $parsedTree );
+
+		return $compiler;
+	}
+
+	public function render( $filename )
+	{
+		$this->cacheFilename = $this->generateCacheFilename( $filename );
+		$this->srcFilename = $this->generateSourceFilename( $filename );
+
+		if( $this->shouldRecompile() ) {
+
+			$compiler = $this->getCompiler( $filename );
+			file_put_contents( $this->cacheFilename, $compiler->compile() );
+		}
+
+		// Execute
+		return $this->execute();
+	}
+
+	public function renderHead( $filename )
+	{
+		$this->cacheFilename = $this->generateCacheFilename( $filename, 'php', 'head' );
+		$this->srcFilename = $this->generateSourceFilename( $filename );
+
+		if( $this->shouldRecompile() ) {
+
+			$compiler = $this->getCompiler( $filename );
+			// Compile and save
+			$compiler->compile();
+			file_put_contents( $this->cacheFilename, $compiler->getHead() );
+		}
+
+		// Execute
+		return $this->execute();
+	}
+
+	public function renderBody( $filename )
+	{
+		$this->cacheFilename = $this->generateCacheFilename( $filename, 'php', 'body' );
+		$this->srcFilename = $this->generateSourceFilename( $filename );
+
+		if( $this->shouldRecompile() ) {
+
+			$compiler = $this->getCompiler( $filename );
+			// Compile and save
+			$compiler->compile();
+			file_put_contents( $this->cacheFilename, $compiler->getBody() );
+		}
+
+		// Execute
+		return $this->execute();
+	}
+
+	private function execute()
+	{
+		ob_start();
+		require $this->cacheFilename;
+		$result = ob_get_contents();
+		ob_end_clean();
+		return $result;
 	}
 }

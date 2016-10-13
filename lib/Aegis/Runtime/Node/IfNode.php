@@ -1,6 +1,6 @@
 <?php
 
-namespace Aegis\Node;
+namespace Aegis\Runtime\Node;
 
 use Aegis\Parser;
 use Aegis\Token;
@@ -44,15 +44,15 @@ class IfNode extends \Aegis\Node
 	{
 		$compiler->write('<?php if( ' );
 
-		foreach( $this->getAttributes() as $a )
-		{
+		foreach( $this->getAttributes() as $a ) {
+
 			$a->compile( $compiler );
 		}
 
 		$compiler->write( ' ): ?>');
 		
-		foreach( $this->getChildren() as $c )
-		{
+		foreach( $this->getChildren() as $c ) {
+
 			$c->compile( $compiler );
 		}
 

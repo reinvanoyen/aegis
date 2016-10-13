@@ -1,6 +1,6 @@
 <?php
 
-namespace Aegis\Node;
+namespace Aegis\Runtime\Node;
 
 use Aegis\Compiler;
 use Aegis\Token;
@@ -75,7 +75,7 @@ class BlockNode extends \Aegis\Node
 		}
 
 		// Write head of itself
-		$compiler->head( '<?php $this->' . $blockHeadFunction . '( ' );
+		$compiler->head( '<?php $this->runtime->' . $blockHeadFunction . '( ' );
 		$compiler->head( $name );
 		$compiler->head( ', function() { ?>' );
 
@@ -89,7 +89,7 @@ class BlockNode extends \Aegis\Node
 		$compiler->head( '<?php } ); ?>' );
 
 		// Render itself
-		$compiler->write( '<?php $this->getBlock( ' );
+		$compiler->write( '<?php $this->runtime->getBlock( ' );
 		$compiler->write( $name );
 		$compiler->write( '); ?>' );
 	}

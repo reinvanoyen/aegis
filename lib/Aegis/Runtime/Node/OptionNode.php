@@ -1,6 +1,6 @@
 <?php
 
-namespace Aegis\Node;
+namespace Aegis\Runtime\Node;
 
 class OptionNode extends \Aegis\Node
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aegis\Node;
+namespace Aegis\Runtime\Node;
 
 use Aegis\Node;
 use Aegis\Token;
@@ -29,6 +29,6 @@ class VariableNode extends Node
 
 	public function compile( $compiler )
 	{
-		$compiler->write( '$this->' . str_replace( '.', '->', $this->name ) );
+		$compiler->write( '$this->runtime->' . str_replace( '.', '->', $this->name ) );
 	}
 }

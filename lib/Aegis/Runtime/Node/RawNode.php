@@ -1,18 +1,19 @@
 <?php
 
-namespace Aegis\Node;
+namespace Aegis\Runtime\Node;
 
 use Aegis\Token;
 
-class IncludeNode extends \Aegis\Node
+class RawNode extends \Aegis\Node
 {
 	public static function parse( $parser )
 	{
-		if( $parser->accept( Token::T_IDENT, 'include' ) ) {
+		if( $parser->accept( Token::T_IDENT, 'raw' ) || $parser->accept( Token::T_IDENT, 'r' ) ) {
 
 			$parser->insert( new static() );
-			$parser->traverseUp();
 			$parser->advance();
+
+			$parser->traverseUp();
 
 			ExpressionNode::parse( $parser );
 			$parser->setAttribute();
@@ -22,16 +23,16 @@ class IncludeNode extends \Aegis\Node
 			$parser->parseOutsideTag();
 		}
 	}
-
+	
 	public function compile( $compiler )
 	{
-		$compiler->write( '<?php $this->render(' );
+		$compiler->write( '<?php echo ' );
 
 		foreach( $this->getAttributes() as $a ) {
-
+			
 			$a->compile( $compiler );
 		}
 
-		$compiler->write( '); ?>' );
+		$compiler->write( '; ?>' );
 	}
 }

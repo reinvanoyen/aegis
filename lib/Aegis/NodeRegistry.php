@@ -4,15 +4,7 @@ namespace Aegis;
 
 class NodeRegistry
 {
-	private static $registeredNodes = [
-		'Aegis\\Node\\IfNode',
-		'Aegis\\Node\\ForNode',
-		'Aegis\\Node\\BlockNode',
-		'Aegis\\Node\\ExtendNode',
-		'Aegis\\Node\\IncludeNode',
-		'Aegis\\Node\\PrintNode',
-		'Aegis\\Node\\RawNode',
-	];
+	private static $registeredNodes = [];
 
 	public static function register( $mixed )
 	{

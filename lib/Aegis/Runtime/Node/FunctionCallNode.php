@@ -1,6 +1,6 @@
 <?php
 
-namespace Aegis\Node;
+namespace Aegis\Runtime\Node;
 
 use Aegis\Token;
 
@@ -41,7 +41,7 @@ class FunctionCallNode extends \Aegis\Node
 
 	public function compile( $compiler )
 	{
-		$compiler->write( '$this->functions[' );
+		$compiler->write( '$this->runtime->functions[' );
 		$compiler->write( '\'' );
 		$compiler->write( $this->funcName );
 		$compiler->write( '\'' );
