@@ -37,7 +37,7 @@ class VariableNode extends Node
 		if( $local ) {
 			$compiler->write( '$' . str_replace( '.', '->', $this->name ) );
 		} else {
-			$compiler->write( '$this->runtime->' . str_replace( '.', '->', $this->name ) );
+			$compiler->write( '$env->' . str_replace( '.', '->', $this->name ) );
 		}
 	}
 }

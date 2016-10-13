@@ -112,7 +112,7 @@ class ForNode extends \Aegis\Node
 			$compiler->write( '++ ): ?>' );
 
 			if( $loopvar !== NULL ) {
-				$compiler->write( '<?php $this->runtime->set( \'' . $loopvar->getName() . '\', $i ); ?>' );
+				$compiler->write( '<?php $env->set( \'' . $loopvar->getName() . '\', $i ); ?>' );
 			}
 
 			foreach( $this->getChildren() as $c ) {

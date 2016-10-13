@@ -12,4 +12,14 @@
 
 	{{ /block }}
 
+	{{ block "content" }}
+
+		<div id="content">
+			<p>
+				Hello
+			</p>
+		</div>
+
+	{{ /block }}
+
 {{ /extends }}

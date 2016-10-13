@@ -1,7 +1,8 @@
 {{ block "header" }}
 
-	<h1>{{ block "title" }}Title{{ /block }}</h1>
-
+	<h1>{{ block "title" }}{{ /block }}</h1>
 	{{ block "nav" }}{{ /block }}
 
 {{ /block }}
+
+{{ block "content" }}Very cool{{ /block }}

@@ -2,6 +2,9 @@
 
 namespace Aegis;
 
+use Aegis\Runtime\DefaultRuntime;
+use Aegis\Helpers\File;
+
 class Template
 {
 	public static $debug = TRUE;
@@ -15,9 +18,13 @@ class Template
 
 	private $runtime;
 
-	public function setRuntime( RuntimeInterface $runtime )
+	public function __construct( RuntimeInterface $runtime = NULL )
 	{
-		$this->runtime = $runtime;
+		if( $runtime ) {
+			$this->runtime = $runtime;
+		} else {
+			$this->runtime = new DefaultRuntime();
+		}
 	}
 
 	public function __set( $k, $v )
@@ -121,9 +128,16 @@ class Template
 	private function execute()
 	{
 		ob_start();
-		require $this->cacheFilename;
+
+		File\scopedRequire( $this->cacheFilename, [
+			'tpl' => $this,
+			'env' => $this->runtime,
+		] );
+
 		$result = ob_get_contents();
 		ob_end_clean();
 		return $result;
 	}
 }
+
+require_once 'Helpers/File.php';

@@ -25,7 +25,7 @@ class IncludeNode extends \Aegis\Node
 
 	public function compile( $compiler )
 	{
-		$compiler->write( '<?php $this->render(' );
+		$compiler->write( '<?php $tpl->render(' );
 
 		foreach( $this->getAttributes() as $a ) {
 

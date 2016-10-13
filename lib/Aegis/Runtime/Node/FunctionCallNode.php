@@ -41,7 +41,7 @@ class FunctionCallNode extends \Aegis\Node
 
 	public function compile( $compiler )
 	{
-		$compiler->write( '$this->runtime->functions[' );
+		$compiler->write( '$env->functions[' );
 		$compiler->write( '\'' );
 		$compiler->write( $this->funcName );
 		$compiler->write( '\'' );

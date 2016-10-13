@@ -8,8 +8,7 @@ require 'autoload.php';
 \Aegis\Template::$debug = TRUE;
 
 $tpl = new \Aegis\Template();
-$tpl->setRuntime( new \Aegis\Runtime\DefaultRuntime() );
 
 $tpl->title = 'My testje';
 
-echo $tpl->render( 'index' );
+echo $tpl->render( 'example/index' );

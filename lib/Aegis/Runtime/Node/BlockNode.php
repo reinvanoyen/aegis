@@ -75,9 +75,9 @@ class BlockNode extends \Aegis\Node
 		}
 
 		// Write head of itself
-		$compiler->head( '<?php $this->runtime->' . $blockHeadFunction . '( ' );
+		$compiler->head( '<?php $env->' . $blockHeadFunction . '( ' );
 		$compiler->head( $name );
-		$compiler->head( ', function() { ?>' );
+		$compiler->head( ', function() use ( $env, $tpl ) { ?>' );
 
 		foreach( $this->getChildren() as $c ) {
 
@@ -89,7 +89,7 @@ class BlockNode extends \Aegis\Node
 		$compiler->head( '<?php } ); ?>' );
 
 		// Render itself
-		$compiler->write( '<?php $this->runtime->getBlock( ' );
+		$compiler->write( '<?php $env->getBlock( ' );
 		$compiler->write( $name );
 		$compiler->write( '); ?>' );
 	}
