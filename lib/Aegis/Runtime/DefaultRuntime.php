@@ -7,7 +7,7 @@ use Aegis\RuntimeInterface;
 
 class DefaultRuntime implements RuntimeInterface
 {
-    private $variables = [];
+    private $vars = [];
     private $blocks = [];
     public $functions = [];
 
@@ -26,12 +26,12 @@ class DefaultRuntime implements RuntimeInterface
 
     public function set($k, $v)
     {
-        $this->variables[ $k ] = $v;
+        $this->vars[ $k ] = $v;
     }
 
     public function __get($k)
     {
-        return $this->variables[ $k ];
+        return $this->vars[ $k ];
     }
 
     public function setBlock($id, $callable)

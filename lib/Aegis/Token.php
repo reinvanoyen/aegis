@@ -30,7 +30,7 @@ class Token
     const T_NUMBER = 'T_NUMBER';
     const T_SYMBOL = 'T_SYMBOL';
 
-    private static $tokenNames = [
+    private static $tokenTypes = [
         self::T_EOL => 'T_EOL',
         self::T_TEXT => 'T_TEXT',
         self::T_OPENING_TAG => 'T_OPENING_TAG',
@@ -45,6 +45,10 @@ class Token
 
     public function __construct($type, $value, $line = 0)
     {
+        if (!isset(self::$tokenTypes[$type])) {
+            throw new InvalidTokenType($type);
+        }
+
         $this->type = $type;
         $this->value = $value;
         $this->line = $line;
@@ -52,8 +56,8 @@ class Token
 
     public function getName()
     {
-        if (isset(self::$tokenNames[ $this->type ])) {
-            return self::$tokenNames[ $this->type ];
+        if (isset(self::$tokenTypes[ $this->type ])) {
+            return self::$tokenTypes[ $this->type ];
         }
 
         return 'T_UNKNOWN';

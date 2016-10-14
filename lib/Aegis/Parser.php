@@ -2,6 +2,9 @@
 
 namespace Aegis;
 
+use Aegis\Node\RootNode;
+use Aegis\Node\TextNode;
+
 class Parser implements ParserInterface
 {
     private $root;
@@ -13,7 +16,7 @@ class Parser implements ParserInterface
 
     public function parse(TokenStream $stream)
     {
-        $this->root = new Node\RootNode();
+        $this->root = new RootNode();
         $this->scope = $this->root;
         $this->cursor = 0;
         $this->tokens = $stream->getTokens();
@@ -31,7 +34,7 @@ class Parser implements ParserInterface
         }
 
         if ($this->accept(Token::T_TEXT)) {
-            $this->insert(new Node\TextNode($this->getCurrentToken()->getValue()));
+            $this->insert(new TextNode($this->getCurrentToken()->getValue()));
             $this->advance();
         }
 
@@ -125,7 +128,7 @@ class Parser implements ParserInterface
         return $this->tokens[ $this->cursor + 1 ];
     }
 
-    public function setScope(\Aegis\Node $scope)
+    public function setScope(Node $scope)
     {
         $this->scope = $scope;
     }
@@ -166,7 +169,7 @@ class Parser implements ParserInterface
         $this->scope = $this->root;
     }
 
-    public function wrap(\Aegis\Node $node)
+    public function wrap(Node $node)
     {
         $last = $this->scope->getLastChild(); // Get the last insert node
         $this->scope->removeLastChild(); // Remove it
@@ -184,7 +187,7 @@ class Parser implements ParserInterface
         $this->scope->setAttribute($last);
     }
 
-    public function insert(\Aegis\Node $node)
+    public function insert(Node $node)
     {
         $node->parent = $this->scope;
         $this->scope->insert($node);
