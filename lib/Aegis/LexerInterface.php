@@ -4,5 +4,5 @@ namespace Aegis;
 
 interface LexerInterface
 {
-	public function tokenize( $string );
+    public function tokenize($string);
 }

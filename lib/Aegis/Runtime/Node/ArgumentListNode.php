@@ -6,38 +6,34 @@ use Aegis\Token;
 
 class ArgumentListNode extends \Aegis\Node
 {
-	public static function parse( $parser )
-	{
-		$parser->insert( new static() );
-		$parser->traverseUp();
+    public static function parse($parser)
+    {
+        $parser->insert(new static());
+        $parser->traverseUp();
 
-		if( ExpressionNode::parse( $parser ) ) {
+        if (ExpressionNode::parse($parser)) {
+            if ($parser->skip(Token::T_SYMBOL, ',')) {
+                self::parse($parser);
+            }
+        }
 
-			if( $parser->skip( Token::T_SYMBOL, ',' ) ) {
+        $parser->traverseDown();
 
-				self::parse( $parser );
-			}
-		}
+        return true;
+    }
 
-		$parser->traverseDown();
+    public function compile($compiler)
+    {
+        $i = 0;
 
-		return TRUE;
-	}
+        foreach ($this->getChildren() as $c) {
+            $c->compile($compiler);
 
-	public function compile( $compiler )
-	{
-		$i = 0;
+            ++$i;
 
-		foreach( $this->getChildren() as $c ) {
-
-			$c->compile( $compiler );
-
-			$i++;
-
-			if( $i < count( $this->getChildren() ) ) {
-
-				$compiler->write( ', ' );
-			}
-		}
-	}
+            if ($i < count($this->getChildren())) {
+                $compiler->write(', ');
+            }
+        }
+    }
 }

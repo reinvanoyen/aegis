@@ -2,45 +2,39 @@
 
 namespace Aegis\Runtime\Node;
 
-use Aegis\Token;
-
 class ExpressionNode extends \Aegis\Node
 {
-	public static function parse( $parser )
-	{
-		if(
-			StringNode::parse( $parser ) ||
-			VariableNode::parse( $parser ) ||
-			NumberNode::parse( $parser ) ||
-			ListNode::parse( $parser ) ||
-			FunctionCallNode::parse( $parser )
-		) {
-			if( ! $parser->getScope() instanceof ExpressionNode ) {
+    public static function parse($parser)
+    {
+        if (
+            StringNode::parse($parser) ||
+            VariableNode::parse($parser) ||
+            NumberNode::parse($parser) ||
+            ListNode::parse($parser) ||
+            FunctionCallNode::parse($parser)
+        ) {
+            if (!$parser->getScope() instanceof self) {
 
-				// Insert the expression and move inside
-				$parser->wrap( new static() );
-			}
+                // Insert the expression and move inside
+                $parser->wrap(new static());
+            }
 
-			if( OperatorNode::parse( $parser ) ) {
-				
-				self::parse( $parser );
+            if (OperatorNode::parse($parser)) {
+                self::parse($parser);
+            } else {
+                $parser->traverseDown();
+            }
 
-			} else {
-				
-				$parser->traverseDown();
-			}
+            return true;
+        }
 
-			return TRUE;
-		}
+        return false;
+    }
 
-		return FALSE;
-	}
-
-	public function compile( $compiler )
-	{
-		foreach( $this->getChildren() as $c ) {
-
-			$c->compile( $compiler );
-		}
-	}
+    public function compile($compiler)
+    {
+        foreach ($this->getChildren() as $c) {
+            $c->compile($compiler);
+        }
+    }
 }

@@ -4,5 +4,5 @@ namespace Aegis;
 
 interface RuntimeInterface
 {
-	public function set( $v, $k );
+    public function set($v, $k);
 }
