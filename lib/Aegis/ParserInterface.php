@@ -4,5 +4,5 @@ namespace Aegis;
 
 interface ParserInterface
 {
-	public function parse( TokenStream $tokens );
+    public function parse(TokenStream $tokens);
 }

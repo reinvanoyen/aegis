@@ -2,8 +2,8 @@
 
 namespace Aegis\Helpers\File;
 
-/*boolean*/ function scopedRequire( $filename, $vars = [] )
+/*boolean*/ function scopedRequire($filename, $vars = [])
 {
-	extract( $vars );
-	require $filename;
+    extract($vars);
+    require $filename;
 }

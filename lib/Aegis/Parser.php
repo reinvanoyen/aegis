@@ -2,207 +2,194 @@
 
 namespace Aegis;
 
-use Aegis\Node;
+use Aegis\Node\RootNode;
+use Aegis\Node\TextNode;
 
 class Parser implements ParserInterface
 {
-	private $root;
-	private $scope;
+    private $root;
+    private $scope;
 
-	private $tokens;
-	private $cursor;
-	private $lastTokenIndex;
+    private $tokens;
+    private $cursor;
+    private $lastTokenIndex;
 
-	public function parse( TokenStream $stream )
-	{
-		$this->root = new Node\RootNode();
-		$this->scope = $this->root;
-		$this->cursor = 0;
-		$this->tokens = $stream->getTokens();
-		$this->lastTokenIndex = count( $this->tokens ) - 1;
+    public function parse(TokenStream $stream)
+    {
+        $this->root = new RootNode();
+        $this->scope = $this->root;
+        $this->cursor = 0;
+        $this->tokens = $stream->getTokens();
+        $this->lastTokenIndex = count($this->tokens) - 1;
 
-		$this->parseOutsideTag();
+        $this->parseOutsideTag();
 
-		return $this->getRoot();
-	}
+        return $this->getRoot();
+    }
 
-	public function parseOutsideTag()
-	{
-		if( ! count( $this->tokens ) ) {
+    public function parseOutsideTag()
+    {
+        if (!count($this->tokens)) {
+            return;
+        }
 
-			return;
-		}
+        if ($this->accept(Token::T_TEXT)) {
+            $this->insert(new TextNode($this->getCurrentToken()->getValue()));
+            $this->advance();
+        }
 
-		if( $this->accept( Token::T_TEXT ) ) {
+        if ($this->skip(Token::T_OPENING_TAG)) {
+            $this->parseStatement();
+        }
+    }
 
-			$this->insert( new Node\TextNode( $this->getCurrentToken()->getValue() ) );
-			$this->advance();
-		}
+    private function parseStatement()
+    {
+        foreach (NodeRegistry::getNodes() as $node) {
+            $node::parse($this);
+        }
+    }
 
-		if( $this->skip( Token::T_OPENING_TAG ) ) {
+    public function expect($type, $value = null)
+    {
+        if (!$this->accept($type, $value)) {
+            $this->error($type, $value);
+        }
 
-			$this->parseStatement();
-		}
-	}
+        return true;
+    }
 
-	private function parseStatement()
-	{
-		foreach( NodeRegistry::getNodes() as $node ) {
+    public function expectNext($type, $value = null)
+    {
+        if (!$this->acceptNext($type, $value)) {
+            $this->error($type, $value);
+        }
 
-			$node::parse( $this );
-		}
-	}
+        return true;
+    }
 
-	public function expect( $type, $value = NULL )
-	{
-		if( ! $this->accept( $type, $value ) ) {
+    public function skip($type, $value = null)
+    {
+        if ($this->accept($type, $value)) {
+            $this->advance();
 
-			$this->error( $type, $value );
-		}
+            return true;
+        }
 
-		return TRUE;
-	}
+        return false;
+    }
 
-	public function expectNext( $type, $value = NULL )
-	{
-		if( ! $this->acceptNext( $type, $value ) ) {
+    public function accept($type, $value = null)
+    {
+        if ($this->getCurrentToken()->getType() === $type) {
+            if ($value) {
+                if ($this->getCurrentToken()->getValue() === $value) {
+                    return true;
+                }
 
-			$this->error( $type, $value );
-		}
+                return false;
+            }
 
-		return TRUE;
-	}
-	
-	public function skip( $type, $value = NULL )
-	{
-		if( $this->accept( $type, $value ) ) {
+            return true;
+        }
 
-			$this->advance();
-			return TRUE;
-		}
+        return false;
+    }
 
-		return FALSE;
-	}
+    public function acceptNext($type, $value = null)
+    {
+        if ($this->getNextToken()->getType() === $type) {
+            if ($value) {
+                if ($this->getNextToken()->getValue() === $value) {
+                    return true;
+                }
 
-	public function accept( $type, $value = NULL )
-	{
-		if( $this->getCurrentToken()->getType() === $type ) {
+                return false;
+            }
 
-			if( $value ) {
+            return true;
+        }
 
-				if( $this->getCurrentToken()->getValue() === $value ) {
+        return false;
+    }
 
-					return TRUE;
-				}
+    public function error($type, $value)
+    {
+        throw new ParseError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken(), $this->getCurrentToken()->getLine());
+    }
 
-				return FALSE;
-			}
-			
-			return TRUE;
-		}
+    public function getCurrentToken()
+    {
+        return $this->tokens[ $this->cursor ];
+    }
 
-		return FALSE;
-	}
+    public function getNextToken()
+    {
+        return $this->tokens[ $this->cursor + 1 ];
+    }
 
-	public function acceptNext( $type, $value = NULL )
-	{
-		if( $this->getNextToken()->getType() === $type ) {
+    public function setScope(Node $scope)
+    {
+        $this->scope = $scope;
+    }
 
-			if( $value ) {
+    public function getScope()
+    {
+        return $this->scope;
+    }
 
-				if( $this->getNextToken()->getValue() === $value ) {
+    public function getRoot()
+    {
+        return $this->root;
+    }
 
-					return TRUE;
-				}
+    public function traverseUp()
+    {
+        $this->scope = $this->scope->getLastChild();
+    }
 
-				return FALSE;
-			}
+    public function traverseDown()
+    {
+        if (!$this->scope->parent) {
+            $this->error('Could not return from scope because scope is already on root level', $this->getCurrentToken()->getLine());
+        }
 
-			return TRUE;
-		}
+        $this->scope = $this->scope->parent;
+    }
 
-		return FALSE;
-	}
+    public function advance()
+    {
+        if ($this->cursor < count($this->tokens) - 1) {
+            ++$this->cursor;
+        }
+    }
 
-	public function error( $type, $value )
-	{
-		throw new ParseError( 'Expected ' . strtoupper( $type  . ' ' . $value ) . ' got ' . $this->getCurrentToken(), $this->getCurrentToken()->getLine() );
-	}
+    public function root()
+    {
+        $this->scope = $this->root;
+    }
 
-	public function getCurrentToken()
-	{
-		return $this->tokens[ $this->cursor ];
-	}
+    public function wrap(Node $node)
+    {
+        $last = $this->scope->getLastChild(); // Get the last insert node
+        $this->scope->removeLastChild(); // Remove it
 
-	public function getNextToken()
-	{
-		return $this->tokens[ $this->cursor + 1 ];
-	}
+        $this->insert($node);
+        $this->traverseUp();
 
-	public function setScope( \Aegis\Node $scope )
-	{
-		$this->scope = $scope;
-	}
+        $this->insert($last);
+    }
 
-	public function getScope()
-	{
-		return $this->scope;
-	}
+    public function setAttribute()
+    {
+        $last = $this->scope->getLastChild(); // Get the last inserted node
+        $this->scope->removeLastChild(); // Remove it
+        $this->scope->setAttribute($last);
+    }
 
-	public function getRoot()
-	{
-		return $this->root;
-	}
-
-	public function traverseUp()
-	{
-		$this->scope = $this->scope->getLastChild();
-	}
-
-	public function traverseDown()
-	{
-		if( ! $this->scope->parent ) {
-
-			$this->error( 'Could not return from scope because scope is already on root level', $this->getCurrentToken()->getLine() );
-		}
-
-		$this->scope = $this->scope->parent;
-	}
-
-	public function advance()
-	{
-		if( $this->cursor < count( $this->tokens ) - 1 ) {
-
-			$this->cursor++;
-		}
-	}
-
-	public function root()
-	{
-		$this->scope = $this->root;
-	}
-
-	public function wrap( \Aegis\Node $node )
-	{
-		$last = $this->scope->getLastChild(); // Get the last insert node
-		$this->scope->removeLastChild(); // Remove it
-
-		$this->insert( $node );
-		$this->traverseUp();
-
-		$this->insert( $last );
-	}
-
-	public function setAttribute()
-	{
-		$last = $this->scope->getLastChild(); // Get the last inserted node
-		$this->scope->removeLastChild(); // Remove it
-		$this->scope->setAttribute( $last );
-	}
-
-	public function insert( \Aegis\Node $node )
-	{
-		$node->parent = $this->scope;
-		$this->scope->insert( $node );
-	}
+    public function insert(Node $node)
+    {
+        $node->parent = $this->scope;
+        $this->scope->insert($node);
+    }
 }

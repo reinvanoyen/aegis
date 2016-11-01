@@ -6,121 +6,113 @@ use Aegis\Token;
 
 class ForNode extends \Aegis\Node
 {
-	public static function parse( $parser )
-	{
-		if( $parser->accept( Token::T_IDENT, 'for' ) ) {
+    public static function parse($parser)
+    {
+        if ($parser->accept(Token::T_IDENT, 'for')) {
+            $parser->insert(new static());
+            $parser->advance();
+            $parser->traverseUp();
 
-			$parser->insert( new static() );
-			$parser->advance();
-			$parser->traverseUp();
+            if ($parser->accept(Token::T_VAR)) {
 
-			if( $parser->accept( Token::T_VAR ) ) {
+                // T_VAR as first attribute
 
-				// T_VAR as first attribute
+                $parser->insert(new VariableNode($parser->getCurrentToken()->getValue()));
+                $parser->setAttribute();
+                $parser->advance();
 
-				$parser->insert( new VariableNode( $parser->getCurrentToken()->getValue() ) );
-				$parser->setAttribute();
-				$parser->advance();
+                $parser->expect(Token::T_IDENT, 'in');
+                $parser->advance();
 
-				$parser->expect( Token::T_IDENT, 'in' );
-				$parser->advance();
+                ExpressionNode::parse($parser);
+                $parser->setAttribute();
+            } elseif ($parser->accept(Token::T_NUMBER)) {
 
-				ExpressionNode::parse( $parser );
-				$parser->setAttribute();
+                // T_NUMBER as first attribute
 
-			} else if( $parser->accept( Token::T_NUMBER ) ) {
+                $parser->insert(new NumberNode($parser->getCurrentToken()->getValue()));
+                $parser->setAttribute();
+                $parser->advance();
 
-				// T_NUMBER as first attribute
+                $parser->expect(Token::T_IDENT, 'to');
+                $parser->advance();
 
-				$parser->insert( new NumberNode( $parser->getCurrentToken()->getValue() ) );
-				$parser->setAttribute();
-				$parser->advance();
+                if ($parser->expect(Token::T_NUMBER)) {
+                    $parser->insert(new NumberNode($parser->getCurrentToken()->getValue()));
+                    $parser->setAttribute();
+                    $parser->advance();
 
-				$parser->expect( Token::T_IDENT, 'to' );
-				$parser->advance();
+                    if ($parser->accept(Token::T_IDENT, 'as')) {
+                        $parser->advance();
+                        $parser->expect(Token::T_VAR);
+                        $parser->insert(new VariableNode($parser->getCurrentToken()->getValue()));
+                        $parser->setAttribute();
+                        $parser->advance();
+                    }
+                }
+            }
 
-				if( $parser->expect( Token::T_NUMBER ) ) {
+            $parser->skip(Token::T_CLOSING_TAG);
 
-					$parser->insert( new NumberNode( $parser->getCurrentToken()->getValue() ) );
-					$parser->setAttribute();
-					$parser->advance();
+            $parser->parseOutsideTag();
 
-					if( $parser->accept( Token::T_IDENT, 'as' ) ) {
-						$parser->advance();
-						$parser->expect( Token::T_VAR );
-						$parser->insert( new VariableNode( $parser->getCurrentToken()->getValue() ) );
-						$parser->setAttribute();
-						$parser->advance();
-					}
-				}
-			}
+            $parser->skip(Token::T_OPENING_TAG);
+            $parser->skip(Token::T_IDENT, '/for');
+            $parser->skip(Token::T_CLOSING_TAG);
 
-			$parser->skip( Token::T_CLOSING_TAG );
+            $parser->traverseDown();
+            $parser->parseOutsideTag();
 
-			$parser->parseOutsideTag();
+            return true;
+        }
 
-			$parser->skip( Token::T_OPENING_TAG );
-			$parser->skip( Token::T_IDENT, '/for' );
-			$parser->skip( Token::T_CLOSING_TAG );
+        return false;
+    }
 
-			$parser->traverseDown();
-			$parser->parseOutsideTag();
+    public function compile($compiler)
+    {
+        $loopitem = $this->getAttribute(0);
+        $arrayable = $this->getAttribute(1);
 
-			return TRUE;
-		}
+        if ($loopitem instanceof VariableNode) {
+            $compiler->write('<?php foreach(');
+            $arrayable->compile($compiler);
+            $compiler->write(' as ');
+            $loopitem->compile($compiler);
+            $compiler->write('): ?>');
 
-		return FALSE;
-	}
+            foreach ($this->getChildren() as $c) {
+                $c->compile($compiler);
+            }
 
-	public function compile( $compiler )
-	{
-		$loopitem = $this->getAttribute( 0 );
-		$arrayable = $this->getAttribute( 1 );
+            $compiler->write('<?php endforeach; ?>');
+        } elseif ($loopitem instanceof NumberNode) {
+            $loopvar = null;
+            if ($this->getAttribute(2)) {
+                $loopvar = $this->getAttribute(2);
+            }
 
-		if( $loopitem instanceof VariableNode ) {
+            $compiler->write('<?php for( ');
+            $compiler->write('$i');
+            $compiler->write(' = ');
+            $loopitem->compile($compiler);
+            $compiler->write('; ');
+            $compiler->write('$i');
+            $compiler->write(' <= ');
+            $arrayable->compile($compiler);
+            $compiler->write('; ');
+            $compiler->write('$i');
+            $compiler->write('++ ): ?>');
 
-			$compiler->write( '<?php foreach(' );
-			$arrayable->compile( $compiler );
-			$compiler->write( ' as ' );
-			$loopitem->compile( $compiler );
-			$compiler->write( '): ?>' );
+            if ($loopvar !== null) {
+                $compiler->write('<?php $env->set( \''.$loopvar->getName().'\', $i ); ?>');
+            }
 
-			foreach( $this->getChildren() as $c ) {
+            foreach ($this->getChildren() as $c) {
+                $c->compile($compiler);
+            }
 
-				$c->compile( $compiler );
-			}
-
-			$compiler->write( '<?php endforeach; ?>' );
-
-		} else if( $loopitem instanceof NumberNode ) {
-
-			$loopvar = NULL;
-			if( $this->getAttribute( 2 ) ) {
-				$loopvar = $this->getAttribute( 2 );
-			}
-
-			$compiler->write( '<?php for( ' );
-			$compiler->write('$i');
-			$compiler->write( ' = ' );
-			$loopitem->compile( $compiler );
-			$compiler->write( '; ' );
-			$compiler->write( '$i' );
-			$compiler->write( ' <= ' );
-			$arrayable->compile( $compiler );
-			$compiler->write( '; ' );
-			$compiler->write('$i');
-			$compiler->write( '++ ): ?>' );
-
-			if( $loopvar !== NULL ) {
-				$compiler->write( '<?php $env->set( \'' . $loopvar->getName() . '\', $i ); ?>' );
-			}
-
-			foreach( $this->getChildren() as $c ) {
-
-				$c->compile( $compiler );
-			}
-
-			$compiler->write( '<?php endfor; ?>' );
-		}
-	}
+            $compiler->write('<?php endfor; ?>');
+        }
+    }
 }

@@ -6,29 +6,26 @@ use Aegis\Token;
 
 class PrintNode extends \Aegis\Node
 {
-	public static function parse( $parser )
-	{
-		if( ExpressionNode::parse( $parser ) ) {
+    public static function parse($parser)
+    {
+        if (ExpressionNode::parse($parser)) {
+            $parser->wrap(new static());
+            $parser->traverseDown();
+        }
 
-			$parser->wrap( new static() );
-			$parser->traverseDown();
-		}
+        if ($parser->skip(Token::T_CLOSING_TAG)) {
+            $parser->parseOutsideTag();
+        }
+    }
 
-		if( $parser->skip( Token::T_CLOSING_TAG ) ) {
+    public function compile($compiler)
+    {
+        $compiler->write('<?php echo htmlspecialchars( ');
 
-			$parser->parseOutsideTag();
-		}
-	}
+        foreach ($this->getChildren() as $c) {
+            $c->compile($compiler);
+        }
 
-	public function compile( $compiler )
-	{
-		$compiler->write( '<?php echo htmlspecialchars( ' );
-
-		foreach( $this->getChildren() as $c ) {
-
-			$c->compile( $compiler );
-		}
-
-		$compiler->write( ' ); ?>' );
-	}
+        $compiler->write(' ); ?>');
+    }
 }
