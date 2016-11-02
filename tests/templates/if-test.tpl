@@ -1,0 +1,1 @@
+{{ if @condition }}Condition is true{{ /if }}
