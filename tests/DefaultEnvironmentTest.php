@@ -21,6 +21,21 @@ class DefaultEnvironmentTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expectedResult, $tpl->render('basics-test') );
 	}
 
+	public function testraw()
+	{
+		Template::$cacheDirectory = 'tests/cache/';
+		Template::$templateDirectory = 'tests/templates/';
+
+		$html = '<span data-name="test">test</span>';
+
+		$tpl = new Template();
+		$tpl->html = $html;
+
+		$expectedResult = '<div>test</div><span data-name="test">test</span>';
+
+		$this->assertEquals($expectedResult, $tpl->render('raw-test') );
+	}
+
 	public function testIf()
 	{
 		Template::$cacheDirectory = 'tests/cache/';
