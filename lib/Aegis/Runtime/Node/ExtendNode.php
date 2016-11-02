@@ -3,17 +3,14 @@
 namespace Aegis\Runtime\Node;
 
 use Aegis\Compiler;
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
-class ExtendNode extends \Aegis\Node
+class ExtendNode extends Node
 {
-    /*
-     *
-     * {{ extends "templatename" }}{{ /extends }}
-     *
-     * */
-
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_IDENT, 'extends')) {
             $parser->insert(new static());
@@ -39,7 +36,7 @@ class ExtendNode extends \Aegis\Node
         return false;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         // Render the head of the extended template
 

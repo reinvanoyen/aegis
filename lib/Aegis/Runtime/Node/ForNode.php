@@ -2,11 +2,14 @@
 
 namespace Aegis\Runtime\Node;
 
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
-class ForNode extends \Aegis\Node
+class ForNode extends Node
 {
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_IDENT, 'for')) {
             $parser->insert(new static());
@@ -69,7 +72,7 @@ class ForNode extends \Aegis\Node
         return false;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         $loopitem = $this->getAttribute(0);
         $arrayable = $this->getAttribute(1);
@@ -86,6 +89,10 @@ class ForNode extends \Aegis\Node
             }
 
             $compiler->write('<?php endforeach; ?>');
+	        $compiler->write('<?php unset(');
+	        $loopitem->compile($compiler);
+	        $compiler->write('); ?>');
+
         } elseif ($loopitem instanceof NumberNode) {
             $loopvar = null;
             if ($this->getAttribute(2)) {

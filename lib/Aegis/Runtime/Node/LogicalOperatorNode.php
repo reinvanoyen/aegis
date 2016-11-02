@@ -2,6 +2,8 @@
 
 namespace Aegis\Runtime\Node;
 
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
@@ -14,7 +16,7 @@ class LogicalOperatorNode extends Node
 		$this->type = $type;
 	}
 
-	public static function parse($parser)
+	public static function parse(ParserInterface $parser)
 	{
 		if (
 			$parser->accept(Token::T_IDENT, 'not') ||
@@ -31,7 +33,7 @@ class LogicalOperatorNode extends Node
 		return false;
 	}
 
-	public function compile($compiler)
+	public function compile(CompilerInterface $compiler)
 	{
 		if ($this->type === 'not') {
 			$compiler->write(' ! ');

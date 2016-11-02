@@ -80,5 +80,5 @@ abstract class Node
         return get_class($this);
     }
 
-    abstract public function compile($compiler);
+    abstract public function compile(CompilerInterface $compiler);
 }

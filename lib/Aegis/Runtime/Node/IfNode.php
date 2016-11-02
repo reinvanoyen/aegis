@@ -2,12 +2,14 @@
 
 namespace Aegis\Runtime\Node;
 
-use Aegis\Parser;
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
-class IfNode extends \Aegis\Node
+class IfNode extends Node
 {
-    public static function parse(Parser $parser)
+    public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_IDENT, 'if')) {
             $parser->insert(new static());
@@ -39,7 +41,7 @@ class IfNode extends \Aegis\Node
         return false;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         $compiler->write('<?php if( ');
 

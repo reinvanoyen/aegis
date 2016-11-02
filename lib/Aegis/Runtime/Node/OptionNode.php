@@ -2,6 +2,7 @@
 
 namespace Aegis\Runtime\Node;
 
+use Aegis\CompilerInterface;
 use Aegis\Node;
 
 class OptionNode extends Node
@@ -18,7 +19,7 @@ class OptionNode extends Node
         return $this->value;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
     }
 }

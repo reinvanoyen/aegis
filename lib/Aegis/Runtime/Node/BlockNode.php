@@ -3,11 +3,14 @@
 namespace Aegis\Runtime\Node;
 
 use Aegis\Compiler;
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
-class BlockNode extends \Aegis\Node
+class BlockNode extends Node
 {
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_IDENT, 'block')) {
             $parser->insert(new static());
@@ -41,7 +44,7 @@ class BlockNode extends \Aegis\Node
         return false;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         $nameAttr = $this->getAttribute(0);
         $subcompiler = new Compiler($nameAttr);

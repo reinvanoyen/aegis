@@ -2,9 +2,13 @@
 
 namespace Aegis\Runtime\Node;
 
-class ExpressionNode extends \Aegis\Node
+use Aegis\CompilerInterface;
+use Aegis\Node;
+use Aegis\ParserInterface;
+
+class ExpressionNode extends Node
 {
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         if (
             StringNode::parse($parser) ||
@@ -32,7 +36,7 @@ class ExpressionNode extends \Aegis\Node
         return false;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         foreach ($this->getChildren() as $c) {
             $c->compile($compiler);

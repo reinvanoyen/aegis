@@ -2,11 +2,14 @@
 
 namespace Aegis\Runtime\Node;
 
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
-class ArgumentListNode extends \Aegis\Node
+class ArgumentListNode extends Node
 {
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         $parser->insert(new static());
         $parser->traverseUp();
@@ -22,7 +25,7 @@ class ArgumentListNode extends \Aegis\Node
         return true;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         $i = 0;
 

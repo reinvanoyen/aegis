@@ -2,9 +2,12 @@
 
 namespace Aegis\Runtime\Node;
 
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
-class OperatorNode extends \Aegis\Node
+class OperatorNode extends Node
 {
     private $type;
 
@@ -13,7 +16,7 @@ class OperatorNode extends \Aegis\Node
         $this->type = $type;
     }
 
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_OP)) {
             $parser->insert(new static($parser->getCurrentToken()->getValue()));
@@ -25,7 +28,7 @@ class OperatorNode extends \Aegis\Node
         return false;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         if ($this->type === '+') {
             $compiler->write(' . ');

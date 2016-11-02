@@ -2,7 +2,9 @@
 
 namespace Aegis\Runtime\Node;
 
+use Aegis\CompilerInterface;
 use Aegis\Node;
+use Aegis\ParserInterface;
 use Aegis\Token;
 
 class VariableNode extends Node
@@ -19,7 +21,7 @@ class VariableNode extends Node
         return $this->name;
     }
 
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_VAR)) {
             $parser->insert(new static($parser->getCurrentToken()->getValue()));
@@ -31,7 +33,7 @@ class VariableNode extends Node
         return false;
     }
 
-    public function compile($compiler, $local = false)
+    public function compile(CompilerInterface $compiler, $local = false)
     {
         if ($local) {
             $compiler->write('$'.str_replace('.', '->', $this->name));

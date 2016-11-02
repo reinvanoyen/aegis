@@ -2,7 +2,10 @@
 
 namespace Aegis\Node;
 
-class TextNode extends \Aegis\Node
+use Aegis\CompilerInterface;
+use Aegis\Node;
+
+class TextNode extends Node
 {
     private $value;
 
@@ -11,7 +14,7 @@ class TextNode extends \Aegis\Node
         $this->value = $value;
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         $compiler->write($this->value);
     }

@@ -2,11 +2,14 @@
 
 namespace Aegis\Runtime\Node;
 
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
-class IncludeNode extends \Aegis\Node
+class IncludeNode extends Node
 {
-    public static function parse($parser)
+    public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_IDENT, 'include')) {
             $parser->insert(new static());
@@ -22,7 +25,7 @@ class IncludeNode extends \Aegis\Node
         }
     }
 
-    public function compile($compiler)
+    public function compile(CompilerInterface $compiler)
     {
         $compiler->write('<?php $tpl->render(');
 

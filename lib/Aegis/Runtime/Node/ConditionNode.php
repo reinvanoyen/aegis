@@ -2,12 +2,13 @@
 
 namespace Aegis\Runtime\Node;
 
-use Aegis\Token;
+use Aegis\CompilerInterface;
+use Aegis\ParserInterface;
 use Aegis\Node;
 
 class ConditionNode extends Node
 {
-	public static function parse($parser)
+	public static function parse(ParserInterface $parser)
 	{
 		if (
 			ExpressionNode::parse($parser) ||
@@ -40,7 +41,7 @@ class ConditionNode extends Node
 		return false;
 	}
 
-	public function compile($compiler)
+	public function compile(CompilerInterface $compiler)
 	{
 		foreach ($this->getChildren() as $c) {
 			$c->compile($compiler);

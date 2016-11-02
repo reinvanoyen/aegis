@@ -2,13 +2,13 @@
 
 namespace Aegis\Helpers\File;
 
-/*boolean*/ function scopedRequire($filename, $vars = [])
+function scopedRequire($filename, $vars = [])
 {
     extract($vars);
     require $filename;
 }
 
-function write( $filename, $content )
+function write($filename, $content)
 {
 	$dir = dirname($filename);
 
