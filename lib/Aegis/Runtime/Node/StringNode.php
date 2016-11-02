@@ -3,8 +3,9 @@
 namespace Aegis\Runtime\Node;
 
 use Aegis\Token;
+use Aegis\Node;
 
-class StringNode extends \Aegis\Node
+class StringNode extends Node
 {
     private $value;
 

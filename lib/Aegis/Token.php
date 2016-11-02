@@ -4,9 +4,9 @@ namespace Aegis;
 
 class Token
 {
-    public $type;
-    public $value;
-    public $line;
+    private $type;
+	private $value;
+	private $line;
 
     const PHP_EXPR = '(?:[^\']|\\\'.*?\\\')+?';
 

@@ -3,12 +3,14 @@
 namespace Aegis\Runtime\Node;
 
 use Aegis\Token;
+use Aegis\Node;
 
-class ListNode extends \Aegis\Node
+class ListNode extends Node
 {
     public static function parse($parser)
     {
         if ($parser->accept(Token::T_SYMBOL, '[')) {
+
             $parser->insert(new static());
             $parser->traverseUp();
             $parser->advance();
