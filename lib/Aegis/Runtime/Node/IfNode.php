@@ -14,8 +14,9 @@ class IfNode extends \Aegis\Node
             $parser->advance();
             $parser->traverseUp();
 
-            ExpressionNode::parse($parser);
-            $parser->setAttribute();
+	        if( ConditionNode::parse($parser) ) {
+		        $parser->setAttribute();
+	        }
 
             $parser->skip(Token::T_CLOSING_TAG);
 
