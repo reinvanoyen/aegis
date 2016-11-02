@@ -120,12 +120,12 @@ class Parser implements ParserInterface
 
     public function getCurrentToken()
     {
-        return $this->tokens[ $this->cursor ];
+        return $this->tokens[$this->cursor];
     }
 
     public function getNextToken()
     {
-        return $this->tokens[ $this->cursor + 1 ];
+        return $this->tokens[$this->cursor + 1];
     }
 
     public function setScope(Node $scope)
@@ -171,7 +171,7 @@ class Parser implements ParserInterface
 
     public function wrap(Node $node)
     {
-        $last = $this->scope->getLastChild(); // Get the last insert node
+        $last = $this->scope->getLastChild(); // Get the last inserted node
         $this->scope->removeLastChild(); // Remove it
 
         $this->insert($node);

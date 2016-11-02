@@ -3,22 +3,26 @@
 namespace Aegis\Runtime\Node;
 
 use Aegis\CompilerInterface;
-use Aegis\Node;
 use Aegis\ParserInterface;
 use Aegis\Token;
+use Aegis\Node;
 
 class RawNode extends Node
 {
     public static function parse(ParserInterface $parser)
     {
-        if ($parser->accept(Token::T_IDENT, 'raw') || $parser->accept(Token::T_IDENT, 'r')) {
+        if (
+        	$parser->accept(Token::T_IDENT, 'raw') ||
+	        $parser->accept(Token::T_IDENT, 'r')
+        ) {
             $parser->insert(new static());
             $parser->advance();
 
             $parser->traverseUp();
 
-            ExpressionNode::parse($parser);
-            $parser->setAttribute();
+            if( ExpressionNode::parse($parser) ) {
+	            $parser->setAttribute();
+            }
 
             $parser->skip(Token::T_CLOSING_TAG);
             $parser->traverseDown();

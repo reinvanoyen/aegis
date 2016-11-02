@@ -23,12 +23,12 @@ class PrintNode extends Node
 
     public function compile(CompilerInterface $compiler)
     {
-        $compiler->write('<?php echo htmlspecialchars( ');
+        $compiler->write('<?php echo htmlspecialchars(');
 
         foreach ($this->getChildren() as $c) {
             $c->compile($compiler);
         }
 
-        $compiler->write(' ); ?>');
+        $compiler->write('); ?>');
     }
 }
