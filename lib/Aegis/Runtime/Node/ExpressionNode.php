@@ -11,7 +11,8 @@ class ExpressionNode extends \Aegis\Node
             VariableNode::parse($parser) ||
             NumberNode::parse($parser) ||
             ListNode::parse($parser) ||
-            FunctionCallNode::parse($parser)
+            FunctionCallNode::parse($parser) ||
+            ConstantNode::parse($parser)
         ) {
             if (!$parser->getScope() instanceof self) {
 
