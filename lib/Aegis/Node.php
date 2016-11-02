@@ -4,7 +4,7 @@ namespace Aegis;
 
 abstract class Node
 {
-    public $parent = null;
+    private $parent = null;
     private $children = [];
     private $attributes = [];
     private $isAttribute;
@@ -38,6 +38,11 @@ abstract class Node
     public function getParent()
     {
         return $this->parent;
+    }
+
+    public function setParent(Node $parent)
+    {
+    	$this->parent = $parent;
     }
 
     public function getChild($i)

@@ -150,11 +150,11 @@ class Parser implements ParserInterface
 
     public function traverseDown()
     {
-        if (!$this->scope->parent) {
+        if (!$this->scope->getParent()) {
             $this->error('Could not return from scope because scope is already on root level', $this->getCurrentToken()->getLine());
         }
 
-        $this->scope = $this->scope->parent;
+        $this->scope = $this->scope->getParent();
     }
 
     public function advance()
@@ -189,7 +189,7 @@ class Parser implements ParserInterface
 
     public function insert(Node $node)
     {
-        $node->parent = $this->scope;
+        $node->setParent( $this->scope );
         $this->scope->insert($node);
     }
 }
