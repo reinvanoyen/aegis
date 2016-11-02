@@ -7,3 +7,14 @@ namespace Aegis\Helpers\File;
     extract($vars);
     require $filename;
 }
+
+function write( $filename, $content )
+{
+	$dir = dirname($filename);
+
+	if (!file_exists($dir)) {
+		mkdir($dir, 0777, true);
+	}
+
+	file_put_contents($filename, $content);
+}

@@ -10,11 +10,9 @@ class Template
     public static $debug = true;
 
     public static $templateExtension = 'tpl';
-    public static $templateDirectory = 'templates/';
+	public static $outputExtension = 'php';
+	public static $templateDirectory = 'templates/';
     public static $cacheDirectory = 'cache/templates/';
-
-    private $cacheFilename;
-    private $srcFilename;
 
     private $runtime;
 
@@ -32,99 +30,87 @@ class Template
         $this->runtime->set($k, $v);
     }
 
-    private function generateCacheFilename($filename, $extension = 'php', $prefix = null)
+    private function getCacheFilename($filename, $part = null)
     {
-        return static::$cacheDirectory.($prefix ? $prefix.'/' : null).urlencode($filename).'.'.$extension;
+        return static::$cacheDirectory.($part ? $part.'/' : '').urlencode($filename).'.'.self::$outputExtension;
     }
 
-    private function generateSourceFilename($filename)
+    private function getSourceFilename($filename)
     {
         return static::$templateDirectory.$filename.'.'.static::$templateExtension;
     }
 
-    private function shouldRecompile()
+    private function shouldRecompile( $cacheFilename, $sourceFilename )
     {
-        if (!file_exists($this->cacheFilename) || filemtime($this->cacheFilename) <= filemtime($this->srcFilename) || static::$debug) {
-            if (!file_exists(static::$cacheDirectory)) {
-                mkdir(static::$cacheDirectory, 0777, true);
-            }
-
-            return true;
-        }
-
-        return false;
+        return (!file_exists($cacheFilename) || filemtime($cacheFilename) <= filemtime($sourceFilename) || static::$debug);
     }
 
-    private function getCompiler($filename)
+    private function createCompiler($filename)
     {
         // Get string to render
-        $string = file_get_contents(static::$templateDirectory.$filename.'.'.static::$templateExtension);
+        $input = file_get_contents($this->getSourceFilename($filename));
 
-        // Tokenize the string
+	    // Create lexer & parser
         $lexer = new Lexer();
-        $tokenStream = $lexer->tokenize($string);
-
-        // Parse the token stream to a node tree
-        $parser = new Parser();
-        $parsedTree = $parser->parse($tokenStream);
+	    $parser = new Parser();
 
         // Create the compiler
-        $compiler = new Compiler($parsedTree);
+        $compiler = new Compiler($parser->parse($lexer->tokenize($input)));
 
         return $compiler;
     }
 
     public function render($filename)
     {
-        $this->cacheFilename = $this->generateCacheFilename($filename);
-        $this->srcFilename = $this->generateSourceFilename($filename);
+        $cacheFilename = $this->getCacheFilename($filename);
+        $srcFilename = $this->getSourceFilename($filename);
 
-        if ($this->shouldRecompile()) {
-            $compiler = $this->getCompiler($filename);
-            file_put_contents($this->cacheFilename, $compiler->compile());
+        if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
+            $compiler = $this->createCompiler($filename);
+	        File\write($cacheFilename, $compiler->compile());
         }
 
         // Execute
-        return $this->execute();
+        return $this->execute($cacheFilename);
     }
 
     public function renderHead($filename)
     {
-        $this->cacheFilename = $this->generateCacheFilename($filename, 'php', 'head');
-        $this->srcFilename = $this->generateSourceFilename($filename);
+	    $cacheFilename = $this->getCacheFilename($filename, 'head');
+	    $srcFilename = $this->getSourceFilename($filename);
 
-        if ($this->shouldRecompile()) {
-            $compiler = $this->getCompiler($filename);
+        if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
+            $compiler = $this->createCompiler($filename);
             // Compile and save
             $compiler->compile();
-            file_put_contents($this->cacheFilename, $compiler->getHead());
+	        File\write($cacheFilename, $compiler->getHead());
         }
 
         // Execute
-        return $this->execute();
+        return $this->execute($cacheFilename);
     }
 
     public function renderBody($filename)
     {
-        $this->cacheFilename = $this->generateCacheFilename($filename, 'php', 'body');
-        $this->srcFilename = $this->generateSourceFilename($filename);
+	    $cacheFilename = $this->getCacheFilename($filename, 'body');
+	    $srcFilename = $this->getSourceFilename($filename);
 
-        if ($this->shouldRecompile()) {
-            $compiler = $this->getCompiler($filename);
+        if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
+            $compiler = $this->createCompiler($filename);
             // Compile and save
             $compiler->compile();
-            file_put_contents($this->cacheFilename, $compiler->getBody());
+	        File\write($cacheFilename, $compiler->getBody());
         }
 
         // Execute
-        return $this->execute();
+        return $this->execute($cacheFilename);
     }
 
-    private function execute()
+    private function execute($filename)
     {
         ob_start();
 
-        File\scopedRequire($this->cacheFilename, [
+        File\scopedRequire($filename, [
             'tpl' => $this,
             'env' => $this->runtime,
         ]);
@@ -136,4 +122,4 @@ class Template
     }
 }
 
-require_once 'Helpers/File.php';
+require_once __DIR__ . '/Helpers/File.php';
