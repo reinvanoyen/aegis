@@ -2,7 +2,7 @@
 
 namespace Aegis;
 
-class NoTokenAtIndex extends \Exception
+class NoTokenAtIndex extends AegisError
 {
     public function __construct($index)
     {

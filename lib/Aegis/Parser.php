@@ -10,17 +10,16 @@ class Parser implements ParserInterface
     private $root;
     private $scope;
 
-    private $tokens;
+    private $tokenStream;
     private $cursor;
     private $lastTokenIndex;
 
     public function parse(TokenStream $stream)
     {
-        $this->root = new RootNode();
-        $this->scope = $this->root;
+        $this->root = $this->scope = new RootNode();
         $this->cursor = 0;
-        $this->tokens = $stream->getTokens();
-        $this->lastTokenIndex = count($this->tokens) - 1;
+        $this->tokenStream = $stream;
+        $this->lastTokenIndex = count($this->tokenStream->getTokens()) - 1;
 
         $this->parseOutsideTag();
 
@@ -29,7 +28,7 @@ class Parser implements ParserInterface
 
     public function parseOutsideTag()
     {
-        if (!count($this->tokens)) {
+        if (!count($this->tokenStream->getTokens())) {
             return;
         }
 
@@ -53,7 +52,7 @@ class Parser implements ParserInterface
     public function expect($type, $value = null)
     {
         if (!$this->accept($type, $value)) {
-            $this->error($type, $value);
+            throw new ParseError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken(), $this->getCurrentToken()->getLine());
         }
 
         return true;
@@ -62,7 +61,7 @@ class Parser implements ParserInterface
     public function expectNext($type, $value = null)
     {
         if (!$this->acceptNext($type, $value)) {
-            $this->error($type, $value);
+            throw new ParseError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken(), $this->getCurrentToken()->getLine());
         }
 
         return true;
@@ -113,19 +112,14 @@ class Parser implements ParserInterface
         return false;
     }
 
-    public function error($type, $value)
-    {
-        throw new ParseError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken(), $this->getCurrentToken()->getLine());
-    }
-
     public function getCurrentToken()
     {
-        return $this->tokens[$this->cursor];
+        return $this->tokenStream->getToken($this->cursor);
     }
 
     public function getNextToken()
     {
-        return $this->tokens[$this->cursor + 1];
+        return $this->tokenStream->getToken($this->cursor + 1);
     }
 
     public function setScope(Node $scope)
@@ -135,38 +129,50 @@ class Parser implements ParserInterface
 
     public function getScope()
     {
+        if (!$this->scope) {
+            throw new AegisError('No scope available before parsing');
+        }
+
         return $this->scope;
     }
 
     public function getRoot()
     {
+        if (!$this->root) {
+            throw new AegisError('No root node available before parsing');
+        }
+
         return $this->root;
     }
 
     public function traverseUp()
     {
-        $this->scope = $this->scope->getLastChild();
+        $this->setScope($this->getScope()->getLastChild());
     }
 
     public function traverseDown()
     {
-        if (!$this->scope->getParent()) {
-            $this->error('Could not return from scope because scope is already on root level', $this->getCurrentToken()->getLine());
+        if (!$this->getScope()->getParent()) {
+            try {
+                throw new ParseError('Could not traverse down from scope because scope is already on root level', $this->getCurrentToken()->getLine());
+            } catch (NoTokenAtIndex $e) {
+                throw new ParseError('Could not traverse down from scope because scope is already on root level');
+            }
         }
 
-        $this->scope = $this->scope->getParent();
+        $this->setScope($this->getScope()->getParent());
     }
 
     public function advance()
     {
-        if ($this->cursor < count($this->tokens) - 1) {
+        if ($this->cursor < count($this->tokenStream->getTokens()) - 1) {
             ++$this->cursor;
         }
     }
 
     public function root()
     {
-        $this->scope = $this->root;
+        $this->setScope($this->root);
     }
 
     public function wrap(Node $node)

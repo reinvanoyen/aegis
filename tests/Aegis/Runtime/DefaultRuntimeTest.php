@@ -2,7 +2,7 @@
 
 use \Aegis\Template;
 
-class DefaultEnvironmentTest extends PHPUnit_Framework_TestCase
+class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 {
     public function testBasics()
     {
@@ -21,7 +21,7 @@ class DefaultEnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedResult, $tpl->render('basics-test'));
     }
 
-    public function testraw()
+    public function testRaw()
     {
         Template::$cacheDirectory = 'tests/cache/';
         Template::$templateDirectory = 'tests/templates/';

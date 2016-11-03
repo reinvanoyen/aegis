@@ -2,7 +2,7 @@
 
 namespace Aegis;
 
-class InvalidTokenType extends \Exception
+class InvalidTokenType extends AegisError
 {
     public function __construct($tokenType)
     {

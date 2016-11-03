@@ -2,11 +2,11 @@
 
 namespace Aegis;
 
-class ParseError extends \Exception
+class ParseError extends AegisError
 {
     protected $srcLine;
 
-    public function __construct($message, $srcLine)
+    public function __construct($message, $srcLine = 0)
     {
         parent::__construct($message.' on line '.$srcLine);
 
