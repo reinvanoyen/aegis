@@ -7,7 +7,7 @@ abstract class Node
     private $parent = null;
     private $children = [];
     private $attributes = [];
-    private $isAttribute;
+    private $isAttribute = false;
 
     public function setAttribute(Node $n)
     {
@@ -22,7 +22,7 @@ abstract class Node
 
     public function getAttribute($i)
     {
-        return  isset($this->attributes[ $i ]) ? $this->attributes[ $i ] : null;
+        return isset($this->attributes[ $i ]) ? $this->attributes[ $i ] : null;
     }
 
     public function getAttributes()
@@ -37,6 +37,7 @@ abstract class Node
 
     public function getParent()
     {
+        // @TODO should throw exception when there's no parent
         return $this->parent;
     }
 
@@ -47,27 +48,34 @@ abstract class Node
 
     public function getChild($i)
     {
+        // @TODO should throw exception when no child is present at the index
         return $this->children[ $i ];
     }
 
     public function getLastChild()
     {
+        // @TODO should throw exception when no child is at the end
+
         return end($this->children);
     }
 
     public function removeChild($i)
     {
+        // @TODO should throw exception when no child is at the index
+
         unset($this->children[ $i ]);
     }
 
     public function removeLastChild()
     {
+        // @TODO should throw exception when no child is there to pop
+
         array_pop($this->children);
     }
 
     public function getSiblings()
     {
-        return $this->parent->children;
+        return $this->getParent()->children;
     }
 
     public function insert(Node $node)
