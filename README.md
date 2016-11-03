@@ -1,5 +1,7 @@
 # Aegis
 
+[![Build Status](https://travis-ci.org/reinvanoyen/aegis.svg?branch=master)](https://travis-ci.org/reinvanoyen/aegis)
+
 ##Template language (in development)
 
 ### Introduction
