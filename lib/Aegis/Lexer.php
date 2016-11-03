@@ -187,7 +187,7 @@ class Lexer implements LexerInterface
     private function lexNumber()
     {
         if (!preg_match('@'.Token::REGEX_T_NUMBER.'@', $this->currentChar)) {
-            $this->tokenStream->addToken(new Token(Token::T_NUMBER, $this->currentValue, $this->line));
+            $this->tokenStream->addToken(new Token(Token::T_NUMBER, (float) $this->currentValue, $this->line));
             $this->currentValue = '';
             $this->setMode(self::MODE_INSIDE_TAG);
 
