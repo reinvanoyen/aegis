@@ -9,36 +9,36 @@ use Aegis\Node;
 
 class ConstantNode extends Node
 {
-	private $value;
+    private $value;
 
-	public function __construct($value)
-	{
-		$this->value = $value;
-	}
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
 
-	public function getValue()
-	{
-		return $this->value;
-	}
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	public static function parse(ParserInterface $parser)
-	{
-		if (
-			$parser->accept(Token::T_IDENT, 'false') ||
-			$parser->accept(Token::T_IDENT, 'true') ||
-			$parser->accept(Token::T_IDENT, 'null')
-		) {
-			$parser->insert(new static($parser->getCurrentToken()->getValue()));
-			$parser->advance();
+    public static function parse(ParserInterface $parser)
+    {
+        if (
+            $parser->accept(Token::T_IDENT, 'false') ||
+            $parser->accept(Token::T_IDENT, 'true') ||
+            $parser->accept(Token::T_IDENT, 'null')
+        ) {
+            $parser->insert(new static($parser->getCurrentToken()->getValue()));
+            $parser->advance();
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public function compile(CompilerInterface $compiler)
-	{
-		$compiler->write($this->getValue());
-	}
+    public function compile(CompilerInterface $compiler)
+    {
+        $compiler->write($this->getValue());
+    }
 }

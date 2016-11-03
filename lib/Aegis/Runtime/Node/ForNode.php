@@ -89,10 +89,9 @@ class ForNode extends Node
             }
 
             $compiler->write('<?php endforeach; ?>');
-	        $compiler->write('<?php unset(');
-	        $loopitem->compile($compiler);
-	        $compiler->write('); ?>');
-
+            $compiler->write('<?php unset(');
+            $loopitem->compile($compiler);
+            $compiler->write('); ?>');
         } elseif ($loopitem instanceof NumberNode) {
             $loopvar = null;
             if ($this->getAttribute(2)) {

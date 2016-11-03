@@ -10,11 +10,11 @@ function scopedRequire($filename, $vars = [])
 
 function write($filename, $content)
 {
-	$dir = dirname($filename);
+    $dir = dirname($filename);
 
-	if (!file_exists($dir)) {
-		mkdir($dir, 0777, true);
-	}
+    if (!file_exists($dir)) {
+        mkdir($dir, 0777, true);
+    }
 
-	file_put_contents($filename, $content);
+    file_put_contents($filename, $content);
 }

@@ -5,8 +5,8 @@ namespace Aegis;
 class Token
 {
     private $type;
-	private $value;
-	private $line;
+    private $value;
+    private $line;
 
     const PHP_EXPR = '(?:[^\']|\\\'.*?\\\')+?';
 
@@ -47,6 +47,10 @@ class Token
     {
         if (!isset(self::$tokenTypes[$type])) {
             throw new InvalidTokenType($type);
+        }
+
+        if ($type === self::T_NUMBER) {
+            $value = (float) $value;
         }
 
         $this->type = $type;

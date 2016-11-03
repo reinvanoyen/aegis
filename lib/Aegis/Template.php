@@ -10,8 +10,8 @@ class Template
     public static $debug = true;
 
     public static $templateExtension = 'tpl';
-	public static $outputExtension = 'php';
-	public static $templateDirectory = 'templates/';
+    public static $outputExtension = 'php';
+    public static $templateDirectory = 'templates/';
     public static $cacheDirectory = 'cache/templates/';
 
     private $runtime;
@@ -40,9 +40,9 @@ class Template
         return static::$templateDirectory.$filename.'.'.static::$templateExtension;
     }
 
-    private function shouldRecompile( $cacheFilename, $sourceFilename )
+    private function shouldRecompile($cacheFilename, $sourceFilename)
     {
-        return (!file_exists($cacheFilename) || filemtime($cacheFilename) <= filemtime($sourceFilename) || static::$debug);
+        return !file_exists($cacheFilename) || filemtime($cacheFilename) <= filemtime($sourceFilename) || static::$debug;
     }
 
     private function createCompiler($filename)
@@ -50,9 +50,9 @@ class Template
         // Get string to render
         $input = file_get_contents($this->getSourceFilename($filename));
 
-	    // Create lexer & parser
+        // Create lexer & parser
         $lexer = new Lexer();
-	    $parser = new Parser();
+        $parser = new Parser();
 
         // Create the compiler
         $compiler = new Compiler($parser->parse($lexer->tokenize($input)));
@@ -67,7 +67,7 @@ class Template
 
         if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
             $compiler = $this->createCompiler($filename);
-	        File\write($cacheFilename, $compiler->compile());
+            File\write($cacheFilename, $compiler->compile());
         }
 
         // Execute
@@ -76,14 +76,14 @@ class Template
 
     public function renderHead($filename)
     {
-	    $cacheFilename = $this->getCacheFilename($filename, 'head');
-	    $srcFilename = $this->getSourceFilename($filename);
+        $cacheFilename = $this->getCacheFilename($filename, 'head');
+        $srcFilename = $this->getSourceFilename($filename);
 
         if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
             $compiler = $this->createCompiler($filename);
             // Compile and save
             $compiler->compile();
-	        File\write($cacheFilename, $compiler->getHead());
+            File\write($cacheFilename, $compiler->getHead());
         }
 
         // Execute
@@ -92,14 +92,14 @@ class Template
 
     public function renderBody($filename)
     {
-	    $cacheFilename = $this->getCacheFilename($filename, 'body');
-	    $srcFilename = $this->getSourceFilename($filename);
+        $cacheFilename = $this->getCacheFilename($filename, 'body');
+        $srcFilename = $this->getSourceFilename($filename);
 
         if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
             $compiler = $this->createCompiler($filename);
             // Compile and save
             $compiler->compile();
-	        File\write($cacheFilename, $compiler->getBody());
+            File\write($cacheFilename, $compiler->getBody());
         }
 
         // Execute
@@ -122,4 +122,4 @@ class Template
     }
 }
 
-require_once __DIR__ . '/Helpers/File.php';
+require_once __DIR__.'/Helpers/File.php';

@@ -2,17 +2,43 @@
 
 use \Aegis\Token;
 use \Aegis\TokenStream;
+use \Aegis\NoTokenAtIndex;
 
 class TokenStreamTest extends PHPUnit_Framework_TestCase
 {
-    public function test()
+    public function testAddToken()
     {
         $stream = new TokenStream();
-        $stream->addToken(new Token(Token::T_VAR, 'value1', 10));
+        $stream->addToken(new Token(Token::T_VAR, 'value', 10));
         $this->assertCount(1, $stream->getTokens(), 'Amount of tokens is not correct');
-        $stream->addToken(new Token(Token::T_VAR, 'value2', 10));
-        $this->assertCount(2, $stream->getTokens(), 'Amount of tokens is not correct');
-        $this->assertEquals($stream->getToken(0)->getValue(), 'value1', 'Value of token is not correct');
-        $this->assertEquals($stream->getToken(1)->getValue(), 'value2', 'Value of token is not correct');
+    }
+
+    public function testAddedTokenTypeString()
+    {
+        $stream = new TokenStream();
+        $stream->addToken(new Token(Token::T_VAR, 'value', 10));
+        $this->assertInternalType('string', $stream->getToken(0)->getValue());
+    }
+
+    public function testAddedTokenTypeFloat()
+    {
+        $stream = new TokenStream();
+        $stream->addToken(new Token(Token::T_NUMBER, '5', 10));
+        $this->assertInternalType('float', $stream->getToken(0)->getValue());
+    }
+
+    public function testGetTokenShouldReturnInstanceOfToken()
+    {
+        $stream = new TokenStream();
+        $stream->addToken(new Token(Token::T_VAR, 'value', 10));
+        $this->assertInstanceOf(Token::class, $stream->getToken(0));
+    }
+
+    public function testGetTokenShouldThrowException()
+    {
+        $this->setExpectedException(NoTokenAtIndex::class);
+
+        $stream = new TokenStream();
+        $stream->getToken(3);
     }
 }

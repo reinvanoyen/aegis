@@ -16,9 +16,9 @@ class IfNode extends Node
             $parser->advance();
             $parser->traverseUp();
 
-	        if( ConditionNode::parse($parser) ) {
-		        $parser->setAttribute();
-	        }
+            if (ConditionNode::parse($parser)) {
+                $parser->setAttribute();
+            }
 
             $parser->skip(Token::T_CLOSING_TAG);
 

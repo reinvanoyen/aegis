@@ -189,7 +189,7 @@ class Parser implements ParserInterface
 
     public function insert(Node $node)
     {
-        $node->setParent( $this->scope );
+        $node->setParent($this->scope);
         $this->scope->insert($node);
     }
 }

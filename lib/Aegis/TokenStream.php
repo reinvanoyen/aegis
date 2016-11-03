@@ -13,7 +13,11 @@ class TokenStream
 
     public function getToken($i)
     {
-        return $this->tokens[ $i ];
+        if (!isset($this->tokens[$i])) {
+            throw new NoTokenAtIndex($i);
+        }
+
+        return $this->tokens[$i];
     }
 
     public function getTokens()

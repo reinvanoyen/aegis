@@ -12,16 +12,16 @@ class RawNode extends Node
     public static function parse(ParserInterface $parser)
     {
         if (
-        	$parser->accept(Token::T_IDENT, 'raw') ||
-	        $parser->accept(Token::T_IDENT, 'r')
+            $parser->accept(Token::T_IDENT, 'raw') ||
+            $parser->accept(Token::T_IDENT, 'r')
         ) {
             $parser->insert(new static());
             $parser->advance();
 
             $parser->traverseUp();
 
-            if( ExpressionNode::parse($parser) ) {
-	            $parser->setAttribute();
+            if (ExpressionNode::parse($parser)) {
+                $parser->setAttribute();
             }
 
             $parser->skip(Token::T_CLOSING_TAG);

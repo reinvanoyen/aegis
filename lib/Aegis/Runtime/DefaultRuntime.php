@@ -31,9 +31,10 @@ class DefaultRuntime implements RuntimeInterface
 
     public function __get($k)
     {
-    	if (!isset($this->vars[$k])) {
-    		throw new UndefinedVariable($k);
-	    }
+        if (!isset($this->vars[$k])) {
+            throw new UndefinedVariable($k);
+        }
+
         return $this->vars[$k];
     }
 

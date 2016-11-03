@@ -12,7 +12,6 @@ class ListNode extends Node
     public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_SYMBOL, '[')) {
-
             $parser->insert(new static());
             $parser->traverseUp();
             $parser->advance();

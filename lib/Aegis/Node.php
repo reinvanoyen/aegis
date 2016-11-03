@@ -42,7 +42,7 @@ abstract class Node
 
     public function setParent(Node $parent)
     {
-    	$this->parent = $parent;
+        $this->parent = $parent;
     }
 
     public function getChild($i)
