@@ -4,5 +4,5 @@ php:
   - 7
   - hhvm
 install:
-  - composer install --no-interaction
-script: phpunit
+  - composer install
+script: vendor/bin/phpunit --debug
