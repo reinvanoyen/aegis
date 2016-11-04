@@ -41,11 +41,34 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
         Template::$cacheDirectory = 'tests/cache/';
         Template::$templateDirectory = 'tests/templates/';
 
+        $expectedResult = '123456789';
+
         $tpl = new Template();
         $tpl->condition = true;
-
-        $expectedResult = 'test 1test 2test 3test 4test 5test 6test 7test 8';
-
         $this->assertEquals($expectedResult, $tpl->render('if-test'));
+    }
+
+    public function testElse()
+    {
+        Template::$cacheDirectory = 'tests/cache/';
+        Template::$templateDirectory = 'tests/templates/';
+
+        $expectedResult = '1234';
+
+        $tpl = new Template();
+        $tpl->condition = false;
+        $this->assertEquals($expectedResult, $tpl->render('else-test'));
+    }
+
+    public function testElseIf()
+    {
+        Template::$cacheDirectory = 'tests/cache/';
+        Template::$templateDirectory = 'tests/templates/';
+
+        $expectedResult = '123';
+
+        $tpl = new Template();
+        $tpl->condition = false;
+        $this->assertEquals($expectedResult, $tpl->render('elseif-test'));
     }
 }

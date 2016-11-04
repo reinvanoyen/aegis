@@ -152,11 +152,11 @@ class Parser implements ParserInterface
 
     public function traverseDown()
     {
-    	try {
-    		$parent = $this->getScope()->getParent();
-	    } catch( AegisError $e ) {
-	    	throw new ParseError($e->getMessage());
-	    }
+        try {
+            $parent = $this->getScope()->getParent();
+        } catch (AegisError $e) {
+            throw new ParseError($e->getMessage());
+        }
 
         $this->setScope($parent);
     }
