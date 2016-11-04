@@ -155,10 +155,10 @@ class Lexer implements LexerInterface
     // MODE IDENT
     private function lexIdent()
     {
-        if ($this->currentChar === ' ' || $this->currentChar === '(') {
-            $this->tokenStream->addToken(new Token(Token::T_IDENT, $this->currentValue, $this->line));
+	    if ( $this->currentChar !== '/' && !preg_match('@'.Token::REGEX_T_IDENT.'@', $this->currentChar) ) {
+		    $this->tokenStream->addToken(new Token(Token::T_IDENT, $this->currentValue, $this->line));
             $this->currentValue = '';
-            $this->setMode(self::MODE_INSIDE_TAG);
+		    $this->setMode(self::MODE_INSIDE_TAG);
 
             return;
         }
