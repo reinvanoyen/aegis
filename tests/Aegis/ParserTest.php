@@ -36,7 +36,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testGetScopeShouldThrowError()
     {
-        $this->setExpectedException(Aegis\AegisError::class);
+        $this->expectException(Aegis\AegisError::class);
 
         $parser = new Parser();
         $parser->getScope();
@@ -44,7 +44,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testTraverseDownShouldThrowParseError()
     {
-        $this->setExpectedException(Aegis\ParseError::class);
+        $this->expectException(Aegis\ParseError::class);
 
         $stream = new TokenStream();
         $parser = new Parser();
@@ -54,7 +54,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testGetCurrentTokenShouldThrowNoTokenAtIndex()
     {
-        $this->setExpectedException(Aegis\NoTokenAtIndex::class);
+        $this->expectException(Aegis\NoTokenAtIndex::class);
 
         $stream = new TokenStream();
         $parser = new Parser();
@@ -64,7 +64,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testExpectShouldThrowParseError()
     {
-        $this->setExpectedException(Aegis\ParseError::class);
+        $this->expectException(Aegis\ParseError::class);
 
         $stream = new TokenStream();
         $stream->addToken(new Token(Token::T_IDENT, 'ident', 1));

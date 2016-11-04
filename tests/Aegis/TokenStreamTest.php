@@ -36,7 +36,7 @@ class TokenStreamTest extends PHPUnit_Framework_TestCase
 
     public function testGetTokenShouldThrowException()
     {
-        $this->setExpectedException(NoTokenAtIndex::class);
+        $this->expectException(NoTokenAtIndex::class);
 
         $stream = new TokenStream();
         $stream->getToken(3);

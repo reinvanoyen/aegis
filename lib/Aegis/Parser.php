@@ -152,15 +152,13 @@ class Parser implements ParserInterface
 
     public function traverseDown()
     {
-        if (!$this->getScope()->getParent()) {
-            try {
-                throw new ParseError('Could not traverse down from scope because scope is already on root level', $this->getCurrentToken()->getLine());
-            } catch (NoTokenAtIndex $e) {
-                throw new ParseError('Could not traverse down from scope because scope is already on root level');
-            }
-        }
+    	try {
+    		$parent = $this->getScope()->getParent();
+	    } catch( AegisError $e ) {
+	    	throw new ParseError($e->getMessage());
+	    }
 
-        $this->setScope($this->getScope()->getParent());
+        $this->setScope($parent);
     }
 
     public function advance()

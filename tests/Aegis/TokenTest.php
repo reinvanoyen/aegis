@@ -25,7 +25,7 @@ class TokenTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidTokenType()
     {
-        $this->setExpectedException(InvalidTokenType::class);
+        $this->expectException(InvalidTokenType::class);
         new Token('invalidtype', 'value', 5);
     }
 }

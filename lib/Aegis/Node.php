@@ -37,7 +37,10 @@ abstract class Node
 
     public function getParent()
     {
-        // @TODO should throw exception when there's no parent
+    	if (!$this->parent) {
+    		throw new AegisError('Could not get parent node of node, because the node has no parent');
+	    }
+
         return $this->parent;
     }
 
@@ -48,34 +51,45 @@ abstract class Node
 
     public function getChild($i)
     {
-        // @TODO should throw exception when no child is present at the index
-        return $this->children[ $i ];
+    	if (!isset($this->children[$i])) {
+		    throw new AegisError('Could not get child from node, because there\'s no child at index ' . $i );
+	    }
+
+        return $this->children[$i];
     }
 
     public function getLastChild()
     {
-        // @TODO should throw exception when no child is at the end
+        $last = end($this->children);
 
-        return end($this->children);
+	    if (!$last) {
+		    throw new AegisError('Could not get last child from node, because the node has no children' );
+	    }
+
+        return $last;
     }
 
     public function removeChild($i)
     {
-        // @TODO should throw exception when no child is at the index
+	    if (!isset($this->children[$i])) {
+		    throw new AegisError('Could remove child from node, because there\'s no child at index ' . $i );
+	    }
 
-        unset($this->children[ $i ]);
+        unset($this->children[$i]);
     }
 
     public function removeLastChild()
     {
-        // @TODO should throw exception when no child is there to pop
+        $last = array_pop($this->children);
 
-        array_pop($this->children);
+	    if (!$last) {
+		    throw new AegisError('Could not remove last child from node, because the node has no children' );
+	    }
     }
 
     public function getSiblings()
     {
-        return $this->getParent()->children;
+        return $this->getParent()->getChildren();
     }
 
     public function insert(Node $node)

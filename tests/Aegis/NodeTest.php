@@ -1,6 +1,7 @@
 <?php
 
 use Aegis\Node;
+use Aegis\AegisError;
 
 class NodeTest extends PHPUnit_Framework_TestCase
 {
@@ -35,4 +36,12 @@ class NodeTest extends PHPUnit_Framework_TestCase
 
         $this->assertNull($node->getAttribute(0));
     }
+
+	public function testRemoveLastChildShouldThrowAegisError()
+	{
+		$this->expectException(AegisError::class);
+
+		$node = $this->getMockForAbstractClass(Node::class);
+		$node->removeLastChild();
+	}
 }

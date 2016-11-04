@@ -11,7 +11,7 @@ be truly extendable. It comes with a default set of functionalities to help you 
 the basics of creating web layouts (template inheritance, printing data, iteration helpers, etc).
 However, if you decide to implement your own nodes and use it as a language with a 
 completely different purpose, you're encouraged to do so.
-Actually, that's what this template language is all about!
+Actually, that's what Aegis is all about!
 
 ### Installation
 
