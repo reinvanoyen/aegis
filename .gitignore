@@ -2,3 +2,4 @@
 /vendor
 /cache
 /tests/cache
+composer.lock
