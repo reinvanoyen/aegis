@@ -37,9 +37,9 @@ abstract class Node
 
     public function getParent()
     {
-    	if (!$this->parent) {
-    		throw new AegisError('Could not get parent node of node, because the node has no parent');
-	    }
+        if (!$this->parent) {
+            throw new AegisError('Could not get parent node of node, because the node has no parent');
+        }
 
         return $this->parent;
     }
@@ -51,9 +51,9 @@ abstract class Node
 
     public function getChild($i)
     {
-    	if (!isset($this->children[$i])) {
-		    throw new AegisError('Could not get child from node, because there\'s no child at index ' . $i );
-	    }
+        if (!isset($this->children[$i])) {
+            throw new AegisError('Could not get child from node, because there\'s no child at index '.$i);
+        }
 
         return $this->children[$i];
     }
@@ -62,18 +62,18 @@ abstract class Node
     {
         $last = end($this->children);
 
-	    if (!$last) {
-		    throw new AegisError('Could not get last child from node, because the node has no children' );
-	    }
+        if (!$last) {
+            throw new AegisError('Could not get last child from node, because the node has no children');
+        }
 
         return $last;
     }
 
     public function removeChild($i)
     {
-	    if (!isset($this->children[$i])) {
-		    throw new AegisError('Could remove child from node, because there\'s no child at index ' . $i );
-	    }
+        if (!isset($this->children[$i])) {
+            throw new AegisError('Could remove child from node, because there\'s no child at index '.$i);
+        }
 
         unset($this->children[$i]);
     }
@@ -82,9 +82,9 @@ abstract class Node
     {
         $last = array_pop($this->children);
 
-	    if (!$last) {
-		    throw new AegisError('Could not remove last child from node, because the node has no children' );
-	    }
+        if (!$last) {
+            throw new AegisError('Could not remove last child from node, because the node has no children');
+        }
     }
 
     public function getSiblings()
