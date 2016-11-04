@@ -11,12 +11,12 @@ class ExpressionNode extends Node
     public static function parse(ParserInterface $parser)
     {
         if (
+            ConstantNode::parse($parser) ||
             StringNode::parse($parser) ||
             VariableNode::parse($parser) ||
             NumberNode::parse($parser) ||
             ListNode::parse($parser) ||
-            FunctionCallNode::parse($parser) ||
-            ConstantNode::parse($parser)
+            FunctionCallNode::parse($parser)
         ) {
             if (!$parser->getScope() instanceof self) {
 

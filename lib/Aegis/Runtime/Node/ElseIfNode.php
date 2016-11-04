@@ -7,20 +7,22 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
-class IfNode extends Node
+class ElseIfNode extends Node
 {
     public static function parse(ParserInterface $parser)
     {
-        if ($parser->accept(Token::T_IDENT, 'if')) {
+        if ($parser->accept(Token::T_IDENT, 'elseif')) {
             $parser->insert(new static());
             $parser->advance();
             $parser->traverseUp();
 
-            if (ConditionNode::parse($parser)) {
-                $parser->setAttribute();
-            }
+            ConditionNode::parse($parser);
+            $parser->setAttribute();
 
-            $parser->skip(Token::T_CLOSING_TAG);
+            $parser->traverseDown();
+
+            $parser->expect(Token::T_CLOSING_TAG);
+            $parser->advance();
 
             $parser->parseOutsideTag();
 
@@ -28,16 +30,9 @@ class IfNode extends Node
                 $parser->parseOutsideTag();
             }
 
-            if (ElseIfNode::parse($parser)) {
+            if (self::parse($parser)) {
                 $parser->parseOutsideTag();
             }
-
-            $parser->skip(Token::T_OPENING_TAG);
-            $parser->skip(Token::T_IDENT, '/if');
-            $parser->skip(Token::T_CLOSING_TAG);
-
-            $parser->traverseDown();
-            $parser->parseOutsideTag();
 
             return true;
         }
@@ -47,18 +42,10 @@ class IfNode extends Node
 
     public function compile(CompilerInterface $compiler)
     {
-        $compiler->write('<?php if( ');
-
+        $compiler->write('<?php elseif( ');
         foreach ($this->getAttributes() as $a) {
             $a->compile($compiler);
         }
-
         $compiler->write(' ): ?>');
-
-        foreach ($this->getChildren() as $c) {
-            $c->compile($compiler);
-        }
-
-        $compiler->write('<?php endif; ?>');
     }
 }
