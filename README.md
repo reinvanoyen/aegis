@@ -1,8 +1,6 @@
 # Aegis, the template language
 
-[![Join the chat at https://gitter.im/reinvanoyen/aegis](https://badges.gitter.im/reinvanoyen/aegis.svg)](https://gitter.im/reinvanoyen/aegis?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/reinvanoyen/aegis.svg?branch=master)](https://travis-ci.org/reinvanoyen/aegis)
+[![Build Status](https://travis-ci.org/reinvanoyen/aegis.svg?branch=master)](https://travis-ci.org/reinvanoyen/aegis) [![Join the chat at https://gitter.im/reinvanoyen/aegis](https://badges.gitter.im/reinvanoyen/aegis.svg)](https://gitter.im/reinvanoyen/aegis?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Important: Experimental software
 This is a relatively young piece of software and is still in experimental 
