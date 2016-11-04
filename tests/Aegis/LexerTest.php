@@ -34,6 +34,10 @@ class LexerTest extends PHPUnit_Framework_TestCase
         $this->tokenValueTest('{}}}', '{}}}');
         $this->tokenValueTest('{{ 5 }}', 5, 1);
         $this->tokenValueTest('{{ 5.8 }}', 5.8, 1);
+        $this->tokenValueTest('{{ test}}', 'test', 1);
+        $this->tokenValueTest('{{test}}', 'test', 1);
+        $this->tokenValueTest('{{test }}', 'test', 1);
+        $this->tokenValueTest('{{ test }}', 'test', 1);
     }
 
     public function testTokenValueTypes()
@@ -188,6 +192,20 @@ class LexerTest extends PHPUnit_Framework_TestCase
             Token::T_CLOSING_TAG,
         ]);
 
+        $this->tokenTypesShouldMatch('{{if @variable}}{{ "string"}}text{{/if }}', [
+            Token::T_OPENING_TAG,
+            Token::T_IDENT,
+            Token::T_VAR,
+            Token::T_CLOSING_TAG,
+            Token::T_OPENING_TAG,
+            Token::T_STRING,
+            Token::T_CLOSING_TAG,
+            Token::T_TEXT,
+            Token::T_OPENING_TAG,
+            Token::T_IDENT,
+            Token::T_CLOSING_TAG,
+        ]);
+
         $this->tokenTypesShouldMatch('{{ block "string" }}', [
             Token::T_OPENING_TAG,
             Token::T_IDENT,
@@ -245,7 +263,7 @@ class LexerTest extends PHPUnit_Framework_TestCase
             Token::T_CLOSING_TAG,
         ]);
 
-        $this->tokenTypesShouldMatch('{{ block "string" + @test_var }}', [
+        $this->tokenTypesShouldMatch('{{block "string" + @test_var}}', [
             Token::T_OPENING_TAG,
             Token::T_IDENT,
             Token::T_STRING,
