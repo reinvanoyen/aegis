@@ -21,11 +21,11 @@ composer require reinvanoyen/aegis
 
 ### Default runtime documentation
 
-* Printing data
-* [Block](#Block)
-* Extends
-* If, else and elseif
-* For
+* [Printing data](#printing-data)
+* [Block](#block)
+* [Extends](#extends)
+* [If, else and elseif](#if-else-and-elseif)
+* [For](#for)
 * Raw
 * Include
 
