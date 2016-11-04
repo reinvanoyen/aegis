@@ -21,12 +21,27 @@ composer require reinvanoyen/aegis
 
 ### Default runtime documentation
 
-* Block
+* Printing data
+* [Block](#Block)
 * Extends
 * If, else and elseif
 * For
 * Raw
 * Include
+
+#### Printing data
+
+```html
+<ul>
+    <li>Some raw text</li>
+    <li>{{ @variable }}</li>
+    <li>{{ 5 }}</li>
+    <li>{{ 'some string' }}</li>
+    <li>{{ "some string" }}</li>
+    <li>{{ "some string " + @variable }}</li>
+    <li>{{ @variable + @variable }}</li>
+</ul>
+```
 
 #### Block
 
@@ -94,6 +109,8 @@ Emptying a block is possible by using the block tag with no content at all:
 {{ block "title" }}{{ /block }}
 ```
 
+The above example would simply output nothing at all.
+
 #### Extends
 
 The `extends` tag brings in a template from another file, provides 
@@ -150,13 +167,43 @@ The `if` tag allows for conditional rendering within templates.
 {{ /if }}
 ```
 
+#### For
+
+```html
+{{ for @contributor in ['Rein Van Oyen'] }}
+    {{ @contributor }}
+{{ /for }}
+```
+
+```html
+{{ for @contributor in @contributors }}
+    {{ @contributor }}
+{{ /for }}
+```
+
+```html
+<ul>
+    {{ for 0 to 10 }}
+        <li>Aegis</li>
+    {{ /for }}
+</ul>
+```
+
+```html
+<ul>
+    {{ for 0 to 10 as @index }}
+        <li>Aegis #{{ @index }}</li>
+    {{ /for }}
+</ul>
+```
+
 ### Creating your own runtime
 
-Coming soon
+Coming soon...
 
 ### Contributing
 
-Feel free to contribute to Aegis, any help is greatly appreciated.
+Feel free to contribute to Aegis, any help is greatly appreciated. Please keep your coding style compatible with [PSR-2](http://www.php-fig.org/psr/psr-2/).
 
 ### License
 Aegis is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
