@@ -1,8 +1,11 @@
-# Aegis
+# Aegis, the template language
 
 [![Build Status](https://travis-ci.org/reinvanoyen/aegis.svg?branch=master)](https://travis-ci.org/reinvanoyen/aegis)
 
-##Template language (in development)
+## Important: Experimental software
+This is a relatively young piece of software and is still in experimental 
+mode, which means using this in production might not be the best idea. Please consider [contributing](#contributing) if you want to 
+make this a more stable piece of software.
 
 ### Introduction
 
@@ -203,7 +206,8 @@ Coming soon...
 
 ### Contributing
 
-Feel free to contribute to Aegis, any help is greatly appreciated. Please keep your coding style compatible with [PSR-2](http://www.php-fig.org/psr/psr-2/).
+Feel free to contribute to Aegis, any help is greatly appreciated. Please keep your coding style compatible with [PSR-2](http://www.php-fig.org/psr/psr-2/) and back 
+your code with unit tests.
 
 ### License
 Aegis is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
