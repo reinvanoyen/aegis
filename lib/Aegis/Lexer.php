@@ -228,12 +228,12 @@ class Lexer implements LexerInterface
 
     private function getCharAtCursor()
     {
-        return $this->input[ $this->cursor ];
+        return $this->input[$this->cursor];
     }
 
     private function getNextChar()
     {
-        return $this->input[ $this->cursor + 1 ];
+        return $this->input[$this->cursor + 1];
     }
 
     private function setMode($mode)
@@ -248,6 +248,6 @@ class Lexer implements LexerInterface
 
     private function advanceCursor($n = 1)
     {
-        $this->cursor += $n;
+    	$this->setCursor($this->cursor + $n);
     }
 }
