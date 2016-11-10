@@ -9,16 +9,17 @@ class Compiler implements CompilerInterface
     private $head = '';
     private $body = '';
 
-    public function __construct(Node $input)
+    public function compile(Node $input)
     {
-        $this->input = $input;
+    	$this->head = $this->body = '';
+	    $this->input = $input;
+	    $this->input->compile($this);
+        return $this->getResult();
     }
 
-    public function compile()
+    public function getResult()
     {
-        $this->input->compile($this);
-
-        return $this->getHead().$this->getBody();
+    	return $this->getHead().$this->getBody();
     }
 
     public function getHead()

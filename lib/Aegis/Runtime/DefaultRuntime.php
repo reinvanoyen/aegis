@@ -2,29 +2,27 @@
 
 namespace Aegis\Runtime;
 
-use Aegis\NodeRegistry;
+use Aegis\NodeCollectionInterface;
 use Aegis\RuntimeInterface;
 
 class DefaultRuntime implements RuntimeInterface
 {
+	private $nodeCollection;
     private $vars = [];
     private $blocks = [];
     public $functions = [];
 
-    public function __construct()
+    public function __construct(NodeCollectionInterface $nodeCollection)
     {
-        NodeRegistry::register([
-            'Aegis\\Runtime\\Node\\IfNode',
-            'Aegis\\Runtime\\Node\\ForNode',
-            'Aegis\\Runtime\\Node\\BlockNode',
-            'Aegis\\Runtime\\Node\\ExtendNode',
-            'Aegis\\Runtime\\Node\\IncludeNode',
-            'Aegis\\Runtime\\Node\\PrintNode',
-            'Aegis\\Runtime\\Node\\RawNode',
-        ]);
+    	$this->nodeCollection = $nodeCollection;
     }
 
-    public function set($k, $v)
+    public function getNodeCollection()
+    {
+        return $this->nodeCollection;
+    }
+
+	public function set($k, $v)
     {
         $this->vars[$k] = $v;
     }

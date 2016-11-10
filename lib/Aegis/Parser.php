@@ -7,12 +7,19 @@ use Aegis\Node\TextNode;
 
 class Parser implements ParserInterface
 {
+	private $runtime;
+
     private $root;
     private $scope;
 
     private $tokenStream;
     private $cursor;
     private $lastTokenIndex;
+
+	public function __construct(RuntimeInterface $runtime )
+	{
+		$this->runtime = $runtime;
+	}
 
     public function parse(TokenStream $stream)
     {
@@ -44,9 +51,7 @@ class Parser implements ParserInterface
 
     private function parseStatement()
     {
-        foreach (NodeRegistry::getNodes() as $node) {
-            $node::parse($this);
-        }
+    	$this->runtime->getNodeCollection()->parse($this);
     }
 
     public function expect($type, $value = null)

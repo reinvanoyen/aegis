@@ -2,6 +2,7 @@
 
 namespace Aegis;
 
+use Aegis\Runtime\DefaultNodeCollection;
 use Aegis\Runtime\DefaultRuntime;
 use Aegis\Helpers\File;
 
@@ -15,50 +16,80 @@ class Template
     public static $cacheDirectory = 'cache/templates/';
 
     private $runtime;
+	private $parser;
+	private $lexer;
+	private $compiler;
 
     public function __construct(RuntimeInterface $runtime = null)
     {
         if ($runtime) {
             $this->runtime = $runtime;
         } else {
-            $this->runtime = new DefaultRuntime();
+            $this->runtime = new DefaultRuntime(new DefaultNodeCollection()); // @TODO Dependency Inject?
         }
     }
+
+    public function setParser(ParserInterface $parser)
+    {
+    	$this->parser = $parser;
+    }
+
+	public function setLexer(LexerInterface $lexer)
+	{
+		$this->lexer = $lexer;
+	}
+
+	public function setCompiler(CompilerInterface $compiler)
+	{
+		$this->compiler = $compiler;
+	}
 
     public function __set($k, $v)
     {
         $this->runtime->set($k, $v);
     }
 
-    private function getCacheFilename($filename, $part = null)
+    private function compileFromFilename($filename)
     {
-        return static::$cacheDirectory.($part ? $part.'/' : '').urlencode($filename).'.'.self::$outputExtension;
+	    $input = file_get_contents($this->getSourceFilename($filename));
+	    return $this->compile($input);
     }
 
-    private function getSourceFilename($filename)
+    private function compile($input)
     {
-        return static::$templateDirectory.$filename.'.'.static::$templateExtension;
+	    if (!$this->lexer) {
+	    	throw new AegisError('Lexer needs to be set before compiling');
+	    }
+
+	    if (!$this->parser) {
+		    throw new AegisError('Parser needs to be set before compiling');
+	    }
+
+	    if (!$this->compiler) {
+		    throw new AegisError('Compiler needs to be set before compiling');
+	    }
+
+	    $tokenStream = $this->lexer->tokenize($input);
+
+	    $rootNode = $this->parser->parse($tokenStream);
+
+	    return $this->compiler->compile($rootNode);
     }
 
-    private function shouldRecompile($cacheFilename, $sourceFilename)
-    {
-        return !file_exists($cacheFilename) || filemtime($cacheFilename) <= filemtime($sourceFilename) || static::$debug;
-    }
+	private function getCacheFilename($filename, $part = null)
+	{
+		return static::$cacheDirectory.($part ? $part.'/' : '').urlencode($filename).'.'.self::$outputExtension;
+	}
 
-    private function createCompiler($filename)
-    {
-        // Get string to render
-        $input = file_get_contents($this->getSourceFilename($filename));
+	private function getSourceFilename($filename)
+	{
+		return static::$templateDirectory.$filename.'.'.static::$templateExtension;
+	}
 
-        // Create lexer & parser
-        $lexer = new Lexer();
-        $parser = new Parser();
-
-        // Create the compiler
-        $compiler = new Compiler($parser->parse($lexer->tokenize($input)));
-
-        return $compiler;
-    }
+	private function shouldRecompile($cacheFilename, $sourceFilename)
+	{
+		return !file_exists($cacheFilename) || filemtime($cacheFilename) <= filemtime($sourceFilename) || static::$debug;
+	}
 
     public function render($filename)
     {
@@ -66,8 +97,8 @@ class Template
         $srcFilename = $this->getSourceFilename($filename);
 
         if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
-            $compiler = $this->createCompiler($filename);
-            File\write($cacheFilename, $compiler->compile());
+
+            File\write($cacheFilename, $this->compileFromFilename($filename));
         }
 
         // Execute
@@ -80,10 +111,9 @@ class Template
         $srcFilename = $this->getSourceFilename($filename);
 
         if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
-            $compiler = $this->createCompiler($filename);
-            // Compile and save
-            $compiler->compile();
-            File\write($cacheFilename, $compiler->getHead());
+
+	        $this->compileFromFilename($filename);
+            File\write($cacheFilename, $this->compiler->getHead());
         }
 
         // Execute
@@ -96,10 +126,9 @@ class Template
         $srcFilename = $this->getSourceFilename($filename);
 
         if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
-            $compiler = $this->createCompiler($filename);
-            // Compile and save
-            $compiler->compile();
-            File\write($cacheFilename, $compiler->getBody());
+
+            $this->compileFromFilename($filename);
+            File\write($cacheFilename, $this->compiler->getBody());
         }
 
         // Execute
