@@ -70,7 +70,6 @@ class Template
 	    }
 
 	    $tokenStream = $this->lexer->tokenize($input);
-
 	    $rootNode = $this->parser->parse($tokenStream);
 
 	    return $this->compiler->compile($rootNode);
