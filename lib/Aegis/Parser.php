@@ -2,8 +2,9 @@
 
 namespace Aegis;
 
-use Aegis\Node\RootNode;
-use Aegis\Node\TextNode;
+use Aegis\Node\RootNode,
+	Aegis\Node\TextNode
+;
 
 class Parser implements ParserInterface
 {
@@ -16,13 +17,17 @@ class Parser implements ParserInterface
     private $cursor;
     private $lastTokenIndex;
 
-	public function __construct(RuntimeInterface $runtime )
+	public function setRuntime(RuntimeInterface $runtime)
 	{
 		$this->runtime = $runtime;
 	}
 
     public function parse(TokenStream $stream)
     {
+	    if ( ! $this->runtime ) {
+		    throw new AegisError('Runtime needs to be set before parsing');
+	    }
+
         $this->root = $this->scope = new RootNode();
         $this->cursor = 0;
         $this->tokenStream = $stream;

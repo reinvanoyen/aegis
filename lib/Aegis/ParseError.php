@@ -17,9 +17,4 @@ class ParseError extends AegisError
     {
         return $this->srcLine;
     }
-
-    public function getSourceFragment()
-    {
-        // @TODO return a snippet from the template source
-    }
 }

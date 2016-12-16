@@ -12,7 +12,10 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
         $string = 'UOspIkq124MLd,shdfDRDFGbnjsjs,k,oao';
         $number = 12;
 
-        $tpl = new Template();
+        $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+	    $tpl->setLexer(new \Aegis\Lexer());
+	    $tpl->setParser(new \Aegis\Parser());
+	    $tpl->setCompiler(new \Aegis\Compiler());
         $tpl->string = $string;
         $tpl->number = $number;
 
@@ -28,7 +31,10 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
         $html = '<span data-name="test">test</span>';
 
-        $tpl = new Template();
+        $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+	    $tpl->setLexer(new \Aegis\Lexer());
+	    $tpl->setParser(new \Aegis\Parser());
+	    $tpl->setCompiler(new \Aegis\Compiler());
         $tpl->html = $html;
 
         $expectedResult = '<div>test</div><span data-name="test">test</span>';
@@ -43,7 +49,10 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
         $expectedResult = '123456789';
 
-        $tpl = new Template();
+	    $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+	    $tpl->setLexer(new \Aegis\Lexer());
+	    $tpl->setParser(new \Aegis\Parser());
+	    $tpl->setCompiler(new \Aegis\Compiler());
         $tpl->condition = true;
         $this->assertEquals($expectedResult, $tpl->render('if-test'));
     }
@@ -55,8 +64,11 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
         $expectedResult = '1234';
 
-        $tpl = new Template();
-        $tpl->condition = false;
+	    $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+	    $tpl->setLexer(new \Aegis\Lexer());
+	    $tpl->setParser(new \Aegis\Parser());
+	    $tpl->setCompiler(new \Aegis\Compiler());
+	    $tpl->condition = false;
         $this->assertEquals($expectedResult, $tpl->render('else-test'));
     }
 
@@ -67,8 +79,11 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
         $expectedResult = '123';
 
-        $tpl = new Template();
-        $tpl->condition = false;
+	    $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+	    $tpl->setLexer(new \Aegis\Lexer());
+	    $tpl->setParser(new \Aegis\Parser());
+	    $tpl->setCompiler(new \Aegis\Compiler());
+	    $tpl->condition = false;
         $this->assertEquals($expectedResult, $tpl->render('elseif-test'));
     }
 }

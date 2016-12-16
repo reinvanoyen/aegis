@@ -2,8 +2,6 @@
 
 namespace Aegis;
 
-use Aegis\Runtime\DefaultNodeCollection;
-use Aegis\Runtime\DefaultRuntime;
 use Aegis\Helpers\File;
 
 class Template
@@ -20,18 +18,15 @@ class Template
 	private $lexer;
 	private $compiler;
 
-    public function __construct(RuntimeInterface $runtime = null)
+    public function __construct(RuntimeInterface $runtime)
     {
-        if ($runtime) {
-            $this->runtime = $runtime;
-        } else {
-            $this->runtime = new DefaultRuntime(new DefaultNodeCollection()); // @TODO Dependency Inject?
-        }
+		$this->runtime = $runtime;
     }
 
     public function setParser(ParserInterface $parser)
     {
     	$this->parser = $parser;
+		$this->parser->setRuntime($this->runtime);
     }
 
 	public function setLexer(LexerInterface $lexer)

@@ -11,6 +11,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
     {
         $stream = new TokenStream();
         $parser = new Parser();
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
 
         $this->assertInstanceOf(RootNode::class, $parser->parse($stream));
     }
@@ -25,7 +26,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $stream->addToken(new Token(Token::T_NUMBER, '10', 1));
 
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $parser->skip(Token::T_IDENT);
         $parser->skip(Token::T_OP);
         $parser->skip(Token::T_OPENING_TAG);
@@ -39,7 +42,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $this->expectException(Aegis\AegisError::class);
 
         $parser = new Parser();
-        $parser->getScope();
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->getScope();
     }
 
     public function testTraverseDownShouldThrowParseError()
@@ -48,7 +53,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
         $stream = new TokenStream();
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $parser->traverseDown();
     }
 
@@ -58,7 +65,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
         $stream = new TokenStream();
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $parser->getCurrentToken();
     }
 
@@ -70,7 +79,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $stream->addToken(new Token(Token::T_IDENT, 'ident', 1));
 
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $parser->expect(Token::T_OP);
     }
 
@@ -82,7 +93,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $stream->addToken(new Token(Token::T_IDENT, 'correctvalue', 1));
 
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $parser->expect(Token::T_IDENT, 'wrongvalue');
     }
 
@@ -92,7 +105,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $stream->addToken(new Token(Token::T_IDENT, 'correctvalue', 1));
 
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $this->assertEquals(true, $parser->expect(Token::T_IDENT, 'correctvalue'));
     }
 
@@ -102,7 +117,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $stream->addToken(new Token(Token::T_IDENT, 'correctvalue', 1));
 
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $this->assertEquals(true, $parser->accept(Token::T_IDENT, 'correctvalue'));
     }
 
@@ -112,7 +129,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $stream->addToken(new Token(Token::T_IDENT, 'correctvalue', 1));
 
         $parser = new Parser();
-        $parser->parse($stream);
+	    $parser->setRuntime(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+
+	    $parser->parse($stream);
         $this->assertEquals(false, $parser->accept(Token::T_IDENT, 'wrongvalue'));
     }
 }
