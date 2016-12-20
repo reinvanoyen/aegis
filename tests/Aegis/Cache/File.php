@@ -4,31 +4,23 @@ use \Aegis\Cache\File;
 
 class FileTest extends PHPUnit_Framework_TestCase
 {
-	public function testLoadWriteRead()
+	private $file;
+
+	public function setup()
 	{
-		$file = \Aegis\Cache\Filesystem::load('myid');
-		$file->write('ok');
-
-		$file02 = \Aegis\Cache\Filesystem::load('myid');
-		$this->assertEquals($file02->read(), 'ok');
-
-		$file03 = \Aegis\Cache\Filesystem::load('myid');
-		$file03->write('something');
-
-		$this->assertEquals($file->read(), 'something');
+		$this->file = \Aegis\Cache\Filesystem::load('myid', 'sub');
 	}
 
-	public function testLoadWriteReadWithOption()
+	public function testLoad()
 	{
-		$file = \Aegis\Cache\Filesystem::load('myid');
-		$file->write('ok');
+		$this->assertInstanceOf(File::class, $this->file);
+	}
 
-		$file02 = \Aegis\Cache\Filesystem::load('myid');
-		$this->assertEquals($file02->read(), 'ok');
+	public function testWrite()
+	{
+		$contents = 'ok';
 
-		$file03 = \Aegis\Cache\Filesystem::load('myid');
-		$file03->write('something');
-
-		$this->assertEquals($file->read(), 'something');
+		$this->file->write($contents);
+		$this->assertEquals($this->file->read(), $contents);
 	}
 }

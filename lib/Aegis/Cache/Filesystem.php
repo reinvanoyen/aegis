@@ -9,18 +9,19 @@ class Filesystem implements CacheInterface
 
 	private static $files = [];
 
-	public static function load($id)
+	public static function load($id, $subId = null)
 	{
-		if (!isset(self::$files[$id])) {
+		$storageId = $id;
 
-			self::$files[$id] = new File($id);
+		if ($subId) {
+			$storageId .= '[' . $subId . ']';
 		}
 
-		return self::$files[$id];
-	}
+		if (!isset(self::$files[$storageId])) {
+			$filename = static::CACHE_DIR . ( $subId ? $subId . '/' : null ) . urlencode($id) . '.' . static::CACHE_EXTENSION;
+			self::$files[$storageId] = new File($filename);
+		}
 
-	public static function generateCachedFilename($id)
-	{
-		return static::CACHE_DIR . urlencode($id) . '.' . static::CACHE_EXTENSION;
+		return self::$files[$storageId];
 	}
 }

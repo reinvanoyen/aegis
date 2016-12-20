@@ -4,15 +4,14 @@ namespace Aegis\Cache;
 
 use Aegis\AegisError;
 
-class File
+class File implements CacheEntryInterface
 {
-	private $id;
 	private $filename;
+	private $timestamp;
 
-	public function __construct($id)
+	public function __construct($filename)
 	{
-		$this->id = $id;
-		$this->filename = Filesystem::generateCachedFilename($id);
+		$this->filename = $filename;
 
 		$dir = dirname($this->filename);
 		if (!file_exists($dir)) {
@@ -21,24 +20,34 @@ class File
 
 		if (!file_exists($this->filename)) {
 			fopen($this->filename, 'a');
+			$this->timestamp = 0;
+			return;
 		}
-	}
 
-	public function isExpired()
-	{
-		return ! file_exists($this->filename) || filemtime($this->filename) <= filemtime($this->id);
+		$this->timestamp = filemtime($this->filename);
 	}
 
 	public function delete()
 	{
-		if( ! @unlink($this->filename) ) {
+		if ( ! @unlink($this->filename) ) {
 			throw new AegisError('Could not delete cache file');
 		}
 	}
 
-	public function write($content)
+	public function write($contents)
 	{
-		file_put_contents($this->filename, $content);
+		file_put_contents($this->filename, $contents);
+		$this->timestamp = time();
+	}
+
+	public function getFilename()
+	{
+		return $this->filename;
+	}
+
+	public function getTimestamp()
+	{
+		return $this->timestamp;
 	}
 
 	public function read()

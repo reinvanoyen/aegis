@@ -40,11 +40,11 @@ class ExtendNode extends Node
     {
         // Render the head of the extended template
 
-        $compiler->head('<?=$tpl->renderHead( ');
+        $compiler->head('<?=$tpl->renderHead(');
 
         foreach ($this->getAttributes() as $a) {
-            $subcompiler = new Compiler($a);
-            $compiler->head($subcompiler->compile());
+            $subcompiler = new Compiler();
+            $compiler->head($subcompiler->compile($a));
         }
 
         $compiler->head(')?>');
@@ -52,18 +52,18 @@ class ExtendNode extends Node
         // Write the head of the current template
 
         foreach ($this->getChildren() as $c) {
-            $subcompiler = new Compiler($c);
-            $subcompiler->compile();
+            $subcompiler = new Compiler();
+            $subcompiler->compile($c);
             $compiler->head($subcompiler->getHead());
         }
 
         // Render the body of the extended template
 
-        $compiler->write('<?=$tpl->renderBody( ');
+        $compiler->write('<?=$tpl->renderBody(');
 
         foreach ($this->getAttributes() as $a) {
-            $subcompiler = new Compiler($a);
-            $compiler->write($subcompiler->compile());
+            $subcompiler = new Compiler();
+            $compiler->write($subcompiler->compile($a));
         }
 
         $compiler->write(')?>');

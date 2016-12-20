@@ -283,6 +283,17 @@ class LexerTest extends PHPUnit_Framework_TestCase
             Token::T_STRING,
             Token::T_CLOSING_TAG,
         ]);
+
+	    $this->tokenTypesShouldMatch('{{ block "blockname" }}some raw text{{ /block }}', [
+		    Token::T_OPENING_TAG,
+		    Token::T_IDENT,
+		    Token::T_STRING,
+		    Token::T_CLOSING_TAG,
+		    Token::T_TEXT,
+		    Token::T_OPENING_TAG,
+		    Token::T_IDENT,
+		    Token::T_CLOSING_TAG,
+	    ]);
     }
 
     private function tokenTypesShouldMatch($input, $tokens)

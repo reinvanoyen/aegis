@@ -2,16 +2,16 @@
 
 namespace Aegis;
 
-use Aegis\Helpers\File;
+use Aegis\Cache\Filesystem;
+use Aegis\Cache\File;
+use Aegis\Helpers\File as FileUtil;
 
 class Template
 {
     public static $debug = true;
 
     public static $templateExtension = 'tpl';
-    public static $outputExtension = 'php';
     public static $templateDirectory = 'templates/';
-    public static $cacheDirectory = 'cache/templates/';
 
     private $runtime;
 	private $parser;
@@ -44,12 +44,6 @@ class Template
         $this->runtime->set($k, $v);
     }
 
-    private function compileFromFilename($filename)
-    {
-	    $input = file_get_contents($this->getSourceFilename($filename));
-	    return $this->compile($input);
-    }
-
     private function compile($input)
     {
 	    if (!$this->lexer) {
@@ -70,9 +64,10 @@ class Template
 	    return $this->compiler->compile($rootNode);
     }
 
-	private function getCacheFilename($filename, $part = null)
+	private function compileFromFilename($filename)
 	{
-		return static::$cacheDirectory.($part ? $part.'/' : '').urlencode($filename).'.'.self::$outputExtension;
+		$input = file_get_contents($filename);
+		return $this->compile($input);
 	}
 
 	private function getSourceFilename($filename)
@@ -80,60 +75,51 @@ class Template
 		return static::$templateDirectory.$filename.'.'.static::$templateExtension;
 	}
 
-	private function shouldRecompile($cacheFilename, $sourceFilename)
-	{
-		return !file_exists($cacheFilename) || filemtime($cacheFilename) <= filemtime($sourceFilename) || static::$debug;
-	}
-
     public function render($filename)
     {
-        $cacheFilename = $this->getCacheFilename($filename);
-        $srcFilename = $this->getSourceFilename($filename);
+    	$filename = $this->getSourceFilename($filename);
+	    $file = Filesystem::load($filename);
 
-        if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
+    	if ($file->getTimestamp() <= filemtime($filename) || static::$debug) {
+    		$file->write($this->compileFromFilename($filename));
+	    }
 
-            File\write($cacheFilename, $this->compileFromFilename($filename));
-        }
-
-        // Execute
-        return $this->execute($cacheFilename);
+        return $this->execute($file->getFilename());
     }
 
     public function renderHead($filename)
     {
-        $cacheFilename = $this->getCacheFilename($filename, 'head');
-        $srcFilename = $this->getSourceFilename($filename);
+	    $filename = $this->getSourceFilename($filename);
+	    $file = Filesystem::load($filename, 'head');
 
-        if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
+	    if ($file->getTimestamp() <= filemtime($filename) || static::$debug) {
 
-	        $this->compileFromFilename($filename);
-            File\write($cacheFilename, $this->compiler->getHead());
-        }
+		    $this->compileFromFilename($filename);
+		    $file->write($this->compiler->getHead());
+	    }
 
-        // Execute
-        return $this->execute($cacheFilename);
+	    return $this->execute($file->getFilename());
     }
 
-    public function renderBody($filename)
-    {
-        $cacheFilename = $this->getCacheFilename($filename, 'body');
-        $srcFilename = $this->getSourceFilename($filename);
+	public function renderBody($filename)
+	{
+		$filename = $this->getSourceFilename($filename);
+		$file = Filesystem::load($filename, 'body');
 
-        if ($this->shouldRecompile($cacheFilename, $srcFilename)) {
+		if ($file->getTimestamp() <= filemtime($filename) || static::$debug) {
 
-            $this->compileFromFilename($filename);
-            File\write($cacheFilename, $this->compiler->getBody());
-        }
+			$this->compileFromFilename($filename);
+			$file->write($this->compiler->getBody());
+		}
 
-        // Execute
-        return $this->execute($cacheFilename);
-    }
+		return $this->execute($file->getFilename());
+	}
 
     private function execute($filename)
     {
         ob_start();
 
-        File\scopedRequire($filename, [
+	    FileUtil\scopedRequire($filename, [
             'tpl' => $this,
             'env' => $this->runtime,
         ]);

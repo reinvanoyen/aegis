@@ -27,13 +27,15 @@ class BlockNode extends Node
                 $parser->advance();
             }
 
-            $parser->skip(Token::T_CLOSING_TAG);
+            $parser->expect(Token::T_CLOSING_TAG);
+	        $parser->advance();
 
-            $parser->parseOutsideTag();
+	        $parser->parseOutsideTag();
 
-            $parser->skip(Token::T_OPENING_TAG);
-            $parser->skip(Token::T_IDENT, '/block');
-            $parser->skip(Token::T_CLOSING_TAG);
+	        $parser->expect(Token::T_IDENT, '/block');
+	        $parser->advance();
+	        $parser->expect(Token::T_CLOSING_TAG);
+	        $parser->advance();
 
             $parser->traverseDown();
             $parser->parseOutsideTag();
@@ -47,8 +49,8 @@ class BlockNode extends Node
     public function compile(CompilerInterface $compiler)
     {
         $nameAttr = $this->getAttribute(0);
-        $subcompiler = new Compiler($nameAttr);
-        $name = $subcompiler->compile();
+        $subcompiler = new Compiler();
+        $name = $subcompiler->compile($nameAttr);
 
         // Determine which function to use
         $blockHeadFunction = 'setBlock';
@@ -65,8 +67,8 @@ class BlockNode extends Node
 
         // Write the heads of the children first
         foreach ($this->getChildren() as $c) {
-            $subcompiler = new Compiler($c);
-            $subcompiler->compile();
+            $subcompiler = new Compiler();
+            $subcompiler->compile($c);
             $compiler->head($subcompiler->getHead());
         }
 
@@ -76,8 +78,8 @@ class BlockNode extends Node
         $compiler->head(', function() use ( $env, $tpl ) { ?>');
 
         foreach ($this->getChildren() as $c) {
-            $subcompiler = new Compiler($c);
-            $subcompiler->compile();
+            $subcompiler = new Compiler();
+            $subcompiler->compile($c);
             $compiler->head($subcompiler->getBody());
         }
 

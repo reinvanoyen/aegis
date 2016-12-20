@@ -13,10 +13,10 @@ class Lexer implements LexerInterface
     private $line = 1;
     private $end;
 
-    private $currentChar;
-    private $lastCharPos;
+    private $lastCharPos = 0;
+    private $currentChar = '';
     private $currentValue = '';
-    private $modeStartChar;
+    private $modeStartChar = '';
 
     const MODE_ALL = 0;
     const MODE_INSIDE_TAG = 1;
@@ -37,10 +37,14 @@ class Lexer implements LexerInterface
         // Set mode
         $this->setMode(self::MODE_ALL);
 
-        // Set end position
+        // @TODO write a proper reset
+	    $this->line = 1;
+	    $this->cursor = 0;
         $this->end = strlen($this->input);
-
         $this->lastCharPos = $this->end - 1;
+	    $this->currentChar = '';
+	    $this->currentValue = '';
+	    $this->modeStartChar = '';
 
         // Loop each character
         while ($this->cursor < $this->end) {

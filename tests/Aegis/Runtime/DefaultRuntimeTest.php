@@ -6,7 +6,6 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 {
     public function testBasics()
     {
-        Template::$cacheDirectory = 'tests/cache/';
         Template::$templateDirectory = 'tests/templates/';
 
         $string = 'UOspIkq124MLd,shdfDRDFGbnjsjs,k,oao';
@@ -26,7 +25,6 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
     public function testRaw()
     {
-        Template::$cacheDirectory = 'tests/cache/';
         Template::$templateDirectory = 'tests/templates/';
 
         $html = '<span data-name="test">test</span>';
@@ -44,7 +42,6 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
     public function testIf()
     {
-        Template::$cacheDirectory = 'tests/cache/';
         Template::$templateDirectory = 'tests/templates/';
 
         $expectedResult = '123456789';
@@ -59,7 +56,6 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
     public function testElse()
     {
-        Template::$cacheDirectory = 'tests/cache/';
         Template::$templateDirectory = 'tests/templates/';
 
         $expectedResult = '1234';
@@ -74,7 +70,6 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
 
     public function testElseIf()
     {
-        Template::$cacheDirectory = 'tests/cache/';
         Template::$templateDirectory = 'tests/templates/';
 
         $expectedResult = '123';
