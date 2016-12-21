@@ -8,8 +8,6 @@ final class Token
     private $value;
     private $line;
 
-    const PHP_EXPR = '(?:[^\']|\\\'.*?\\\')+?';
-
     const REGEX_T_EOL = '[\n\r]';
     const REGEX_T_OPENING_TAG = '{{'; // {{
     const REGEX_T_CLOSING_TAG = '}}'; // }}
@@ -19,7 +17,6 @@ final class Token
     const REGEX_T_NUMBER = '[0-9.]'; // 1 2 3 4 5 6 7 8 9 .
     const REGEX_T_SYMBOL = '\(|\)|\,|\[|\]'; // ( ) , [ ]
 
-    const T_EOL = 'T_EOL';
     const T_TEXT = 'T_TEXT';
     const T_OPENING_TAG = 'T_OPENING_TAG';
     const T_CLOSING_TAG = 'T_CLOSING_TAG';
@@ -31,7 +28,6 @@ final class Token
     const T_SYMBOL = 'T_SYMBOL';
 
     private static $tokenTypes = [
-        self::T_EOL => 'T_EOL',
         self::T_TEXT => 'T_TEXT',
         self::T_OPENING_TAG => 'T_OPENING_TAG',
         self::T_CLOSING_TAG => 'T_CLOSING_TAG',

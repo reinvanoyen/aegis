@@ -6,39 +6,41 @@ use \Aegis\NoTokenAtIndex;
 
 class TokenStreamTest extends PHPUnit_Framework_TestCase
 {
+    private $stream;
+
+    public function setup()
+    {
+        $this->stream = new TokenStream();
+    }
+
     public function testAddToken()
     {
-        $stream = new TokenStream();
-        $stream->addToken(new Token(Token::T_VAR, 'value', 10));
-        $this->assertCount(1, $stream->getTokens(), 'Amount of tokens is not correct');
+        $this->stream->addToken(new Token(Token::T_VAR, 'value', 10));
+        $this->assertCount(1, $this->stream->getTokens(), 'Amount of tokens is not correct');
     }
 
     public function testAddedTokenTypeString()
     {
-        $stream = new TokenStream();
-        $stream->addToken(new Token(Token::T_VAR, 'value', 10));
-        $this->assertInternalType('string', $stream->getToken(0)->getValue());
+        $this->stream->addToken(new Token(Token::T_VAR, 'value', 10));
+        $this->assertInternalType('string', $this->stream->getToken(0)->getValue());
     }
 
     public function testAddedTokenTypeFloat()
     {
-        $stream = new TokenStream();
-        $stream->addToken(new Token(Token::T_NUMBER, '5', 10));
-        $this->assertInternalType('float', $stream->getToken(0)->getValue());
+        $this->stream->addToken(new Token(Token::T_NUMBER, '5', 10));
+        $this->assertInternalType('float', $this->stream->getToken(0)->getValue());
     }
 
     public function testGetTokenShouldReturnInstanceOfToken()
     {
-        $stream = new TokenStream();
-        $stream->addToken(new Token(Token::T_VAR, 'value', 10));
-        $this->assertInstanceOf(Token::class, $stream->getToken(0));
+        $this->stream->addToken(new Token(Token::T_VAR, 'value', 10));
+        $this->assertInstanceOf(Token::class, $this->stream->getToken(0));
     }
 
     public function testGetTokenShouldThrowException()
     {
         $this->expectException(NoTokenAtIndex::class);
 
-        $stream = new TokenStream();
-        $stream->getToken(3);
+        $this->stream->getToken(3);
     }
 }
