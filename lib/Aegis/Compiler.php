@@ -11,15 +11,15 @@ class Compiler implements CompilerInterface
 
     public function compile(Node $input)
     {
-    	$this->head = $this->body = '';
-	    $this->input = $input;
-	    $this->input->compile($this);
+        $this->head = $this->body = '';
+        $this->input = $input;
+        $this->input->compile($this);
         return $this->getResult();
     }
 
     public function getResult()
     {
-    	return $this->getHead().$this->getBody();
+        return $this->getHead().$this->getBody();
     }
 
     public function getHead()

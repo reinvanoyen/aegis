@@ -4,5 +4,5 @@ namespace Aegis\Cache;
 
 interface CacheInterface
 {
-	public static function load($id, $subentry = null);
+    public static function load($id, $subentry = null);
 }

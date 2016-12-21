@@ -56,11 +56,11 @@ class ForNode extends Node
             }
 
             $parser->expect(Token::T_CLOSING_TAG);
-	        $parser->advance();
+            $parser->advance();
 
             $parser->parseOutsideTag();
 
-	        $parser->expect(Token::T_IDENT, '/for');
+            $parser->expect(Token::T_IDENT, '/for');
             $parser->advance();
             $parser->expect(Token::T_CLOSING_TAG);
             $parser->advance();

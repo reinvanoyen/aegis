@@ -38,13 +38,13 @@ class Lexer implements LexerInterface
         $this->setMode(self::MODE_ALL);
 
         // @TODO write a proper reset
-	    $this->line = 1;
-	    $this->cursor = 0;
+        $this->line = 1;
+        $this->cursor = 0;
         $this->end = strlen($this->input);
         $this->lastCharPos = $this->end - 1;
-	    $this->currentChar = '';
-	    $this->currentValue = '';
-	    $this->modeStartChar = '';
+        $this->currentChar = '';
+        $this->currentValue = '';
+        $this->modeStartChar = '';
 
         // Loop each character
         while ($this->cursor < $this->end) {
@@ -252,6 +252,6 @@ class Lexer implements LexerInterface
 
     private function advanceCursor($n = 1)
     {
-    	$this->setCursor($this->cursor + $n);
+        $this->setCursor($this->cursor + $n);
     }
 }

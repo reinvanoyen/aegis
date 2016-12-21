@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd ../
+phpunit
+php-cs-fixer fix ./ --level=psr2
+rm -Rf cache/
+rm -Rf tests/cache/

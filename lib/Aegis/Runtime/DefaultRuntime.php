@@ -7,14 +7,14 @@ use Aegis\RuntimeInterface;
 
 class DefaultRuntime implements RuntimeInterface
 {
-	private $nodeCollection;
+    private $nodeCollection;
     private $vars = [];
     private $blocks = [];
     public $functions = [];
 
     public function __construct(NodeCollectionInterface $nodeCollection)
     {
-    	$this->nodeCollection = $nodeCollection;
+        $this->nodeCollection = $nodeCollection;
     }
 
     public function getNodeCollection()
@@ -22,7 +22,7 @@ class DefaultRuntime implements RuntimeInterface
         return $this->nodeCollection;
     }
 
-	public function set($k, $v)
+    public function set($k, $v)
     {
         $this->vars[$k] = $v;
     }

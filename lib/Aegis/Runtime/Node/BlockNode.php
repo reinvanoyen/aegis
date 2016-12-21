@@ -28,14 +28,14 @@ class BlockNode extends Node
             }
 
             $parser->expect(Token::T_CLOSING_TAG);
-	        $parser->advance();
+            $parser->advance();
 
-	        $parser->parseOutsideTag();
+            $parser->parseOutsideTag();
 
-	        $parser->expect(Token::T_IDENT, '/block');
-	        $parser->advance();
-	        $parser->expect(Token::T_CLOSING_TAG);
-	        $parser->advance();
+            $parser->expect(Token::T_IDENT, '/block');
+            $parser->advance();
+            $parser->expect(Token::T_CLOSING_TAG);
+            $parser->advance();
 
             $parser->traverseDown();
             $parser->parseOutsideTag();

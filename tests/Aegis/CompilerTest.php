@@ -5,15 +5,20 @@ use Aegis\Node\RootNode;
 
 class CompilerTest extends PHPUnit_Framework_TestCase
 {
+    private $compiler;
+
+    public function setup()
+    {
+        $this->compiler = new Compiler();
+    }
+
     public function testCompileShouldReturnTypeString()
     {
-        $compiler = new Compiler();
-        $this->assertInternalType('string', $compiler->compile(new RootNode()));
+        $this->assertInternalType('string', $this->compiler->compile(new RootNode()));
     }
 
     public function testCompileShouldReturnEmptyString()
     {
-        $compiler = new Compiler();
-        $this->assertEquals('', $compiler->compile(new RootNode()));
+        $this->assertEquals('', $this->compiler->compile(new RootNode()));
     }
 }

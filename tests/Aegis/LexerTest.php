@@ -5,6 +5,13 @@ use \Aegis\Token;
 
 class LexerTest extends PHPUnit_Framework_TestCase
 {
+    private $lexer;
+
+    public function setup()
+    {
+        $this->lexer = new Lexer();
+    }
+
     public function testTokenizeShouldReturnInstanceOfTokenStream()
     {
         $this->tokenizeShouldReturnInstanceOfTokenStream('{{');
@@ -284,22 +291,21 @@ class LexerTest extends PHPUnit_Framework_TestCase
             Token::T_CLOSING_TAG,
         ]);
 
-	    $this->tokenTypesShouldMatch('{{ block "blockname" }}some raw text{{ /block }}', [
-		    Token::T_OPENING_TAG,
-		    Token::T_IDENT,
-		    Token::T_STRING,
-		    Token::T_CLOSING_TAG,
-		    Token::T_TEXT,
-		    Token::T_OPENING_TAG,
-		    Token::T_IDENT,
-		    Token::T_CLOSING_TAG,
-	    ]);
+        $this->tokenTypesShouldMatch('{{ block "blockname" }}some raw text{{ /block }}', [
+            Token::T_OPENING_TAG,
+            Token::T_IDENT,
+            Token::T_STRING,
+            Token::T_CLOSING_TAG,
+            Token::T_TEXT,
+            Token::T_OPENING_TAG,
+            Token::T_IDENT,
+            Token::T_CLOSING_TAG,
+        ]);
     }
 
     private function tokenTypesShouldMatch($input, $tokens)
     {
-        $lexer = new Lexer();
-        $stream = $lexer->tokenize($input);
+        $stream = $this->lexer->tokenize($input);
 
         $this->assertCount(count($tokens), $stream->getTokens(), 'Amount of tokens does not match expected amount');
 
@@ -310,21 +316,18 @@ class LexerTest extends PHPUnit_Framework_TestCase
 
     private function tokenValueTest($input, $value, $position = 0)
     {
-        $lexer = new Lexer();
-        $stream = $lexer->tokenize($input);
+        $stream = $this->lexer->tokenize($input);
         $this->assertEquals($value, $stream->getToken($position)->getValue(), 'Value of token does not match '.$value);
     }
 
     private function tokenizeShouldReturnInstanceOfTokenStream($input)
     {
-        $lexer = new Lexer();
-        $this->assertInstanceOf(\Aegis\TokenStream::class, $lexer->tokenize($input));
+        $this->assertInstanceOf(\Aegis\TokenStream::class, $this->lexer->tokenize($input));
     }
 
     private function tokenValueTypeShouldMatch($input, $type, $position = 0)
     {
-        $lexer = new Lexer();
-        $stream = $lexer->tokenize($input);
+        $stream = $this->lexer->tokenize($input);
         $this->assertInternalType($type, $stream->getToken($position)->getValue(), 'Type of value of token does not match '.$type);
     }
 }
