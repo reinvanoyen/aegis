@@ -101,7 +101,7 @@ class Lexer implements LexerInterface
             return;
         }
 
-        if ($this->currentChar === '{' && $this->getNextChar() === '{') {
+        if (preg_match('@'.Token::REGEX_T_OPENING_TAG.'@', $this->currentChar) && preg_match('@'.Token::REGEX_T_OPENING_TAG.'@', $this->getNextChar()) ) {
 
             // Add text until now to the token stream
             if ($this->currentValue !== '') {
@@ -148,7 +148,7 @@ class Lexer implements LexerInterface
             $this->setMode(self::MODE_NUMBER);
 
             return;
-        } elseif ($this->currentChar === '@') {
+        } elseif (preg_match('@'.Token::REGEX_T_VAR_START.'@', $this->currentChar)) {
             $this->setMode(self::MODE_VAR);
             $this->advanceCursor();
 
