@@ -19,7 +19,6 @@ class LogicalOperatorNode extends Node
     public static function parse(ParserInterface $parser)
     {
         if (
-            $parser->accept(Token::T_IDENT, 'not') ||
             $parser->accept(Token::T_IDENT, 'or') ||
             $parser->accept(Token::T_IDENT, 'and') ||
             $parser->accept(Token::T_IDENT, 'equals')
@@ -30,13 +29,25 @@ class LogicalOperatorNode extends Node
             return true;
         }
 
+        if (
+            $parser->accept(Token::T_IDENT, 'not')
+        ) {
+            if ($parser->acceptNext(Token::T_IDENT, 'equals')) {
+	            $parser->insert(new static('neq'));
+	            $parser->advance();
+	            $parser->advance();
+
+	            return true;
+            }
+        }
+
         return false;
     }
 
     public function compile(CompilerInterface $compiler)
     {
-        if ($this->type === 'not') {
-            $compiler->write(' ! ');
+        if ($this->type === 'neq') {
+            $compiler->write(' !== ');
         } elseif ($this->type === 'or') {
             $compiler->write(' || ');
         } elseif ($this->type === 'and') {

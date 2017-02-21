@@ -3,7 +3,6 @@
 namespace Aegis;
 
 use Aegis\Cache\Filesystem;
-use Aegis\Cache\File;
 use Aegis\Helpers\File as FileUtil;
 
 class Template

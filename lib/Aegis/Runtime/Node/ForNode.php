@@ -40,19 +40,28 @@ class ForNode extends Node
                 $parser->expect(Token::T_IDENT, 'to');
                 $parser->advance();
 
-                if ($parser->expect(Token::T_NUMBER)) {
+                $checkForAlias = false;
+                if ($parser->accept(Token::T_NUMBER)) {
                     $parser->insert(new NumberNode($parser->getCurrentToken()->getValue()));
                     $parser->setAttribute();
                     $parser->advance();
-
-                    if ($parser->accept(Token::T_IDENT, 'as')) {
-                        $parser->advance();
-                        $parser->expect(Token::T_VAR);
-                        $parser->insert(new VariableNode($parser->getCurrentToken()->getValue()));
-                        $parser->setAttribute();
-                        $parser->advance();
-                    }
+	                $checkForAlias = true;
                 }
+
+	            if ($parser->accept(Token::T_VAR)) {
+		            $parser->insert(new VariableNode($parser->getCurrentToken()->getValue()));
+		            $parser->setAttribute();
+		            $parser->advance();
+		            $checkForAlias = true;
+	            }
+
+	            if ($checkForAlias && $parser->accept(Token::T_IDENT, 'as')) {
+		            $parser->advance();
+		            $parser->expect(Token::T_VAR);
+		            $parser->insert(new VariableNode($parser->getCurrentToken()->getValue()));
+		            $parser->setAttribute();
+		            $parser->advance();
+	            }
             }
 
             $parser->expect(Token::T_CLOSING_TAG);
