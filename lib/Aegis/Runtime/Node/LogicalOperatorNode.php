@@ -32,12 +32,17 @@ class LogicalOperatorNode extends Node
         if (
             $parser->accept(Token::T_IDENT, 'not')
         ) {
+
             if ($parser->acceptNext(Token::T_IDENT, 'equals')) {
 	            $parser->insert(new static('neq'));
 	            $parser->advance();
 	            $parser->advance();
 
 	            return true;
+            } else {
+            	$parser->insert(new static('not'));
+            	$parser->advance();
+            	return true;
             }
         }
 
@@ -46,10 +51,12 @@ class LogicalOperatorNode extends Node
 
     public function compile(CompilerInterface $compiler)
     {
-        if ($this->type === 'neq') {
+	    if ($this->type === 'neq') {
             $compiler->write(' !== ');
         } elseif ($this->type === 'or') {
             $compiler->write(' || ');
+	    } elseif ($this->type === 'not') {
+		    $compiler->write(' ! ');
         } elseif ($this->type === 'and') {
             $compiler->write(' && ');
         } elseif ($this->type === 'equals') {
