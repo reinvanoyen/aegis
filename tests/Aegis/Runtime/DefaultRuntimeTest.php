@@ -44,7 +44,7 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
     {
         Template::$templateDirectory = 'tests/templates/';
 
-        $expectedResult = '123456789';
+        $expectedResult = '12345678910';
 
         $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
         $tpl->setLexer(new \Aegis\Lexer());
