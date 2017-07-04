@@ -16,6 +16,7 @@ class DefaultNodeCollection extends NodeCollection
             'Aegis\\Runtime\\Node\\IncludeNode',
             'Aegis\\Runtime\\Node\\PrintNode',
             'Aegis\\Runtime\\Node\\RawNode',
+            'Aegis\\Runtime\\Node\\PhpNode',
         ]);
     }
 }

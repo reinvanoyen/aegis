@@ -53,6 +53,18 @@ class Parser implements ParserInterface
         }
     }
 
+    public function parseText()
+    {
+        if (!count($this->tokenStream->getTokens())) {
+            return;
+        }
+
+        if ($this->accept(Token::T_TEXT)) {
+            $this->insert(new TextNode($this->getCurrentToken()->getValue()));
+            $this->advance();
+        }
+    }
+
     private function parseStatement()
     {
         $this->runtime->getNodeCollection()->parse($this);

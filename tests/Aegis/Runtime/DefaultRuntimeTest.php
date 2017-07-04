@@ -81,4 +81,18 @@ class DefaultRuntimeTest extends PHPUnit_Framework_TestCase
         $tpl->condition = false;
         $this->assertEquals($expectedResult, $tpl->render('elseif-test'));
     }
+
+    public function testPhp()
+    {
+        Template::$templateDirectory = 'tests/templates/';
+
+        $expectedResult = "ok nice";
+
+        $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+        $tpl->setLexer(new \Aegis\Lexer());
+        $tpl->setParser(new \Aegis\Parser());
+        $tpl->setCompiler(new \Aegis\Compiler());
+        $tpl->condition = 1;
+        $this->assertEquals($expectedResult, $tpl->render('php-test'));
+    }
 }
