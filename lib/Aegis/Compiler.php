@@ -2,41 +2,77 @@
 
 namespace Aegis;
 
+/**
+ * Class Compiler
+ * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Compiler implements CompilerInterface
 {
-    private $input;
-
+    /**
+     * @var string
+     */
     private $head = '';
+
+    /**
+     * @var string
+     */
     private $body = '';
 
-    public function compile(Node $input)
+    /**
+     * Compiles a node into a string
+     *
+     * @param Node $node
+     * @return string
+     */
+    public function compile(Node $node) : string
     {
         $this->head = $this->body = '';
-        $this->input = $input;
-        $this->input->compile($this);
+        $node->compile($this);
         return $this->getResult();
     }
 
-    public function getResult()
+    /**
+     * Gets the result of the compiling as a string
+     *
+     * @return string
+     */
+    public function getResult() : string
     {
         return $this->getHead().$this->getBody();
     }
 
-    public function getHead()
+    /**
+     * @return string
+     */
+    public function getHead() : string
     {
         return $this->head;
     }
 
-    public function getBody()
+    /**
+     * @return string
+     */
+    public function getBody() : string
     {
         return $this->body;
     }
 
+    /**
+     * Writes a string to the head
+     *
+     * @param $string
+     */
     public function head($string)
     {
         $this->head .= $string;
     }
 
+    /**
+     * Writes a string to the body
+     *
+     * @param $string
+     */
     public function write($string)
     {
         $this->body .= $string;

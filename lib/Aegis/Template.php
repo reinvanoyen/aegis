@@ -12,14 +12,39 @@ use Aegis\Helpers\File as FileUtil;
  */
 class Template
 {
+    /**
+     * @var bool
+     */
     public static $debug = true;
 
+    /**
+     * @var string
+     */
     public static $templateExtension = 'tpl';
+
+    /**
+     * @var string
+     */
     public static $templateDirectory = 'templates/';
 
+    /**
+     * @var RuntimeInterface
+     */
     private $runtime;
+
+    /**
+     * @var ParserInterface
+     */
     private $parser;
+
+    /**
+     * @var LexerInterface
+     */
     private $lexer;
+
+    /**
+     * @var CompilerInterface
+     */
     private $compiler;
 
     public function __construct(RuntimeInterface $runtime)
@@ -27,27 +52,45 @@ class Template
         $this->runtime = $runtime;
     }
 
+    /**
+     * @param ParserInterface $parser
+     */
     public function setParser(ParserInterface $parser)
     {
         $this->parser = $parser;
         $this->parser->setRuntime($this->runtime);
     }
 
+    /**
+     * @param LexerInterface $lexer
+     */
     public function setLexer(LexerInterface $lexer)
     {
         $this->lexer = $lexer;
     }
 
+    /**
+     * @param CompilerInterface $compiler
+     */
     public function setCompiler(CompilerInterface $compiler)
     {
         $this->compiler = $compiler;
     }
 
-    public function __set($k, $v)
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function __set($key, $value)
     {
-        $this->runtime->set($k, $v);
+        $this->runtime->set($key, $value);
     }
 
+    /**
+     * @param $input
+     * @return mixed
+     * @throws AegisError
+     */
     private function compile($input)
     {
         if (!$this->lexer) {
@@ -68,17 +111,29 @@ class Template
         return $this->compiler->compile($rootNode);
     }
 
+    /**
+     * @param $filename
+     * @return mixed
+     */
     private function compileFromFilename($filename)
     {
         $input = file_get_contents($filename);
         return $this->compile($input);
     }
 
+    /**
+     * @param $filename
+     * @return string
+     */
     private function getSourceFilename($filename)
     {
         return static::$templateDirectory.$filename.'.'.static::$templateExtension;
     }
 
+    /**
+     * @param $filename
+     * @return string
+     */
     public function render($filename)
     {
         $filename = $this->getSourceFilename($filename);
@@ -91,6 +146,10 @@ class Template
         return $this->execute($file->getFilename());
     }
 
+    /**
+     * @param $filename
+     * @return string
+     */
     public function renderHead($filename)
     {
         $filename = $this->getSourceFilename($filename);
@@ -104,6 +163,10 @@ class Template
         return $this->execute($file->getFilename());
     }
 
+    /**
+     * @param $filename
+     * @return string
+     */
     public function renderBody($filename)
     {
         $filename = $this->getSourceFilename($filename);
@@ -117,6 +180,10 @@ class Template
         return $this->execute($file->getFilename());
     }
 
+    /**
+     * @param $filename
+     * @return string
+     */
     private function execute($filename)
     {
         ob_start();

@@ -21,20 +21,20 @@ class Parser implements ParserInterface
     private $cursor;
     private $lastTokenIndex;
 
-	/**
-	 * @param RuntimeInterface $runtime
-	 */
+    /**
+     * @param RuntimeInterface $runtime
+     */
     public function setRuntime(RuntimeInterface $runtime)
     {
         $this->runtime = $runtime;
     }
 
-	/**
-	 * @param TokenStream $stream
-	 * @return mixed
-	 * @throws AegisError
-	 */
-    public function parse(TokenStream $stream)
+    /**
+     * @param TokenStream $stream
+     * @return RootNode
+     * @throws AegisError
+     */
+    public function parse(TokenStream $stream) : RootNode
     {
         if (! $this->runtime) {
             throw new AegisError('Runtime needs to be set before parsing');
@@ -112,11 +112,11 @@ class Parser implements ParserInterface
         return false;
     }
 
-	/**
-	 * @param $type
-	 * @param null $value
-	 * @return bool
-	 */
+    /**
+     * @param $type
+     * @param null $value
+     * @return bool
+     */
     public function accept($type, $value = null)
     {
         if ($this->getCurrentToken()->getType() === $type) {
@@ -134,11 +134,11 @@ class Parser implements ParserInterface
         return false;
     }
 
-	/**
-	 * @param $type
-	 * @param null $value
-	 * @return bool
-	 */
+    /**
+     * @param $type
+     * @param null $value
+     * @return bool
+     */
     public function acceptNext($type, $value = null)
     {
         if ($this->getNextToken()->getType() === $type) {
@@ -156,34 +156,34 @@ class Parser implements ParserInterface
         return false;
     }
 
-	/**
-	 * @return mixed
-	 */
+    /**
+     * @return mixed
+     */
     public function getCurrentToken()
     {
         return $this->tokenStream->getToken($this->cursor);
     }
 
-	/**
-	 * @return mixed
-	 */
+    /**
+     * @return mixed
+     */
     public function getNextToken()
     {
         return $this->tokenStream->getToken($this->cursor + 1);
     }
 
-	/**
-	 * @param Node $scope
-	 */
+    /**
+     * @param Node $scope
+     */
     public function setScope(Node $scope)
     {
         $this->scope = $scope;
     }
 
-	/**
-	 * @return mixed
-	 * @throws AegisError
-	 */
+    /**
+     * @return mixed
+     * @throws AegisError
+     */
     public function getScope()
     {
         if (!$this->scope) {
@@ -193,10 +193,10 @@ class Parser implements ParserInterface
         return $this->scope;
     }
 
-	/**
-	 * @return mixed
-	 * @throws AegisError
-	 */
+    /**
+     * @return mixed
+     * @throws AegisError
+     */
     public function getRoot()
     {
         if (!$this->root) {
@@ -211,9 +211,9 @@ class Parser implements ParserInterface
         $this->setScope($this->getScope()->getLastChild());
     }
 
-	/**
-	 * @throws ParseError
-	 */
+    /**
+     * @throws ParseError
+     */
     public function traverseDown()
     {
         try {

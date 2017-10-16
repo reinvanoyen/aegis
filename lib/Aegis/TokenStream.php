@@ -7,36 +7,44 @@ namespace Aegis;
  * @package Aegis
  * @author Rein Van Oyen <reinvanoyen@gmail.com>
  */
-
 class TokenStream
 {
+    /**
+     * @var Token[]
+     */
     private $tokens = [];
 
-	/**
-	 * @param Token $token
-	 */
+    /**
+     * Adds a token to the TokenStream
+     *
+     * @param Token $token
+     */
     public function addToken(Token $token)
     {
         $this->tokens[] = $token;
     }
 
-	/**
-	 * @param $i
-	 * @return mixed
-	 * @throws NoTokenAtIndex
-	 */
-    public function getToken($i)
+    /**
+     * Gets a token at given index
+     *
+     * @param $index
+     * @return Token
+     * @throws NoTokenAtIndex
+     */
+    public function getToken($index)
     {
-        if (!isset($this->tokens[$i])) {
-            throw new NoTokenAtIndex($i);
+        if (!isset($this->tokens[$index])) {
+            throw new NoTokenAtIndex($index);
         }
 
-        return $this->tokens[$i];
+        return $this->tokens[$index];
     }
 
-	/**
-	 * @return array
-	 */
+    /**
+     * Gets all tokens
+     *
+     * @return Token[]
+     */
     public function getTokens()
     {
         return $this->tokens;

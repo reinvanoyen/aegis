@@ -2,10 +2,21 @@
 
 namespace Aegis;
 
+/**
+ * Class NodeCollection
+ * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class NodeCollection implements NodeCollectionInterface
 {
+    /**
+     * @var array
+     */
     private $nodes = [];
 
+    /**
+     * @param $mixed
+     */
     public function add($mixed)
     {
         if (is_array($mixed)) {
@@ -19,6 +30,9 @@ class NodeCollection implements NodeCollectionInterface
         }
     }
 
+    /**
+     * @param ParserInterface $parser
+     */
     public function parse(ParserInterface $parser)
     {
         foreach ($this->nodes as $node) {

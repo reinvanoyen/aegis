@@ -2,20 +2,61 @@
 
 namespace Aegis;
 
+/**
+ * Class Lexer
+ * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Lexer implements LexerInterface
 {
+    /**
+     * @var int
+     */
     private $mode;
 
+    /**
+     * @var string
+     */
     private $input;
+
+    /**
+     * @var TokenStream
+     */
     private $stream;
 
+    /**
+     * @var int
+     */
     private $cursor;
+
+    /**
+     * @var int
+     */
     private $line;
+
+    /**
+     * @var int
+     */
     private $end;
+
+    /**
+     * @var int
+     */
     private $lastCharPos;
 
+    /**
+     * @var int
+     */
     private $currentChar;
+
+    /**
+     * @var string
+     */
     private $currentValue;
+
+    /**
+     * @var string
+     */
     private $modeStartChar;
 
     const MODE_ALL = 0;
@@ -26,7 +67,13 @@ class Lexer implements LexerInterface
     const MODE_NUMBER = 5;
     const MODE_OP = 6;
 
-    public function tokenize($input)
+    /**
+     * Tokenizes a string into a TokenStream
+     *
+     * @param $input
+     * @return TokenStream
+     */
+    public function tokenize(string $input) : TokenStream
     {
         $this->prepare($input);
 
@@ -67,7 +114,12 @@ class Lexer implements LexerInterface
         return $this->stream;
     }
 
-    private function prepare($input)
+    /**
+     * Prepares the Lexer for tokenizing a string
+     *
+     * @param string $input
+     */
+    private function prepare(string $input)
     {
         $this->input = str_replace(["\n\r", "\r"], "\n", $input);
 
@@ -230,23 +282,43 @@ class Lexer implements LexerInterface
         $this->advanceCursor();
     }
 
-    private function getNextChar()
+    /**
+     * Gets the next character from the cursor position
+     *
+     * @return mixed
+     */
+    private function getNextChar() : string
     {
         return $this->input[$this->cursor + 1];
     }
 
-    private function setMode($mode)
+    /**
+     * Sets the lexing mode
+     *
+     * @param int $mode
+     */
+    private function setMode(int $mode)
     {
         $this->mode = $mode;
     }
 
-    private function setCursor($n)
+    /**
+     * Sets the cursor to the specified position
+     *
+     * @param int $position
+     */
+    private function setCursor(int $position)
     {
-        $this->cursor = $n;
+        $this->cursor = $position;
     }
 
-    private function advanceCursor($n = 1)
+    /**
+     * Advance the cursor by a given index, if no index is given, advance by 1
+     *
+     * @param int $index
+     */
+    private function advanceCursor(int $index = 1)
     {
-        $this->setCursor($this->cursor + $n);
+        $this->setCursor($this->cursor + $index);
     }
 }

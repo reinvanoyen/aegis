@@ -7,56 +7,86 @@ namespace Aegis;
  * @package Aegis
  * @author Rein Van Oyen <reinvanoyen@gmail.com>
  */
-
 abstract class Node
 {
+    /**
+     * @var Node|null
+     */
     private $parent = null;
+
+    /**
+     * @var Node[]
+     */
     private $children = [];
+
+    /**
+     * @var Node[]
+     */
     private $attributes = [];
+
+    /**
+     * @var bool
+     */
     private $isAttribute = false;
 
-	/**
-	 * @param Node $node
-	 */
+    /**
+     * Adds the given node as an attribute
+     *
+     * @param Node $node
+     */
     public function setAttribute(Node $node)
     {
         $node->isAttribute = true;
         $this->attributes[] = $node;
     }
 
-	/**
-	 * @return bool
-	 */
+    /**
+     * Return whether the node is an attribute
+     *
+     * @return bool
+     */
     public function isAttribute()
     {
         return $this->isAttribute;
     }
 
-	/**
-	 * @param $index
-	 * @return mixed|null
-	 */
-    public function getAttribute($index)
+    /**
+     * Gets an attribute node
+     *
+     * @param int $index
+     * @return Node|null
+     */
+    public function getAttribute(int $index) : ?Node
     {
         return isset($this->attributes[$index]) ? $this->attributes[$index] : null;
     }
 
-	/**
-	 * @return array
-	 */
+    /**
+     * Gets all attribute nodes
+     *
+     * @return Node[]
+     */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
-	/**
-	 * @return array
-	 */
+    /**
+     * Gets all child nodes
+     *
+     * @return Node[]
+     */
     public function getChildren()
     {
         return $this->children;
     }
 
+    /**
+     * Gets the parent node
+     *
+     * @return Node
+     * @throws AegisError
+     */
     public function getParent()
     {
         if (!$this->parent) {
@@ -66,20 +96,24 @@ abstract class Node
         return $this->parent;
     }
 
-	/**
-	 * @param Node $parent
-	 */
+    /**
+     * Sets the parent node
+     *
+     * @param Node $parent
+     */
     public function setParent(Node $parent)
     {
         $this->parent = $parent;
     }
 
-	/**
-	 * @param $index
-	 * @return mixed
-	 * @throws AegisError
-	 */
-    public function getChild($index)
+    /**
+     * Gets the child at the given index
+     *
+     * @param int $index
+     * @return Node
+     * @throws AegisError
+     */
+    public function getChild(int $index) : Node
     {
         if (!isset($this->children[$index])) {
             throw new AegisError('Could not get child from node, because there\'s no child at index '.$i);
@@ -88,11 +122,13 @@ abstract class Node
         return $this->children[$index];
     }
 
-	/**
-	 * @return mixed
-	 * @throws AegisError
-	 */
-    public function getLastChild()
+    /**
+     * Gets the last child node
+     *
+     * @return Node
+     * @throws AegisError
+     */
+    public function getLastChild() : Node
     {
         $last = end($this->children);
 
@@ -103,11 +139,13 @@ abstract class Node
         return $last;
     }
 
-	/**
-	 * @param $index
-	 * @throws AegisError
-	 */
-    public function removeChild($index)
+    /**
+     * Removes the child node at the given index
+     *
+     * @param int $index
+     * @throws AegisError
+     */
+    public function removeChild(int $index)
     {
         if (!isset($this->children[$index])) {
             throw new AegisError('Could remove child from node, because there\'s no child at index '.$index);
@@ -116,9 +154,11 @@ abstract class Node
         unset($this->children[$index]);
     }
 
-	/**
-	 * @throws AegisError
-	 */
+    /**
+     * Removes the last child node
+     *
+     * @throws AegisError
+     */
     public function removeLastChild()
     {
         $last = array_pop($this->children);
@@ -128,33 +168,39 @@ abstract class Node
         }
     }
 
-	/**
-	 * @return mixed
-	 */
+    /**
+     * Gets all sibling nodes
+     *
+     * @return Node[]
+     */
     public function getSiblings()
     {
         return $this->getParent()->getChildren();
     }
 
-	/**
-	 * @param Node $node
-	 */
+    /**
+     * Adds a child node
+     *
+     * @param Node $node
+     */
     public function insert(Node $node)
     {
         $this->children[] = $node;
     }
 
-	/**
-	 * @return string
-	 */
-    public function getName()
+    /**
+     * Gets the name of the node
+     *
+     * @return string
+     */
+    public function getName() : string
     {
         return get_class($this);
     }
 
-	/**
-	 * @param CompilerInterface $compiler
-	 * @return mixed
-	 */
+    /**
+     * @param CompilerInterface $compiler
+     * @return mixed
+     */
     abstract public function compile(CompilerInterface $compiler);
 }

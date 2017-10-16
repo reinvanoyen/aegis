@@ -7,18 +7,30 @@ use Aegis\Node;
 use Aegis\ParserInterface;
 use Aegis\Token;
 
+/**
+ * Class VariableNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class VariableNode extends Node
 {
-    private $name;
+    private $variableName;
 
-    public function __construct($name)
+    /**
+     * VariableNode constructor.
+     * @param string $variableName
+     */
+    public function __construct(string $variableName)
     {
-        $this->name = $name;
+        $this->variableName = $variableName;
     }
 
-    public function getName()
+    /**
+     * @return string
+     */
+    public function getVariableName() : string
     {
-        return $this->name;
+        return $this->variableName;
     }
 
     public static function parse(ParserInterface $parser)
@@ -36,9 +48,9 @@ class VariableNode extends Node
     public function compile(CompilerInterface $compiler, $local = false)
     {
         if ($local) {
-            $compiler->write('$'.str_replace('.', '->', $this->name));
+            $compiler->write('$'.str_replace('.', '->', $this->getVariableName()));
         } else {
-            $compiler->write('$env->'.str_replace('.', '->', $this->name));
+            $compiler->write('$env->'.str_replace('.', '->', $this->getVariableName()));
         }
     }
 }

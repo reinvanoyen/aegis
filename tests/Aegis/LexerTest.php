@@ -26,7 +26,6 @@ class LexerTest extends PHPUnit_Framework_TestCase
         $this->tokenizeShouldReturnInstanceOfTokenStream('@test');
         $this->tokenizeShouldReturnInstanceOfTokenStream('{{@test}}');
         $this->tokenizeShouldReturnInstanceOfTokenStream('{{ block }}{{ /block }}');
-        $this->tokenizeShouldReturnInstanceOfTokenStream(null);
     }
 
     public function testTokenValues()
@@ -59,7 +58,6 @@ class LexerTest extends PHPUnit_Framework_TestCase
 
     public function testEmptyStringTypes()
     {
-        $this->tokenTypesShouldMatch(null, []);
         $this->tokenTypesShouldMatch('', []);
         $this->tokenTypesShouldMatch(' ', [Token::T_TEXT]);
     }
