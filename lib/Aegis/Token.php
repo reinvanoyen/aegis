@@ -2,6 +2,11 @@
 
 namespace Aegis;
 
+/**
+ * Class Token
+ * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 final class Token
 {
     private $type;
@@ -46,6 +51,13 @@ final class Token
         self::T_SYMBOL => 'T_SYMBOL',
     ];
 
+	/**
+	 * Token constructor.
+	 * @param $type
+	 * @param $value
+	 * @param int $line
+	 * @throws InvalidTokenType
+	 */
     public function __construct($type, $value, $line = 0)
     {
         if (!isset(self::$tokenTypes[$type])) {
@@ -61,6 +73,9 @@ final class Token
         $this->line = $line;
     }
 
+	/**
+	 * @return mixed|string
+	 */
     public function getName()
     {
         if (isset(self::$tokenTypes[ $this->type ])) {
@@ -70,21 +85,33 @@ final class Token
         return 'T_UNKNOWN';
     }
 
+	/**
+	 * @return int
+	 */
     public function getType()
     {
         return $this->type;
     }
 
+	/**
+	 * @return int
+	 */
     public function getLine()
     {
         return $this->line;
     }
 
+	/**
+	 * @return float
+	 */
     public function getValue()
     {
         return $this->value;
     }
 
+	/**
+	 * @return string
+	 */
     public function __toString()
     {
         return strtoupper($this->getType().' '.$this->getValue())."\n";

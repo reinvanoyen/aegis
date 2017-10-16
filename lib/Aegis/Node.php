@@ -2,6 +2,12 @@
 
 namespace Aegis;
 
+/**
+ * Class Node
+ * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
+
 abstract class Node
 {
     private $parent = null;
@@ -9,27 +15,43 @@ abstract class Node
     private $attributes = [];
     private $isAttribute = false;
 
-    public function setAttribute(Node $n)
+	/**
+	 * @param Node $node
+	 */
+    public function setAttribute(Node $node)
     {
-        $n->isAttribute = true;
-        $this->attributes[] = $n;
+        $node->isAttribute = true;
+        $this->attributes[] = $node;
     }
 
+	/**
+	 * @return bool
+	 */
     public function isAttribute()
     {
         return $this->isAttribute;
     }
 
-    public function getAttribute($i)
+	/**
+	 * @param $index
+	 * @return mixed|null
+	 */
+    public function getAttribute($index)
     {
-        return isset($this->attributes[ $i ]) ? $this->attributes[ $i ] : null;
+        return isset($this->attributes[$index]) ? $this->attributes[$index] : null;
     }
 
+	/**
+	 * @return array
+	 */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
+	/**
+	 * @return array
+	 */
     public function getChildren()
     {
         return $this->children;
@@ -44,20 +66,32 @@ abstract class Node
         return $this->parent;
     }
 
+	/**
+	 * @param Node $parent
+	 */
     public function setParent(Node $parent)
     {
         $this->parent = $parent;
     }
 
-    public function getChild($i)
+	/**
+	 * @param $index
+	 * @return mixed
+	 * @throws AegisError
+	 */
+    public function getChild($index)
     {
-        if (!isset($this->children[$i])) {
+        if (!isset($this->children[$index])) {
             throw new AegisError('Could not get child from node, because there\'s no child at index '.$i);
         }
 
-        return $this->children[$i];
+        return $this->children[$index];
     }
 
+	/**
+	 * @return mixed
+	 * @throws AegisError
+	 */
     public function getLastChild()
     {
         $last = end($this->children);
@@ -69,15 +103,22 @@ abstract class Node
         return $last;
     }
 
-    public function removeChild($i)
+	/**
+	 * @param $index
+	 * @throws AegisError
+	 */
+    public function removeChild($index)
     {
-        if (!isset($this->children[$i])) {
-            throw new AegisError('Could remove child from node, because there\'s no child at index '.$i);
+        if (!isset($this->children[$index])) {
+            throw new AegisError('Could remove child from node, because there\'s no child at index '.$index);
         }
 
-        unset($this->children[$i]);
+        unset($this->children[$index]);
     }
 
+	/**
+	 * @throws AegisError
+	 */
     public function removeLastChild()
     {
         $last = array_pop($this->children);
@@ -87,20 +128,33 @@ abstract class Node
         }
     }
 
+	/**
+	 * @return mixed
+	 */
     public function getSiblings()
     {
         return $this->getParent()->getChildren();
     }
 
+	/**
+	 * @param Node $node
+	 */
     public function insert(Node $node)
     {
         $this->children[] = $node;
     }
 
+	/**
+	 * @return string
+	 */
     public function getName()
     {
         return get_class($this);
     }
 
+	/**
+	 * @param CompilerInterface $compiler
+	 * @return mixed
+	 */
     abstract public function compile(CompilerInterface $compiler);
 }

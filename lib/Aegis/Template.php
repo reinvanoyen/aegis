@@ -5,6 +5,11 @@ namespace Aegis;
 use Aegis\Cache\Filesystem;
 use Aegis\Helpers\File as FileUtil;
 
+/**
+ * Class Template
+ * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Template
 {
     public static $debug = true;

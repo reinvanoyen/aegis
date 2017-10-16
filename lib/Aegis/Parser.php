@@ -5,6 +5,11 @@ namespace Aegis;
 use Aegis\Node\RootNode;
 use Aegis\Node\TextNode;
 
+/**
+ * Class Parser
+ * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Parser implements ParserInterface
 {
     private $runtime;
@@ -16,11 +21,19 @@ class Parser implements ParserInterface
     private $cursor;
     private $lastTokenIndex;
 
+	/**
+	 * @param RuntimeInterface $runtime
+	 */
     public function setRuntime(RuntimeInterface $runtime)
     {
         $this->runtime = $runtime;
     }
 
+	/**
+	 * @param TokenStream $stream
+	 * @return mixed
+	 * @throws AegisError
+	 */
     public function parse(TokenStream $stream)
     {
         if (! $this->runtime) {
@@ -99,6 +112,11 @@ class Parser implements ParserInterface
         return false;
     }
 
+	/**
+	 * @param $type
+	 * @param null $value
+	 * @return bool
+	 */
     public function accept($type, $value = null)
     {
         if ($this->getCurrentToken()->getType() === $type) {
@@ -116,6 +134,11 @@ class Parser implements ParserInterface
         return false;
     }
 
+	/**
+	 * @param $type
+	 * @param null $value
+	 * @return bool
+	 */
     public function acceptNext($type, $value = null)
     {
         if ($this->getNextToken()->getType() === $type) {
@@ -133,21 +156,34 @@ class Parser implements ParserInterface
         return false;
     }
 
+	/**
+	 * @return mixed
+	 */
     public function getCurrentToken()
     {
         return $this->tokenStream->getToken($this->cursor);
     }
 
+	/**
+	 * @return mixed
+	 */
     public function getNextToken()
     {
         return $this->tokenStream->getToken($this->cursor + 1);
     }
 
+	/**
+	 * @param Node $scope
+	 */
     public function setScope(Node $scope)
     {
         $this->scope = $scope;
     }
 
+	/**
+	 * @return mixed
+	 * @throws AegisError
+	 */
     public function getScope()
     {
         if (!$this->scope) {
@@ -157,6 +193,10 @@ class Parser implements ParserInterface
         return $this->scope;
     }
 
+	/**
+	 * @return mixed
+	 * @throws AegisError
+	 */
     public function getRoot()
     {
         if (!$this->root) {
@@ -171,6 +211,9 @@ class Parser implements ParserInterface
         $this->setScope($this->getScope()->getLastChild());
     }
 
+	/**
+	 * @throws ParseError
+	 */
     public function traverseDown()
     {
         try {
