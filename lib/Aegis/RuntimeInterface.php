@@ -5,6 +5,7 @@ namespace Aegis;
 /**
  * Interface RuntimeInterface
  * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
  */
 interface RuntimeInterface
 {
@@ -15,9 +16,9 @@ interface RuntimeInterface
     public function __construct(NodeCollectionInterface $nodeCollection);
 
     /**
-     * @return mixed
+     * @return NodeCollectionInterface
      */
-    public function getNodeCollection();
+    public function getNodeCollection() : NodeCollectionInterface;
 
     /**
      * @param $key

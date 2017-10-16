@@ -19,7 +19,7 @@ class TokenStream
      *
      * @param Token $token
      */
-    public function addToken(Token $token)
+    public function addToken(Token $token) : void
     {
         $this->tokens[] = $token;
     }
@@ -31,7 +31,7 @@ class TokenStream
      * @return Token
      * @throws NoTokenAtIndex
      */
-    public function getToken($index)
+    public function getToken($index) : Token
     {
         if (!isset($this->tokens[$index])) {
             throw new NoTokenAtIndex($index);
@@ -45,7 +45,7 @@ class TokenStream
      *
      * @return Token[]
      */
-    public function getTokens()
+    public function getTokens() : array
     {
         return $this->tokens;
     }

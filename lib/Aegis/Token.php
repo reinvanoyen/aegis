@@ -84,7 +84,7 @@ final class Token
      *
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         if (isset(self::$tokenTypes[ $this->type ])) {
             return self::$tokenTypes[ $this->type ];

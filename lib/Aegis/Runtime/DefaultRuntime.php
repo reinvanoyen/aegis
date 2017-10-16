@@ -5,6 +5,11 @@ namespace Aegis\Runtime;
 use Aegis\NodeCollectionInterface;
 use Aegis\RuntimeInterface;
 
+/**
+ * Class DefaultRuntime
+ * @package Aegis\Runtime
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class DefaultRuntime implements RuntimeInterface
 {
     private $nodeCollection;
@@ -17,7 +22,12 @@ class DefaultRuntime implements RuntimeInterface
         $this->nodeCollection = $nodeCollection;
     }
 
-    public function getNodeCollection()
+	/**
+	 * Gets the NodeCollection
+	 *
+	 * @return NodeCollectionInterface
+	 */
+    public function getNodeCollection() : NodeCollectionInterface
     {
         return $this->nodeCollection;
     }

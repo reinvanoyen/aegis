@@ -7,6 +7,7 @@ use Aegis\Node\RootNode;
 /**
  * Interface ParserInterface
  * @package Aegis
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
  */
 interface ParserInterface
 {

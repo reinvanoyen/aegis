@@ -72,8 +72,9 @@ class Compiler implements CompilerInterface
      * Writes a string to the body
      *
      * @param $string
+     * @return void
      */
-    public function write($string)
+    public function write(string $string) : void
     {
         $this->body .= $string;
     }
