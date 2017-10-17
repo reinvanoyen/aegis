@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class IncludeNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class IncludeNode extends Node
 {
     public static function parse(ParserInterface $parser)
@@ -16,10 +21,13 @@ class IncludeNode extends Node
             $parser->traverseUp();
             $parser->advance();
 
-            ExpressionNode::parse($parser);
+            if (! ExpressionNode::parse($parser)) {
+                $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+            }
             $parser->setAttribute();
 
-            $parser->skip(Token::T_CLOSING_TAG);
+            $parser->expect(Token::T_CLOSING_TAG);
+            $parser->advance();
             $parser->traverseDown();
             $parser->parseOutsideTag();
         }
@@ -27,7 +35,7 @@ class IncludeNode extends Node
 
     public function compile(CompilerInterface $compiler)
     {
-        $compiler->write('<?php $tpl->render(');
+        $compiler->write('<?php echo $tpl->render(');
 
         foreach ($this->getAttributes() as $a) {
             $a->compile($compiler);

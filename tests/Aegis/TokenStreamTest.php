@@ -2,7 +2,6 @@
 
 use \Aegis\Token;
 use \Aegis\TokenStream;
-use \Aegis\NoTokenAtIndex;
 
 class TokenStreamTest extends PHPUnit_Framework_TestCase
 {
@@ -39,7 +38,7 @@ class TokenStreamTest extends PHPUnit_Framework_TestCase
 
     public function testGetTokenShouldThrowException()
     {
-        $this->expectException(NoTokenAtIndex::class);
+        $this->expectException(\Aegis\Error\NoTokenAtIndex::class);
         $this->stream->getToken(3);
     }
 }

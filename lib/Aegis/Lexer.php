@@ -34,10 +34,10 @@ class Lexer implements LexerInterface
      */
     private $line;
 
-	/**
-	 * @var int
-	 */
-	private $linePosition;
+    /**
+     * @var int
+     */
+    private $linePosition;
 
     /**
      * @var int
@@ -84,7 +84,6 @@ class Lexer implements LexerInterface
 
         // Loop each character
         while ($this->cursor < $this->end) {
-
             $this->currentChar = $this->input[$this->cursor];
 
             if (preg_match('@'.Token::REGEX_T_EOL.'@', $this->currentChar)) {
@@ -149,7 +148,7 @@ class Lexer implements LexerInterface
 
     private function lexAll()
     {
-        // If were at the end of the file, write a text token with the remaining text
+        // If we are at the end of the file, write a text token with the remaining text
         if ($this->cursor + 1 === $this->end) {
             $this->stream->addToken(new Token(Token::T_TEXT, $this->currentValue.$this->currentChar, $this->line, $this->linePosition));
             $this->advanceCursor(); // Advance one last time so the while loops stops running
@@ -317,7 +316,7 @@ class Lexer implements LexerInterface
      */
     private function advanceCursor(int $index = 1)
     {
-	    $this->cursor += $index;
-	    $this->linePosition += $index;
+        $this->cursor += $index;
+        $this->linePosition += $index;
     }
 }

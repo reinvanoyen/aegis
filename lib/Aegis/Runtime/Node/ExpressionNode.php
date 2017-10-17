@@ -6,6 +6,11 @@ use Aegis\CompilerInterface;
 use Aegis\Node;
 use Aegis\ParserInterface;
 
+/**
+ * Class ExpressionNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class ExpressionNode extends Node
 {
     public static function parse(ParserInterface $parser)
@@ -25,7 +30,9 @@ class ExpressionNode extends Node
             }
 
             if (OperatorNode::parse($parser)) {
-                self::parse($parser);
+                if (!self::parse($parser)) {
+                    $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+                }
             } else {
                 $parser->traverseDown();
             }

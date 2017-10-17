@@ -12,64 +12,64 @@ use Aegis\RuntimeInterface;
  */
 class DefaultRuntime implements RuntimeInterface
 {
-	/**
-	 * @var NodeCollectionInterface
-	 */
+    /**
+     * @var NodeCollectionInterface
+     */
     private $nodeCollection;
 
-	/**
-	 * @var array
-	 */
+    /**
+     * @var array
+     */
     private $vars = [];
 
-	/**
-	 * @var array
-	 */
+    /**
+     * @var array
+     */
     private $blocks = [];
 
-	/**
-	 * @var array
-	 */
+    /**
+     * @var array
+     */
     public $functions = [];
 
-	/**
-	 * DefaultRuntime constructor.
-	 * @param NodeCollectionInterface $nodeCollection
-	 */
+    /**
+     * DefaultRuntime constructor.
+     * @param NodeCollectionInterface $nodeCollection
+     */
     public function __construct(NodeCollectionInterface $nodeCollection)
     {
         $this->nodeCollection = $nodeCollection;
     }
 
-	/**
-	 * Gets the NodeCollection
-	 *
-	 * @return NodeCollectionInterface
-	 */
+    /**
+     * Gets the NodeCollection
+     *
+     * @return NodeCollectionInterface
+     */
     public function getNodeCollection() : NodeCollectionInterface
     {
         return $this->nodeCollection;
     }
 
-	/**
-	 * Sets a variable
-	 *
-	 * @param $key
-	 * @param $value
-	 * @return void
-	 */
+    /**
+     * Sets a variable
+     *
+     * @param $key
+     * @param $value
+     * @return void
+     */
     public function set($key, $value) : void
     {
         $this->vars[$key] = $value;
     }
 
-	/**
-	 * Gets a variable
-	 *
-	 * @param $key
-	 * @return mixed
-	 * @throws UndefinedVariable
-	 */
+    /**
+     * Gets a variable
+     *
+     * @param $key
+     * @return mixed
+     * @throws UndefinedVariable
+     */
     public function __get($key)
     {
         if (!isset($this->vars[$key])) {
@@ -79,48 +79,48 @@ class DefaultRuntime implements RuntimeInterface
         return $this->vars[$key];
     }
 
-	/**
-	 * Sets a block
-	 *
-	 * @param $id
-	 * @param $callable
-	 * @return void
-	 */
+    /**
+     * Sets a block
+     *
+     * @param $id
+     * @param $callable
+     * @return void
+     */
     public function setBlock($id, $callable) : void
     {
         $this->blocks[$id] = [$callable];
     }
 
-	/**
-	 * Appends a callable to a block
-	 *
-	 * @param $id
-	 * @param $callable
-	 * @return void
-	 */
+    /**
+     * Appends a callable to a block
+     *
+     * @param $id
+     * @param $callable
+     * @return void
+     */
     public function appendBlock($id, $callable) : void
     {
         $this->blocks[$id][] = $callable;
     }
 
-	/**
-	 * Prepends a callable to a block
-	 *
-	 * @param $id
-	 * @param $callable
-	 * @return void
-	 */
+    /**
+     * Prepends a callable to a block
+     *
+     * @param $id
+     * @param $callable
+     * @return void
+     */
     public function prependBlock($id, $callable) : void
     {
         array_unshift($this->blocks[$id], $callable);
     }
 
-	/**
-	 * Executes the contents of a block
-	 *
-	 * @param $id
-	 * @return void
-	 */
+    /**
+     * Executes the contents of a block
+     *
+     * @param $id
+     * @return void
+     */
     public function getBlock($id) : void
     {
         foreach ($this->blocks[$id] as $callable) {
@@ -128,13 +128,13 @@ class DefaultRuntime implements RuntimeInterface
         }
     }
 
-	/**
-	 * Sets a function
-	 *
-	 * @param $funcName
-	 * @param $callable
-	 * @return void
-	 */
+    /**
+     * Sets a function
+     *
+     * @param $funcName
+     * @param $callable
+     * @return void
+     */
     public function setFunction($funcName, $callable) : void
     {
         $this->functions[$funcName] = $callable;

@@ -15,10 +15,10 @@ use Aegis\Node;
  */
 class BlockNode extends Node
 {
-	/**
-	 * @param ParserInterface $parser
-	 * @return bool
-	 */
+    /**
+     * @param ParserInterface $parser
+     * @return bool
+     */
     public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_IDENT, 'block')) {
@@ -27,8 +27,8 @@ class BlockNode extends Node
 
             $parser->traverseUp();
 
-            if (! ExpressionNode::parse($parser) ) {
-            	$parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+            if (! ExpressionNode::parse($parser)) {
+                $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
             }
             $parser->setAttribute();
 
@@ -57,9 +57,9 @@ class BlockNode extends Node
         return false;
     }
 
-	/**
-	 * @param CompilerInterface $compiler
-	 */
+    /**
+     * @param CompilerInterface $compiler
+     */
     public function compile(CompilerInterface $compiler)
     {
         $nameAttr = $this->getAttribute(0);

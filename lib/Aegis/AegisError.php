@@ -9,25 +9,25 @@ namespace Aegis;
  */
 class AegisError extends \Exception
 {
-	/**
-	 * @var string
-	 */
-	protected $sourceCode;
+    /**
+     * @var string
+     */
+    protected $sourceCode;
 
-	/**
-	 * @return void
-	 */
-	public function printExceptionDetail() : void
-	{
-		echo $this->getMessage();
-	}
+    /**
+     * @return void
+     */
+    public function printExceptionDetail() : void
+    {
+        echo $this->getMessage();
+    }
 
-	/**
-	 * @param string $source
-	 * @return void
-	 */
-	public function setSourceCode(string $source) : void
-	{
-		$this->sourceCode = $source;
-	}
+    /**
+     * @param string $source
+     * @return void
+     */
+    public function setSourceCode(string $source) : void
+    {
+        $this->sourceCode = $source;
+    }
 }

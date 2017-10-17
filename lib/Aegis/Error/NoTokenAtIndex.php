@@ -1,13 +1,13 @@
 <?php
 
-namespace Aegis;
+namespace Aegis\Error;
 
 /**
  * Class NoTokenAtIndex
  * @package Aegis
  * @author Rein Van Oyen <reinvanoyen@gmail.com>
  */
-class NoTokenAtIndex extends AegisError
+class NoTokenAtIndex extends \Aegis\AegisError
 {
     /**
      * NoTokenAtIndex constructor.

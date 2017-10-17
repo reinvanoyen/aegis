@@ -14,35 +14,35 @@ use Aegis\Node\TextNode;
  */
 class Parser implements ParserInterface
 {
-	/**
-	 * @var RuntimeInterface
-	 */
+    /**
+     * @var RuntimeInterface
+     */
     private $runtime;
 
-	/**
-	 * @var RootNode
-	 */
+    /**
+     * @var RootNode
+     */
     private $root;
 
-	/**
-	 * @var Node
-	 */
+    /**
+     * @var Node
+     */
     private $scope;
 
-	/**
-	 * @var int
-	 */
+    /**
+     * @var int
+     */
     private $cursor;
 
-	/**
-	 * @var int
-	 */
+    /**
+     * @var int
+     */
     private $lastTokenIndex;
 
-	/**
-	 * @var TokenStream
-	 */
-	private $stream;
+    /**
+     * @var TokenStream
+     */
+    private $stream;
 
     /**
      * Sets the runtime
@@ -68,21 +68,35 @@ class Parser implements ParserInterface
             throw new AegisError('Runtime needs to be set before parsing');
         }
 
-        $this->root = $this->scope = new RootNode();
-        $this->cursor = 0;
-        $this->stream = $stream;
-        $this->lastTokenIndex = count($this->stream->getTokens()) - 1;
-
+        $this->prepare($stream);
         $this->parseOutsideTag();
+
+        if ($this->cursor !== $this->lastTokenIndex) {
+            $this->syntaxError('Unexpected token ' . $this->getCurrentToken());
+        }
 
         return $this->getRoot();
     }
 
-	/**
-	 * Parses outside of tags
-	 *
-	 * @return void
-	 */
+    /**
+     * Prepares the parser for parsing
+     *
+     * @param TokenStream $stream
+     * @return void
+     */
+    public function prepare(TokenStream $stream) :void
+    {
+        $this->root = $this->scope = new RootNode();
+        $this->stream = $stream;
+        $this->lastTokenIndex = max(0, count($this->stream->getTokens()) - 1);
+        $this->cursor = 0;
+    }
+
+    /**
+     * Parses outside of tags
+     *
+     * @return void
+     */
     public function parseOutsideTag() : void
     {
         if (!count($this->stream->getTokens())) {
@@ -99,11 +113,11 @@ class Parser implements ParserInterface
         }
     }
 
-	/**
-	 * Parses text
-	 *
-	 * @return void
-	 */
+    /**
+     * Parses text
+     *
+     * @return void
+     */
     public function parseText() : void
     {
         if (!count($this->stream->getTokens())) {
@@ -116,41 +130,41 @@ class Parser implements ParserInterface
         }
     }
 
-	/**
-	 * Parses a statement
-	 *
-	 * @return void
-	 */
+    /**
+     * Parses a statement
+     *
+     * @return void
+     */
     private function parseStatement() : void
     {
         $this->runtime->getNodeCollection()->parse($this);
     }
 
-	/**
-	 * Expects the current token to be of given type and optionally has given value
-	 *
-	 * @param int $type
-	 * @param null $value
-	 * @return bool
-	 * @throws ParseError
-	 */
+    /**
+     * Expects the current token to be of given type and optionally has given value
+     *
+     * @param int $type
+     * @param null $value
+     * @return bool
+     * @throws ParseError
+     */
     public function expect(int $type, $value = null) : bool
     {
         if (!$this->accept($type, $value)) {
-        	$this->syntaxError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken());
+            $this->syntaxError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken());
         }
 
         return true;
     }
 
-	/**
-	 * Expects the next token to be of given type and optionally has given value
-	 *
-	 * @param int $type
-	 * @param null $value
-	 * @return bool
-	 * @throws ParseError
-	 */
+    /**
+     * Expects the next token to be of given type and optionally has given value
+     *
+     * @param int $type
+     * @param null $value
+     * @return bool
+     * @throws ParseError
+     */
     public function expectNext(int $type, $value = null) : bool
     {
         if (!$this->acceptNext($type, $value)) {
@@ -160,13 +174,13 @@ class Parser implements ParserInterface
         return true;
     }
 
-	/**
-	 * Skips the current token if it's of given type and optionally has given value
-	 *
-	 * @param int $type
-	 * @param null $value
-	 * @return bool
-	 */
+    /**
+     * Skips the current token if it's of given type and optionally has given value
+     *
+     * @param int $type
+     * @param null $value
+     * @return bool
+     */
     public function skip(int $type, $value = null) : bool
     {
         if ($this->accept($type, $value)) {
@@ -178,13 +192,13 @@ class Parser implements ParserInterface
         return false;
     }
 
-	/**
-	 * Accepts the current token if it's of given type and optionally has given value
-	 *
-	 * @param int $type
-	 * @param null $value
-	 * @return bool
-	 */
+    /**
+     * Accepts the current token if it's of given type and optionally has given value
+     *
+     * @param int $type
+     * @param null $value
+     * @return bool
+     */
     public function accept(int $type, $value = null) : bool
     {
         if ($this->getCurrentToken()->getType() === $type) {
@@ -202,13 +216,13 @@ class Parser implements ParserInterface
         return false;
     }
 
-	/**
-	 * Accepts the next token if it's of given type and optionally has given value
-	 *
-	 * @param int $type
-	 * @param null $value
-	 * @return bool
-	 */
+    /**
+     * Accepts the next token if it's of given type and optionally has given value
+     *
+     * @param int $type
+     * @param null $value
+     * @return bool
+     */
     public function acceptNext(int $type, $value = null) : bool
     {
         if ($this->getNextToken()->getType() === $type) {
@@ -226,21 +240,21 @@ class Parser implements ParserInterface
         return false;
     }
 
-	/**
-	 * Gets the token at the cursor position
-	 *
-	 * @return Token
-	 */
+    /**
+     * Gets the token at the cursor position
+     *
+     * @return Token
+     */
     public function getCurrentToken() : Token
     {
         return $this->stream->getToken($this->cursor);
     }
 
-	/**
-	 * Gets the token at the next position from the cursor
-	 *
-	 * @return Token
-	 */
+    /**
+     * Gets the token at the next position from the cursor
+     *
+     * @return Token
+     */
     public function getNextToken() : Token
     {
         return $this->stream->getToken($this->cursor + 1);
@@ -257,12 +271,12 @@ class Parser implements ParserInterface
         $this->scope = $scope;
     }
 
-	/**
-	 * Gets the parsing scope
-	 *
-	 * @return Node
-	 * @throws AegisError
-	 */
+    /**
+     * Gets the parsing scope
+     *
+     * @return Node
+     * @throws AegisError
+     */
     public function getScope() : Node
     {
         if (!$this->scope) {
@@ -272,12 +286,12 @@ class Parser implements ParserInterface
         return $this->scope;
     }
 
-	/**
-	 * Gets the root node (full AST)
-	 *
-	 * @return RootNode
-	 * @throws AegisError
-	 */
+    /**
+     * Gets the root node (full AST)
+     *
+     * @return RootNode
+     * @throws AegisError
+     */
     public function getRoot() : RootNode
     {
         if (!$this->root) {
@@ -287,22 +301,22 @@ class Parser implements ParserInterface
         return $this->root;
     }
 
-	/**
-	 * Moves inside the last inserted node
-	 *
-	 * @return void
-	 */
+    /**
+     * Moves inside the last inserted node
+     *
+     * @return void
+     */
     public function traverseUp() : void
     {
         $this->setScope($this->getScope()->getLastChild());
     }
 
-	/**
-	 * Moves outside the current scope
-	 *
-	 * @return void
-	 * @throws ParseError
-	 */
+    /**
+     * Moves outside the current scope
+     *
+     * @return void
+     * @throws ParseError
+     */
     public function traverseDown() : void
     {
         try {
@@ -314,11 +328,11 @@ class Parser implements ParserInterface
         $this->setScope($parent);
     }
 
-	/**
-	 * Advances the cursor
-	 *
-	 * @return void
-	 */
+    /**
+     * Advances the cursor
+     *
+     * @return void
+     */
     public function advance() : void
     {
         if ($this->cursor < count($this->stream->getTokens()) - 1) {
@@ -326,22 +340,22 @@ class Parser implements ParserInterface
         }
     }
 
-	/**
-	 * Moves to the root node
-	 *
-	 * @return void
-	 */
+    /**
+     * Moves to the root node
+     *
+     * @return void
+     */
     public function root() : void
     {
         $this->setScope($this->root);
     }
 
-	/**
-	 * Wraps the last inserted node with the given node
-	 *
-	 * @param Node $node
-	 * @return void
-	 */
+    /**
+     * Wraps the last inserted node with the given node
+     *
+     * @param Node $node
+     * @return void
+     */
     public function wrap(Node $node) : void
     {
         $last = $this->scope->getLastChild(); // Get the last inserted node
@@ -353,11 +367,11 @@ class Parser implements ParserInterface
         $this->insert($last);
     }
 
-	/**
-	 * Sets the last inserted node as attribute
-	 *
-	 * @return void
-	 */
+    /**
+     * Sets the last inserted node as attribute
+     *
+     * @return void
+     */
     public function setAttribute() : void
     {
         $last = $this->scope->getLastChild(); // Get the last inserted node
@@ -365,24 +379,25 @@ class Parser implements ParserInterface
         $this->scope->setAttribute($last);
     }
 
-	/**
-	 * Inserts the given node
-	 *
-	 * @param Node $node
-	 * @return void
-	 */
+    /**
+     * Inserts the given node
+     *
+     * @param Node $node
+     * @return void
+     */
     public function insert(Node $node) : void
     {
         $node->setParent($this->scope);
         $this->scope->insert($node);
     }
 
-	/**
-	 * @throws SyntaxError
-	 * @return void
-	 */
+    /**
+     * @param string $message
+     * @return void
+     * @throws SyntaxError
+     */
     public function syntaxError(string $message = '') : void
     {
-    	throw new SyntaxError($message, $this->getCurrentToken()->getLine(), $this->getCurrentToken()->getPosition());
+        throw new SyntaxError($message, $this->getCurrentToken()->getLine(), $this->getCurrentToken()->getPosition());
     }
 }

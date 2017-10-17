@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class ListNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class ListNode extends Node
 {
     public static function parse(ParserInterface $parser)

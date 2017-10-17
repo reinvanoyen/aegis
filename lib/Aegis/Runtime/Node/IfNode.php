@@ -22,14 +22,14 @@ class IfNode extends Node
             $parser->traverseUp();
 
             if (! ConditionNode::parse($parser)) {
-	            $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+                $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken() . ', expected condition');
             }
-	        $parser->setAttribute();
+            $parser->setAttribute();
 
             $parser->expect(Token::T_CLOSING_TAG);
-	        $parser->advance();
+            $parser->advance();
 
-	        $parser->parseOutsideTag();
+            $parser->parseOutsideTag();
 
             if (ElseNode::parse($parser)) {
                 $parser->parseOutsideTag();
@@ -39,7 +39,6 @@ class IfNode extends Node
                 $parser->parseOutsideTag();
             }
 
-            $parser->skip(Token::T_OPENING_TAG);
             $parser->expect(Token::T_IDENT, '/if');
             $parser->advance();
             $parser->skip(Token::T_CLOSING_TAG);

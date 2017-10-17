@@ -47,16 +47,16 @@ class Template
      */
     private $compiler;
 
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     private $input;
 
     public function __construct(RuntimeInterface $runtime)
     {
         $this->runtime = $runtime;
 
-	    set_exception_handler([$this, 'handleException']);
+        set_exception_handler([$this, 'handleException']);
     }
 
     /**
@@ -100,7 +100,7 @@ class Template
      */
     private function compile(string $input)
     {
-    	$this->input = $input;
+        $this->input = $input;
 
         if (!$this->lexer) {
             throw new AegisError('Lexer needs to be set before compiling');
@@ -208,17 +208,17 @@ class Template
         return $result;
     }
 
-	/**
-	 * @param $exception
-	 * @return void
-	 */
-	public function handleException($exception) : void
-	{
-		if ($exception instanceof AegisError) {
-			$exception->setSourceCode($this->input);
-			$exception->printExceptionDetail();
-		}
-	}
+    /**
+     * @param $exception
+     * @return void
+     */
+    public function handleException($exception) : void
+    {
+        if ($exception instanceof AegisError) {
+            $exception->setSourceCode($this->input);
+            $exception->printExceptionDetail();
+        }
+    }
 }
 
 require_once __DIR__.'/Helpers/File.php';

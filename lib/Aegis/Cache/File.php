@@ -11,20 +11,20 @@ use Aegis\AegisError;
  */
 class File implements CacheEntryInterface
 {
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     private $filename;
 
-	/**
-	 * @var int
-	 */
+    /**
+     * @var int
+     */
     private $timestamp;
 
-	/**
-	 * File constructor.
-	 * @param string $filename
-	 */
+    /**
+     * File constructor.
+     * @param string $filename
+     */
     public function __construct(string $filename)
     {
         $this->filename = $filename;
@@ -43,12 +43,12 @@ class File implements CacheEntryInterface
         $this->timestamp = filemtime($this->filename);
     }
 
-	/**
-	 * Deletes the file from the filesystem
-	 *
-	 * @throws AegisError
-	 * @return void
-	 */
+    /**
+     * Deletes the file from the filesystem
+     *
+     * @throws AegisError
+     * @return void
+     */
     public function delete() : void
     {
         if (! @unlink($this->filename)) {
@@ -56,42 +56,42 @@ class File implements CacheEntryInterface
         }
     }
 
-	/**
-	 * Writes contents to the file
-	 *
-	 * @param string $contents
-	 */
+    /**
+     * Writes contents to the file
+     *
+     * @param string $contents
+     */
     public function write(string $contents) : void
     {
         file_put_contents($this->filename, $contents);
         $this->timestamp = time();
     }
 
-	/**
-	 * Gets the filename
-	 *
-	 * @return string
-	 */
+    /**
+     * Gets the filename
+     *
+     * @return string
+     */
     public function getFilename() : string
     {
         return $this->filename;
     }
 
-	/**
-	 * Gets the timestamp of last modification of the file
-	 *
-	 * @return int
-	 */
+    /**
+     * Gets the timestamp of last modification of the file
+     *
+     * @return int
+     */
     public function getTimestamp() : int
     {
         return $this->timestamp;
     }
 
-	/**
-	 * Gets the contents of the file
-	 *
-	 * @return string
-	 */
+    /**
+     * Gets the contents of the file
+     *
+     * @return string
+     */
     public function read() : string
     {
         $contents = @file_get_contents($this->filename);

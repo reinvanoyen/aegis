@@ -24,13 +24,13 @@ class ParserTest extends PHPUnit_Framework_TestCase
     public function testGetCurrentTokenType()
     {
         $stream = new TokenStream();
-        $stream->addToken(new Token(Token::T_IDENT, 'ident', 1));
+        $stream->addToken(new Token(Token::T_IDENT, 'block', 1));
         $stream->addToken(new Token(Token::T_OP, '+', 1));
         $stream->addToken(new Token(Token::T_OPENING_TAG, '{{', 1));
         $stream->addToken(new Token(Token::T_IDENT, 'ident', 1));
         $stream->addToken(new Token(Token::T_NUMBER, '10', 1));
 
-        $this->parser->parse($stream);
+        $this->parser->prepare($stream);
         $this->parser->skip(Token::T_IDENT);
         $this->parser->skip(Token::T_OP);
         $this->parser->skip(Token::T_OPENING_TAG);
@@ -56,7 +56,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testGetCurrentTokenShouldThrowNoTokenAtIndex()
     {
-        $this->expectException(Aegis\NoTokenAtIndex::class);
+        $this->expectException(\Aegis\Error\NoTokenAtIndex::class);
 
         $stream = new TokenStream();
         $this->parser->parse($stream);

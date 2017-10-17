@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class PrintNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class PrintNode extends Node
 {
     public static function parse(ParserInterface $parser)
@@ -14,10 +19,11 @@ class PrintNode extends Node
         if (ExpressionNode::parse($parser)) {
             $parser->wrap(new static());
             $parser->traverseDown();
-        }
 
-        if ($parser->skip(Token::T_CLOSING_TAG)) {
-            $parser->parseOutsideTag();
+            if ($parser->expect(Token::T_CLOSING_TAG)) {
+                $parser->advance();
+                $parser->parseOutsideTag();
+            }
         }
     }
 

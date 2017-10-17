@@ -11,9 +11,9 @@ use Aegis\NodeCollection;
  */
 class DefaultNodeCollection extends NodeCollection
 {
-	/**
-	 * DefaultNodeCollection constructor.
-	 */
+    /**
+     * DefaultNodeCollection constructor.
+     */
     public function __construct()
     {
         $this->add([

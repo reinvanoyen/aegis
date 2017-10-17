@@ -14,10 +14,10 @@ use Aegis\Node;
  */
 class ArgumentListNode extends Node
 {
-	/**
-	 * @param ParserInterface $parser
-	 * @return bool
-	 */
+    /**
+     * @param ParserInterface $parser
+     * @return bool
+     */
     public static function parse(ParserInterface $parser)
     {
         $parser->insert(new static());
@@ -34,11 +34,11 @@ class ArgumentListNode extends Node
         return true;
     }
 
-	/**
-	 * Compiles the node
-	 *
-	 * @param CompilerInterface $compiler
-	 */
+    /**
+     * Compiles the node
+     *
+     * @param CompilerInterface $compiler
+     */
     public function compile(CompilerInterface $compiler)
     {
         $i = 0;

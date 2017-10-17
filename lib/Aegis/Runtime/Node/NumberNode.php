@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class NumberNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class NumberNode extends Node
 {
     private $value;

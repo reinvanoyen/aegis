@@ -24,10 +24,10 @@ final class Token
      */
     private $line;
 
-	/**
-	 * @var int
-	 */
-	private $position;
+    /**
+     * @var int
+     */
+    private $position;
 
     const REGEX_T_EOL = '[\n\r]';
     const REGEX_T_OPENING_TAG = '\{'; // {
@@ -119,14 +119,14 @@ final class Token
         return $this->line;
     }
 
-	/**
-	 * Gets the position of the token on the line
-	 *
-	 * @return int
-	 */
+    /**
+     * Gets the position of the token on the line
+     *
+     * @return int
+     */
     public function getPosition() : int
     {
-    	return $this->position;
+        return $this->position;
     }
 
     /**
@@ -146,14 +146,14 @@ final class Token
      */
     public function __toString() : string
     {
-    	if (
-    		$this->getType() !== self::T_TEXT &&
-		    $this->getType() !== self::T_OPENING_TAG &&
-		    $this->getType() !== self::T_CLOSING_TAG
-	    ) {
-	        return strtoupper($this->getName()).'('.$this->getValue().')'."\n";
-	    }
+        if (
+            $this->getType() !== self::T_TEXT &&
+            $this->getType() !== self::T_OPENING_TAG &&
+            $this->getType() !== self::T_CLOSING_TAG
+        ) {
+            return strtoupper($this->getName()).'('.$this->getValue().')'."\n";
+        }
 
-	    return strtoupper($this->getName());
+        return strtoupper($this->getName());
     }
 }

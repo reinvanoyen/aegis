@@ -9,7 +9,7 @@ namespace Aegis;
  */
 class TokenStream
 {
-	/**
+    /**
      * @var Token[]
      */
     private $tokens = [];
@@ -34,7 +34,7 @@ class TokenStream
     public function getToken($index) : Token
     {
         if (!isset($this->tokens[$index])) {
-            throw new NoTokenAtIndex($index);
+            throw new Error\NoTokenAtIndex($index);
         }
 
         return $this->tokens[$index];

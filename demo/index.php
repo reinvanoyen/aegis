@@ -1,6 +1,6 @@
 <?php
 
-ini_set( 'display_errors', 1 );
+ini_set('display_errors', 1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -10,5 +10,8 @@ $tpl = new \Aegis\Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\
 $tpl->setLexer(new \Aegis\Lexer());
 $tpl->setParser(new \Aegis\Parser());
 $tpl->setCompiler(new \Aegis\Compiler());
+
+$tpl->title = 'This is a title';
+$tpl->subtitle = 'This is a subtitle';
 
 echo $tpl->render('index');

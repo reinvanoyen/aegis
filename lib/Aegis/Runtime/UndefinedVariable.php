@@ -9,10 +9,10 @@ namespace Aegis\Runtime;
  */
 class UndefinedVariable extends \Exception
 {
-	/**
-	 * UndefinedVariable constructor.
-	 * @param string $name
-	 */
+    /**
+     * UndefinedVariable constructor.
+     * @param string $name
+     */
     public function __construct($name)
     {
         parent::__construct('Undefined runtime variable: '.$name);

@@ -21,8 +21,8 @@ class ElseIfNode extends Node
             $parser->advance();
             $parser->traverseUp();
 
-            if ( ! ConditionNode::parse($parser) ) {
-	            $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+            if (! ConditionNode::parse($parser)) {
+                $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
             }
             $parser->setAttribute();
 

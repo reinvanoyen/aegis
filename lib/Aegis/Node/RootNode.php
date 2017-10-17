@@ -12,12 +12,12 @@ use Aegis\Node;
  */
 class RootNode extends Node
 {
-	/**
-	 * Compiles the node
-	 *
-	 * @param CompilerInterface $compiler
-	 * @return void
-	 */
+    /**
+     * Compiles the node
+     *
+     * @param CompilerInterface $compiler
+     * @return void
+     */
     public function compile(CompilerInterface $compiler) : void
     {
         foreach ($this->getChildren() as $c) {

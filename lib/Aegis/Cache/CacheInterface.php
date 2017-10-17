@@ -8,12 +8,12 @@ namespace Aegis\Cache;
  */
 interface CacheInterface
 {
-	/**
-	 * Gets the cache entry
-	 *
-	 * @param $id
-	 * @param null $subentry
-	 * @return CacheEntryInterface
-	 */
+    /**
+     * Gets the cache entry
+     *
+     * @param $id
+     * @param null $subentry
+     * @return CacheEntryInterface
+     */
     public static function load($id, $subentry = null) : CacheEntryInterface;
 }

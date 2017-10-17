@@ -15,9 +15,9 @@ interface CompilerInterface
      */
     public function compile(Node $node) : string;
 
-	/**
-	 * @param string $string
-	 * @return void
-	 */
-	public function write(string $string) : void;
+    /**
+     * @param string $string
+     * @return void
+     */
+    public function write(string $string) : void;
 }

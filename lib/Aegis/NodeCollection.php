@@ -32,8 +32,9 @@ class NodeCollection implements NodeCollectionInterface
 
     /**
      * @param ParserInterface $parser
+     * @return void
      */
-    public function parse(ParserInterface $parser)
+    public function parse(ParserInterface $parser) : void
     {
         foreach ($this->nodes as $node) {
             $node::parse($parser);
