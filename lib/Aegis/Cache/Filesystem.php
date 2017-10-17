@@ -2,14 +2,29 @@
 
 namespace Aegis\Cache;
 
+/**
+ * Class Filesystem
+ * @package Aegis\Cache
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class Filesystem implements CacheInterface
 {
     const CACHE_EXTENSION = 'php';
     const CACHE_DIR = 'cache/';
 
+	/**
+	 * @var CacheEntryInterface[]
+	 */
     private static $files = [];
 
-    public static function load($id, $subId = null)
+	/**
+	 * Gets the cache file from the filesystem
+	 *
+	 * @param $id
+	 * @param null $subId
+	 * @return CacheEntryInterface
+	 */
+    public static function load($id, $subId = null) : CacheEntryInterface
     {
         $storageId = $id;
 

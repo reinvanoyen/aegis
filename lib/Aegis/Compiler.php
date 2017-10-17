@@ -43,6 +43,8 @@ class Compiler implements CompilerInterface
     }
 
     /**
+     * Gets the contents written to head
+     *
      * @return string
      */
     public function getHead() : string
@@ -51,6 +53,8 @@ class Compiler implements CompilerInterface
     }
 
     /**
+     * Gets the contents written to body
+     *
      * @return string
      */
     public function getBody() : string
@@ -62,8 +66,9 @@ class Compiler implements CompilerInterface
      * Writes a string to the head
      *
      * @param $string
+     * @return void
      */
-    public function head($string)
+    public function head($string) : void
     {
         $this->head .= $string;
     }

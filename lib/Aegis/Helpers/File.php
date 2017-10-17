@@ -2,7 +2,12 @@
 
 namespace Aegis\Helpers\File;
 
-function scopedRequire($filename, $vars = [])
+/**
+ * @param $filename
+ * @param array $vars
+ * @return void
+ */
+function scopedRequire($filename, $vars = []) : void
 {
     extract($vars);
     require $filename;

@@ -12,11 +12,30 @@ use Aegis\RuntimeInterface;
  */
 class DefaultRuntime implements RuntimeInterface
 {
+	/**
+	 * @var NodeCollectionInterface
+	 */
     private $nodeCollection;
+
+	/**
+	 * @var array
+	 */
     private $vars = [];
+
+	/**
+	 * @var array
+	 */
     private $blocks = [];
+
+	/**
+	 * @var array
+	 */
     public $functions = [];
 
+	/**
+	 * DefaultRuntime constructor.
+	 * @param NodeCollectionInterface $nodeCollection
+	 */
     public function __construct(NodeCollectionInterface $nodeCollection)
     {
         $this->nodeCollection = $nodeCollection;
@@ -32,43 +51,91 @@ class DefaultRuntime implements RuntimeInterface
         return $this->nodeCollection;
     }
 
-    public function set($k, $v)
+	/**
+	 * Sets a variable
+	 *
+	 * @param $key
+	 * @param $value
+	 * @return void
+	 */
+    public function set($key, $value) : void
     {
-        $this->vars[$k] = $v;
+        $this->vars[$key] = $value;
     }
 
-    public function __get($k)
+	/**
+	 * Gets a variable
+	 *
+	 * @param $key
+	 * @return mixed
+	 * @throws UndefinedVariable
+	 */
+    public function __get($key)
     {
-        if (!isset($this->vars[$k])) {
-            throw new UndefinedVariable($k);
+        if (!isset($this->vars[$key])) {
+            throw new UndefinedVariable($key);
         }
 
-        return $this->vars[$k];
+        return $this->vars[$key];
     }
 
-    public function setBlock($id, $callable)
+	/**
+	 * Sets a block
+	 *
+	 * @param $id
+	 * @param $callable
+	 * @return void
+	 */
+    public function setBlock($id, $callable) : void
     {
         $this->blocks[$id] = [$callable];
     }
 
-    public function appendBlock($id, $callable)
+	/**
+	 * Appends a callable to a block
+	 *
+	 * @param $id
+	 * @param $callable
+	 * @return void
+	 */
+    public function appendBlock($id, $callable) : void
     {
         $this->blocks[$id][] = $callable;
     }
 
-    public function prependBlock($id, $callable)
+	/**
+	 * Prepends a callable to a block
+	 *
+	 * @param $id
+	 * @param $callable
+	 * @return void
+	 */
+    public function prependBlock($id, $callable) : void
     {
         array_unshift($this->blocks[$id], $callable);
     }
 
-    public function getBlock($id)
+	/**
+	 * Executes the contents of a block
+	 *
+	 * @param $id
+	 * @return void
+	 */
+    public function getBlock($id) : void
     {
         foreach ($this->blocks[$id] as $callable) {
             $callable();
         }
     }
 
-    public function setFunction($funcName, $callable)
+	/**
+	 * Sets a function
+	 *
+	 * @param $funcName
+	 * @param $callable
+	 * @return void
+	 */
+    public function setFunction($funcName, $callable) : void
     {
         $this->functions[$funcName] = $callable;
     }

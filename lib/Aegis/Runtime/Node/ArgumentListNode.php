@@ -7,8 +7,17 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class ArgumentListNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class ArgumentListNode extends Node
 {
+	/**
+	 * @param ParserInterface $parser
+	 * @return bool
+	 */
     public static function parse(ParserInterface $parser)
     {
         $parser->insert(new static());
@@ -25,6 +34,11 @@ class ArgumentListNode extends Node
         return true;
     }
 
+	/**
+	 * Compiles the node
+	 *
+	 * @param CompilerInterface $compiler
+	 */
     public function compile(CompilerInterface $compiler)
     {
         $i = 0;

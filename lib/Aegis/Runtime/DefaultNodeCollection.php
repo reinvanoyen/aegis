@@ -4,8 +4,16 @@ namespace Aegis\Runtime;
 
 use Aegis\NodeCollection;
 
+/**
+ * Class DefaultNodeCollection
+ * @package Aegis\Runtime
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class DefaultNodeCollection extends NodeCollection
 {
+	/**
+	 * DefaultNodeCollection constructor.
+	 */
     public function __construct()
     {
         $this->add([
