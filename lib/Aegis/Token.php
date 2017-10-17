@@ -24,6 +24,11 @@ final class Token
      */
     private $line;
 
+	/**
+	 * @var int
+	 */
+	private $position;
+
     const REGEX_T_EOL = '[\n\r]';
     const REGEX_T_OPENING_TAG = '\{'; // {
     const REGEX_T_CLOSING_TAG = '\}'; // }
@@ -64,7 +69,7 @@ final class Token
      * @param int $line
      * @throws InvalidTokenType
      */
-    public function __construct($type, $value, $line = 0)
+    public function __construct($type, $value, $line = 0, $position = 0)
     {
         if (!isset(self::$tokenTypes[$type])) {
             throw new InvalidTokenType($type);
@@ -77,6 +82,7 @@ final class Token
         $this->type = $type;
         $this->value = $value;
         $this->line = $line;
+        $this->position = $position;
     }
 
     /**
@@ -113,6 +119,16 @@ final class Token
         return $this->line;
     }
 
+	/**
+	 * Gets the position of the token on the line
+	 *
+	 * @return int
+	 */
+    public function getPosition() : int
+    {
+    	return $this->position;
+    }
+
     /**
      * Gets the value of the token
      *
@@ -130,6 +146,14 @@ final class Token
      */
     public function __toString() : string
     {
-        return strtoupper($this->getType().' '.$this->getValue())."\n";
+    	if (
+    		$this->getType() !== self::T_TEXT &&
+		    $this->getType() !== self::T_OPENING_TAG &&
+		    $this->getType() !== self::T_CLOSING_TAG
+	    ) {
+	        return strtoupper($this->getName()).'('.$this->getValue().')'."\n";
+	    }
+
+	    return strtoupper($this->getName());
     }
 }

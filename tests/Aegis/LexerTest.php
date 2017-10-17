@@ -30,7 +30,7 @@ class LexerTest extends PHPUnit_Framework_TestCase
 
     public function testTokenValues()
     {
-        $this->tokenValueTest('{{', '');
+        $this->tokenValueTest('{{', '{{');
         $this->tokenValueTest(' ', ' ');
         $this->tokenValueTest('test', 'test');
         $this->tokenValueTest('}}', '}}');

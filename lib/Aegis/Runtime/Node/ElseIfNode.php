@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class ElseIfNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class ElseIfNode extends Node
 {
     public static function parse(ParserInterface $parser)
@@ -16,7 +21,9 @@ class ElseIfNode extends Node
             $parser->advance();
             $parser->traverseUp();
 
-            ConditionNode::parse($parser);
+            if ( ! ConditionNode::parse($parser) ) {
+	            $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+            }
             $parser->setAttribute();
 
             $parser->traverseDown();

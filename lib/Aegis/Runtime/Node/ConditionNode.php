@@ -6,6 +6,11 @@ use Aegis\CompilerInterface;
 use Aegis\ParserInterface;
 use Aegis\Node;
 
+/**
+ * Class ConditionNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class ConditionNode extends Node
 {
     public static function parse(ParserInterface $parser)

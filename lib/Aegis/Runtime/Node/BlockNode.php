@@ -8,8 +8,17 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class BlockNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class BlockNode extends Node
 {
+	/**
+	 * @param ParserInterface $parser
+	 * @return bool
+	 */
     public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_IDENT, 'block')) {
@@ -18,7 +27,9 @@ class BlockNode extends Node
 
             $parser->traverseUp();
 
-            ExpressionNode::parse($parser);
+            if (! ExpressionNode::parse($parser) ) {
+            	$parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+            }
             $parser->setAttribute();
 
             if ($parser->accept(Token::T_IDENT, 'prepend') || $parser->accept(Token::T_IDENT, 'append')) {
@@ -46,6 +57,9 @@ class BlockNode extends Node
         return false;
     }
 
+	/**
+	 * @param CompilerInterface $compiler
+	 */
     public function compile(CompilerInterface $compiler)
     {
         $nameAttr = $this->getAttribute(0);

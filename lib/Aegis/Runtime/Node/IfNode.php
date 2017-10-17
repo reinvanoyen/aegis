@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class IfNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class IfNode extends Node
 {
     public static function parse(ParserInterface $parser)
@@ -16,13 +21,15 @@ class IfNode extends Node
             $parser->advance();
             $parser->traverseUp();
 
-            if (ConditionNode::parse($parser)) {
-                $parser->setAttribute();
+            if (! ConditionNode::parse($parser)) {
+	            $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
             }
+	        $parser->setAttribute();
 
-            $parser->skip(Token::T_CLOSING_TAG);
+            $parser->expect(Token::T_CLOSING_TAG);
+	        $parser->advance();
 
-            $parser->parseOutsideTag();
+	        $parser->parseOutsideTag();
 
             if (ElseNode::parse($parser)) {
                 $parser->parseOutsideTag();
@@ -33,7 +40,8 @@ class IfNode extends Node
             }
 
             $parser->skip(Token::T_OPENING_TAG);
-            $parser->skip(Token::T_IDENT, '/if');
+            $parser->expect(Token::T_IDENT, '/if');
+            $parser->advance();
             $parser->skip(Token::T_CLOSING_TAG);
 
             $parser->traverseDown();

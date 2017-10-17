@@ -2,6 +2,7 @@
 
 namespace Aegis;
 
+use Aegis\Error\SyntaxError;
 use Aegis\Node\RootNode;
 use Aegis\Node\TextNode;
 
@@ -136,7 +137,7 @@ class Parser implements ParserInterface
     public function expect(int $type, $value = null) : bool
     {
         if (!$this->accept($type, $value)) {
-            throw new ParseError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken(), $this->getCurrentToken()->getLine());
+        	$this->syntaxError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken());
         }
 
         return true;
@@ -374,5 +375,14 @@ class Parser implements ParserInterface
     {
         $node->setParent($this->scope);
         $this->scope->insert($node);
+    }
+
+	/**
+	 * @throws SyntaxError
+	 * @return void
+	 */
+    public function syntaxError(string $message = '') : void
+    {
+    	throw new SyntaxError($message, $this->getCurrentToken()->getLine(), $this->getCurrentToken()->getPosition());
     }
 }

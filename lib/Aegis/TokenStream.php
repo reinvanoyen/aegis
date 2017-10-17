@@ -9,7 +9,7 @@ namespace Aegis;
  */
 class TokenStream
 {
-    /**
+	/**
      * @var Token[]
      */
     private $tokens = [];

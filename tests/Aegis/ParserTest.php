@@ -65,7 +65,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testExpectShouldThrowParseError()
     {
-        $this->expectException(Aegis\ParseError::class);
+        $this->expectException(\Aegis\Error\SyntaxError::class);
 
         $stream = new TokenStream();
         $stream->addToken(new Token(Token::T_IDENT, 'ident', 1));
@@ -74,9 +74,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $this->parser->expect(Token::T_OP);
     }
 
-    public function testExpectWithValueShouldThrowParseError()
+    public function testExpectWithValueShouldThrowSyntaxError()
     {
-        $this->setExpectedException(Aegis\ParseError::class);
+        $this->setExpectedException(\Aegis\Error\SyntaxError::class);
 
         $stream = new TokenStream();
         $stream->addToken(new Token(Token::T_IDENT, 'correctvalue', 1));
