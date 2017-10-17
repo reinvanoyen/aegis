@@ -1,3 +1,1 @@
-{{ if true }}
-	test
-{{ /if }}
+{{ "etest" }}

@@ -34,10 +34,10 @@ class Lexer implements LexerInterface
      */
     private $line;
 
-    /**
-     * @var int
-     */
-    private $linePosition;
+	/**
+	 * @var
+	 */
+    private $lineOffset;
 
     /**
      * @var int
@@ -64,6 +64,11 @@ class Lexer implements LexerInterface
      */
     private $modeStartChar;
 
+	/**
+	 * @var int
+	 */
+    private $modeStartPosition;
+
     const MODE_ALL = 0;
     const MODE_INSIDE_TAG = 1;
     const MODE_VAR = 2;
@@ -88,7 +93,7 @@ class Lexer implements LexerInterface
 
             if (preg_match('@'.Token::REGEX_T_EOL.'@', $this->currentChar)) {
                 ++$this->line;
-                $this->linePosition = 0;
+                $this->lineOffset = $this->cursor + 1;
             }
 
             switch ($this->mode) {
@@ -117,6 +122,8 @@ class Lexer implements LexerInterface
             }
         }
 
+        var_dump( $this->stream );
+
         return $this->stream;
     }
 
@@ -137,20 +144,21 @@ class Lexer implements LexerInterface
 
         $this->cursor = 0;
         $this->line = 1;
-        $this->linePosition = 0;
         $this->end = strlen($this->input);
         $this->lastCharPos = $this->end - 1;
 
         $this->currentChar = '';
         $this->currentValue = '';
         $this->modeStartChar = '';
+
+	    $this->modeStartPosition = 0;
     }
 
     private function lexAll()
     {
         // If we are at the end of the file, write a text token with the remaining text
         if ($this->cursor + 1 === $this->end) {
-            $this->stream->addToken(new Token(Token::T_TEXT, $this->currentValue.$this->currentChar, $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_TEXT, $this->currentValue.$this->currentChar, $this->line, 0));
             $this->advanceCursor(); // Advance one last time so the while loops stops running
 
             return;
@@ -160,12 +168,12 @@ class Lexer implements LexerInterface
 
             // Add text until now to the token stream
             if ($this->currentValue !== '') {
-                $this->stream->addToken(new Token(Token::T_TEXT, $this->currentValue, $this->line, $this->linePosition));
+                $this->stream->addToken(new Token(Token::T_TEXT, $this->currentValue, $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
                 $this->currentValue = '';
             }
 
             // Add the opening tag to the stream
-            $this->stream->addToken(new Token(Token::T_OPENING_TAG, $this->currentChar . $this->getNextChar(), $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_OPENING_TAG, $this->currentChar . $this->getNextChar(), $this->line, 0));
             $this->advanceCursor(2);
             $this->setMode(self::MODE_INSIDE_TAG);
 
@@ -180,7 +188,7 @@ class Lexer implements LexerInterface
     private function lexInsideTag()
     {
         if (preg_match('@'.Token::REGEX_T_CLOSING_TAG.'@', $this->currentChar) && preg_match('@'.Token::REGEX_T_CLOSING_TAG.'@', $this->getNextChar())) {
-            $this->stream->addToken(new Token(Token::T_CLOSING_TAG, $this->currentChar . $this->getNextChar(), $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_CLOSING_TAG, $this->currentChar . $this->getNextChar(), $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
             $this->advanceCursor(2);
             $this->setMode(self::MODE_ALL);
 
@@ -209,7 +217,7 @@ class Lexer implements LexerInterface
 
             return;
         } elseif (preg_match('@'.Token::REGEX_T_SYMBOL.'@', $this->currentChar)) {
-            $this->stream->addToken(new Token(Token::T_SYMBOL, $this->currentChar, $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_SYMBOL, $this->currentChar, $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
         }
 
         $this->advanceCursor();
@@ -219,7 +227,7 @@ class Lexer implements LexerInterface
     private function lexIdent()
     {
         if (!preg_match('@'.Token::REGEX_T_IDENT.'@', $this->currentChar)) {
-            $this->stream->addToken(new Token(Token::T_IDENT, $this->currentValue, $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_IDENT, $this->currentValue, $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
             $this->currentValue = '';
             $this->setMode(self::MODE_INSIDE_TAG);
 
@@ -235,7 +243,7 @@ class Lexer implements LexerInterface
     {
         if ($this->currentChar === $this->modeStartChar) {
             $this->advanceCursor();
-            $this->stream->addToken(new Token(Token::T_STRING, $this->currentValue, $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_STRING, $this->currentValue, $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
             $this->currentValue = '';
             $this->setMode(self::MODE_INSIDE_TAG);
 
@@ -250,7 +258,7 @@ class Lexer implements LexerInterface
     private function lexNumber()
     {
         if (!preg_match('@'.Token::REGEX_T_NUMBER.'@', $this->currentChar)) {
-            $this->stream->addToken(new Token(Token::T_NUMBER, $this->currentValue, $this->line, $this->linePosition));
+	        $this->stream->addToken(new Token(Token::T_NUMBER, $this->currentValue, $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
             $this->currentValue = '';
             $this->setMode(self::MODE_INSIDE_TAG);
 
@@ -266,7 +274,7 @@ class Lexer implements LexerInterface
     {
         if (preg_match('@'.Token::REGEX_T_VAR.'@', substr($this->input, $this->cursor), $matches)) {
             $variableName = $matches[ 0 ];
-            $this->stream->addToken(new Token(Token::T_VAR, $variableName, $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_VAR, $variableName, $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
             $this->advanceCursor(strlen($variableName));
             $this->setMode(self::MODE_INSIDE_TAG);
 
@@ -278,7 +286,7 @@ class Lexer implements LexerInterface
     private function lexOperator()
     {
         if (!preg_match('@'.Token::REGEX_T_OP.'@', $this->currentChar)) {
-            $this->stream->addToken(new Token(Token::T_OP, $this->currentValue, $this->line, $this->linePosition));
+            $this->stream->addToken(new Token(Token::T_OP, $this->currentValue, $this->line, 0));
             $this->currentValue = '';
             $this->setMode(self::MODE_INSIDE_TAG);
 
@@ -307,6 +315,15 @@ class Lexer implements LexerInterface
     private function setMode(int $mode)
     {
         $this->mode = $mode;
+        $this->modeStartPosition = $this->getCurrentLinePosition();
+    }
+
+	/**
+	 * @return int
+	 */
+    private function getCurrentLinePosition() : int
+    {
+    	return $this->cursor - $this->lineOffset;
     }
 
     /**
@@ -317,6 +334,5 @@ class Lexer implements LexerInterface
     private function advanceCursor(int $index = 1)
     {
         $this->cursor += $index;
-        $this->linePosition += $index;
     }
 }
