@@ -29,6 +29,7 @@ class ForNode extends Node
 
                 ExpressionNode::parse($parser);
                 $parser->setAttribute();
+
             } elseif ($parser->accept(Token::T_NUMBER)) {
 
                 // T_NUMBER as first attribute

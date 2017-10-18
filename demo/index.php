@@ -13,5 +13,10 @@ $tpl->setCompiler(new \Aegis\Compiler());
 
 $tpl->title = 'This is a title';
 $tpl->subtitle = 'This is a subtitle';
+$tpl->five = 5;
+$tpl->members = [ 'Rein', 'Wie', 'nog iemand' ];
+
+$tpl->include_primary = false;
+$tpl->include_secondary = 'include02';
 
 echo $tpl->render('index');

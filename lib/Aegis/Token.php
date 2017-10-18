@@ -24,11 +24,6 @@ final class Token
      */
     private $line;
 
-    /**
-     * @var int
-     */
-    private $position;
-
 	/**
 	 * @var int
 	 */
@@ -45,7 +40,7 @@ final class Token
     const REGEX_T_IDENT = '[a-zA-Z\-\_\/]'; // a-z A-Z - _ /
     const REGEX_T_OP = '[\+\-\*\?]'; // + - * ?
     const REGEX_T_NUMBER = '[0-9.]'; // 0 1 2 3 4 5 6 7 8 9 .
-    const REGEX_T_SYMBOL = '[\(\)\,\[\]]'; // ( ) , [ ]
+    const REGEX_T_SYMBOL = '[\(\)\,\[\]\$\>\<]'; // ( ) , [ ]
     const REGEX_T_VAR = '^[a-zA-Z._-]+'; // a-z A-Z _ -
     const REGEX_T_VAR_START = '\@'; // @
     const REGEX_T_STRING_DELIMITER = '[\"\']'; // " '
@@ -92,7 +87,6 @@ final class Token
         $this->type = $type;
         $this->value = $value;
         $this->line = $line;
-        $this->position = $startPosition;
 	    $this->startPosition = $startPosition;
 	    $this->endPosition = $endPosition;
     }
@@ -129,16 +123,6 @@ final class Token
     public function getLine() : int
     {
         return $this->line;
-    }
-
-    /**
-     * Gets the position of the token on the line
-     *
-     * @return int
-     */
-    public function getPosition() : int
-    {
-        return $this->position;
     }
 
 	/**

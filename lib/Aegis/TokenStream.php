@@ -49,4 +49,25 @@ class TokenStream
     {
         return $this->tokens;
     }
+
+	/**
+	 * @return string
+	 */
+    public function __toString() : string
+    {
+    	$output = '<pre>';
+
+    	foreach($this->getTokens() as $token)
+	    {
+	    	$output .= '<div style="padding: 3px 0; border-bottom: 1px solid #ccc;">';
+	    	$output .= '<strong style="color: blue; padding-right: 10px;">' . htmlspecialchars($token->getValue()) . '</strong>';
+	    	$output .= '<span style="color: #555; padding-right: 10px;">' . $token->getName() . '</span>';
+	    	$output .= '<span style="color: red;">line: ' . $token->getLine() . ', position: ' . $token->getStartPosition() . '-' . $token->getEndPosition() . '</span>';
+		    $output .= '</div>';
+	    }
+
+	    $output .= '</pre>';
+
+	    return $output;
+    }
 }

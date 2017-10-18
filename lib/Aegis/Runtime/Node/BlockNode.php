@@ -28,7 +28,7 @@ class BlockNode extends Node
             $parser->traverseUp();
 
             if (! ExpressionNode::parse($parser)) {
-                $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken());
+                $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken() . ', expected expression');
             }
             $parser->setAttribute();
 

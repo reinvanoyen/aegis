@@ -8,6 +8,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class ExtendNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class ExtendNode extends Node
 {
     public static function parse(ParserInterface $parser)
@@ -17,15 +22,18 @@ class ExtendNode extends Node
             $parser->advance();
 
             $parser->traverseUp();
-            ExpressionNode::parse($parser);
+            if( ! ExpressionNode::parse($parser) ) {
+            	$parser->syntaxError('Unexpected token ' . $parser->getCurrentToken() . ', expected expression');
+            }
             $parser->setAttribute();
             $parser->skip(Token::T_CLOSING_TAG);
 
             $parser->parseOutsideTag();
 
-            $parser->skip(Token::T_OPENING_TAG);
-            $parser->skip(Token::T_IDENT, '/extends');
-            $parser->skip(Token::T_CLOSING_TAG);
+            $parser->expect(Token::T_IDENT, '/extends');
+            $parser->advance();
+            $parser->expect(Token::T_CLOSING_TAG);
+	        $parser->advance();
 
             $parser->traverseDown();
             $parser->parseOutsideTag();

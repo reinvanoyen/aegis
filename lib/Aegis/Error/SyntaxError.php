@@ -3,6 +3,7 @@
 namespace Aegis\Error;
 
 use Aegis\AegisError;
+use Aegis\Token;
 
 /**
  * Class SyntaxError
@@ -16,17 +17,17 @@ class SyntaxError extends AegisError
      */
     protected $line;
 
-    /**
-     * @var int
-     */
-    private $position;
+	/**
+	 * @var Token
+	 */
+    private $token;
 
-    public function __construct(string $message, int $srcLine = 0, int $srcPosition = 0)
+    public function __construct(string $message, int $srcLine = 0, Token $token)
     {
         parent::__construct('Syntax error on line ' . $srcLine . ': ' . $message);
 
         $this->line = $srcLine;
-        $this->position = $srcPosition;
+        $this->token = $token;
     }
 
     /**
@@ -34,34 +35,33 @@ class SyntaxError extends AegisError
      */
     public function printExceptionDetail() : void
     {
+    	echo '<h3>SyntaxError</h3>';
         echo '<h4>' . $this->getMessage() . '</h4>';
-        echo '<h3>Position ' . $this->position . '</h3>';
 
         $lines = explode("\n", $this->sourceCode);
 
         $start = max(0, $this->line - 10);
         $end = min(count($lines), $this->line + 10);
 
-        echo '<pre>';
+        echo '<pre style="background-color: #333; color: #d9d9d9; padding: 5px;">';
 
         for ($i = $start; $i < $end; $i++) {
-            if ($i === $this->line - 1) {
-                $beforeError = substr($lines[$i], 0, max(0, $this->position - 1));
-                $error = substr($lines[$i], max(0, $this->position - 1), 1);
-                if (! $error) {
-                    $error = ' ';
-                }
-                $afterError = substr($lines[$i], $this->position);
 
-                echo '<span style="display: block; padding: 2px 0; border-bottom: 1px dotted #777; background-color: #e0e0e0; color: #444;">';
-                echo '<strong>' . ($i + 1) . '</strong> ';
+            if ($i === $this->line - 1) {
+
+                $beforeError = substr($lines[$i], 0, $this->token->getStartPosition());
+                $error = substr($lines[$i], $this->token->getStartPosition(), $this->token->getEndPosition() - $this->token->getStartPosition());
+                $afterError = substr($lines[$i], $this->token->getEndPosition());
+
+                echo '<span style="display: block; padding: 3px 0; background-color: #222; color: #777;">';
+	            echo '<strong style="color: #777; padding: 0 5px; display: inline-block; width: 30px; text-align: right;">' . ($i + 1) . '</strong> ';
                 echo htmlspecialchars($beforeError);
-                echo '<span style="background-color: red; color: white;">' . htmlspecialchars($error) . '</span>';
+                echo '<span style="background-color: red; color: white; padding: 0 2px;">' . htmlspecialchars($error) . '</span>';
                 echo htmlspecialchars($afterError);
                 echo '</span>';
             } else {
-                echo '<span style="display: block; padding: 2px 0; border-bottom: 1px solid #ccc;">';
-                echo '<strong>' . ($i + 1) . '</strong> ';
+                echo '<span style="display: block; padding: 3px 0; border-bottom: 1px dotted #222;">';
+                echo '<strong style="color: #777; padding: 0 5px; display: inline-block; width: 30px; text-align: right;">' . ($i + 1) . '</strong> ';
                 echo htmlspecialchars($lines[$i]);
                 echo '</span>';
             }
