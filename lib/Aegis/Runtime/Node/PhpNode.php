@@ -22,7 +22,7 @@ class PhpNode extends Node
             $parser->traverseUp();
 
             $parser->expect(Token::T_CLOSING_TAG);
-	        $parser->advance();
+            $parser->advance();
 
             $parser->parseText();
 
@@ -30,7 +30,7 @@ class PhpNode extends Node
             $parser->expect(Token::T_IDENT, '/php');
             $parser->advance();
             $parser->expect(Token::T_CLOSING_TAG);
-	        $parser->advance();
+            $parser->advance();
 
             $parser->traverseDown();
             $parser->parseOutsideTag();

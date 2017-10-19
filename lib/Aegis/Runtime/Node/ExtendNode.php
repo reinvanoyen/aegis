@@ -22,8 +22,8 @@ class ExtendNode extends Node
             $parser->advance();
 
             $parser->traverseUp();
-            if( ! ExpressionNode::parse($parser) ) {
-            	$parser->syntaxError('Unexpected token ' . $parser->getCurrentToken() . ', expected expression');
+            if (! ExpressionNode::parse($parser)) {
+                $parser->syntaxError('Unexpected token ' . $parser->getCurrentToken() . ', expected expression');
             }
             $parser->setAttribute();
             $parser->skip(Token::T_CLOSING_TAG);
@@ -33,7 +33,7 @@ class ExtendNode extends Node
             $parser->expect(Token::T_IDENT, '/extends');
             $parser->advance();
             $parser->expect(Token::T_CLOSING_TAG);
-	        $parser->advance();
+            $parser->advance();
 
             $parser->traverseDown();
             $parser->parseOutsideTag();

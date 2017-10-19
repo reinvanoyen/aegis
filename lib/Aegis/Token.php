@@ -20,19 +20,29 @@ final class Token
     private $value;
 
     /**
+     * @var string
+     */
+    private $source;
+
+    /**
      * @var int
      */
-    private $line;
+    private $startLine;
 
-	/**
-	 * @var int
-	 */
-	private $startPosition;
+    /**
+     * @var int
+     */
+    private $endLine;
 
-	/**
-	 * @var int
-	 */
-	private $endPosition;
+    /**
+     * @var int
+     */
+    private $startPosition;
+
+    /**
+     * @var int
+     */
+    private $endPosition;
 
     const REGEX_T_EOL = '[\n\r]';
     const REGEX_T_OPENING_TAG = '\{'; // {
@@ -74,7 +84,7 @@ final class Token
      * @param int $line
      * @throws InvalidTokenType
      */
-    public function __construct($type, $value, $line = 0, $startPosition = 0, $endPosition = 0)
+    public function __construct($type, $value, $source = '', $startLine = 0, $endLine = 0, $startPosition = 0, $endPosition = 0)
     {
         if (!isset(self::$tokenTypes[$type])) {
             throw new InvalidTokenType($type);
@@ -86,9 +96,11 @@ final class Token
 
         $this->type = $type;
         $this->value = $value;
-        $this->line = $line;
-	    $this->startPosition = $startPosition;
-	    $this->endPosition = $endPosition;
+        $this->source = $source;
+        $this->startLine = $startLine;
+        $this->endLine = $endLine;
+        $this->startPosition = $startPosition;
+        $this->endPosition = $endPosition;
     }
 
     /**
@@ -116,34 +128,52 @@ final class Token
     }
 
     /**
-     * Gets the linenumber of the token
+     * Gets the starting linenumber of the token
      *
      * @return int
      */
-    public function getLine() : int
+    public function getStartLine() : int
     {
-        return $this->line;
+        return $this->startLine;
     }
 
-	/**
-	 * Gets the start position of the token on the line
-	 *
-	 * @return int
-	 */
-	public function getStartPosition() : int
-	{
-		return $this->startPosition;
-	}
+    /**
+     * Gets the ending linenumber of the token
+     *
+     * @return int
+     */
+    public function getEndLine() : int
+    {
+        return $this->endLine;
+    }
 
-	/**
-	 * Gets the end position of the token on the line
-	 *
-	 * @return int
-	 */
-	public function getEndPosition() : int
-	{
-		return $this->endPosition;
-	}
+    /**
+     * @return bool
+     */
+    public function isMultiline() : bool
+    {
+        return ($this->getStartLine() !== $this->getEndLine());
+    }
+
+    /**
+     * Gets the start position of the token on the line
+     *
+     * @return int
+     */
+    public function getStartPosition() : int
+    {
+        return $this->startPosition;
+    }
+
+    /**
+     * Gets the end position of the token on the line
+     *
+     * @return int
+     */
+    public function getEndPosition() : int
+    {
+        return $this->endPosition;
+    }
 
     /**
      * Gets the value of the token
@@ -171,5 +201,13 @@ final class Token
         }
 
         return strtoupper($this->getName());
+    }
+
+    /**
+     * @return string
+     */
+    public function getSource() : string
+    {
+        return $this->source ?: $this->getValue();
     }
 }

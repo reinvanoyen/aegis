@@ -1,9 +1,3 @@
-{{ extends @include_primary ? @include_secondary }}
+{{ @variable }}
 
-	{{ block "main" }}
-		Pretty slick
-	{{ /block }}
-
-{{ /extends }}
-
-{{ @title ? @subtitle }}
+{{ omg }}

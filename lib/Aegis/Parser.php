@@ -398,6 +398,6 @@ class Parser implements ParserInterface
      */
     public function syntaxError(string $message = '') : void
     {
-        throw new SyntaxError($message, $this->getCurrentToken()->getLine(), $this->getCurrentToken());
+        throw new SyntaxError($message, $this->stream, $this->getCurrentToken());
     }
 }

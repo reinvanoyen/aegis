@@ -13,14 +13,8 @@ class TokenTest extends PHPUnit_Framework_TestCase
 
     public function testTokenValue()
     {
-        $token = new Token(Token::T_VAR, 'value', 5);
+        $token = new Token(Token::T_VAR, 'value');
         $this->assertEquals($token->getValue(), 'value', 'Value of token is incorrect');
-    }
-
-    public function testTokenLine()
-    {
-        $token = new Token(Token::T_VAR, 'value', 5);
-        $this->assertEquals($token->getLine(), 5, 'Value of token is incorrect');
     }
 
     public function testInvalidTokenType()
