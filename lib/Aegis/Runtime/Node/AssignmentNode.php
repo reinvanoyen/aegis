@@ -14,43 +14,43 @@ use Aegis\Node;
  */
 class AssignmentNode extends Node
 {
-	public static function parse(ParserInterface $parser)
-	{
-		if ($parser->accept(Token::T_IDENT, 'set')) {
-			$parser->insert(new static());
-			$parser->advance();
-			$parser->traverseUp();
+    public static function parse(ParserInterface $parser)
+    {
+        if ($parser->accept(Token::T_IDENT, 'set')) {
+            $parser->insert(new static());
+            $parser->advance();
+            $parser->traverseUp();
 
-			if (! VariableNode::parse($parser)) {
-				$parser->syntaxError('Unexpected token' . $parser->getCurrentToken() . ', expected variable');
-			}
-			$parser->setAttribute();
+            if (! VariableNode::parse($parser)) {
+                $parser->syntaxError('Unexpected token' . $parser->getCurrentToken() . ', expected variable');
+            }
+            $parser->setAttribute();
 
-			if (! ExpressionNode::parse($parser)) {
-				$parser->syntaxError('Unexpected token' . $parser->getCurrentToken());
-			}
+            if (! ExpressionNode::parse($parser)) {
+                $parser->syntaxError('Unexpected token' . $parser->getCurrentToken());
+            }
 
-			$parser->expect(Token::T_CLOSING_TAG);
-			$parser->advance();
-			$parser->traverseDown();
-			$parser->parseOutsideTag();
-		}
-	}
+            $parser->expect(Token::T_CLOSING_TAG);
+            $parser->advance();
+            $parser->traverseDown();
+            $parser->parseOutsideTag();
+        }
+    }
 
-	public function compile(CompilerInterface $compiler)
-	{
-		$compiler->write('<?php ');
+    public function compile(CompilerInterface $compiler)
+    {
+        $compiler->write('<?php ');
 
-		foreach ($this->getAttributes() as $a) {
-			$a->compile($compiler);
-		}
+        foreach ($this->getAttributes() as $a) {
+            $a->compile($compiler);
+        }
 
-		$compiler->write(' = ');
+        $compiler->write(' = ');
 
-		foreach ($this->getChildren() as $c) {
-			$c->compile($compiler);
-		}
+        foreach ($this->getChildren() as $c) {
+            $c->compile($compiler);
+        }
 
-		$compiler->write('; ?>');
-	}
+        $compiler->write('; ?>');
+    }
 }

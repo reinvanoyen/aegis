@@ -218,7 +218,7 @@ class Template
             $exception->setSourceCode($this->input);
             $exception->printExceptionDetail();
         } else {
-        	throw $exception;
+            throw $exception;
         }
     }
 }

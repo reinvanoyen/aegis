@@ -17,8 +17,8 @@ class DefaultNodeCollection extends NodeCollection
     public function __construct()
     {
         $this->add([
-	        'Aegis\\Runtime\\Node\\AssignmentNode',
-	        'Aegis\\Runtime\\Node\\IfNode',
+            'Aegis\\Runtime\\Node\\AssignmentNode',
+            'Aegis\\Runtime\\Node\\IfNode',
             'Aegis\\Runtime\\Node\\ForNode',
             'Aegis\\Runtime\\Node\\BlockNode',
             'Aegis\\Runtime\\Node\\ExtendNode',

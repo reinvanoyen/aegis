@@ -14,21 +14,21 @@ use Aegis\Node;
  */
 class OperatorNode extends Node
 {
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     private $type;
 
-	/**
-	 * @var bool
-	 */
+    /**
+     * @var bool
+     */
     private $numberMath;
 
-	/**
-	 * OperatorNode constructor.
-	 * @param $type
-	 * @param bool $numberMath
-	 */
+    /**
+     * OperatorNode constructor.
+     * @param $type
+     * @param bool $numberMath
+     */
     public function __construct($type, $numberMath=false)
     {
         $this->type = $type;
@@ -57,20 +57,14 @@ class OperatorNode extends Node
     public function compile(CompilerInterface $compiler)
     {
         if ($this->type === '+') {
-
             if ($this->numberMath) {
-
                 $compiler->write(' + ');
             } else {
                 $compiler->write(' . ');
             }
-
         } elseif ($this->type === '?') {
-
             $compiler->write(' ?: ');
-
         } else {
-
             $compiler->write(' '.$this->type.' ');
         }
     }
