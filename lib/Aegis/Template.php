@@ -217,6 +217,8 @@ class Template
         if ($exception instanceof AegisError) {
             $exception->setSourceCode($this->input);
             $exception->printExceptionDetail();
+        } else {
+        	throw $exception;
         }
     }
 }

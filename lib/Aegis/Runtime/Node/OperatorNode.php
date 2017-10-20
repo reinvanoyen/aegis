@@ -14,9 +14,21 @@ use Aegis\Node;
  */
 class OperatorNode extends Node
 {
+	/**
+	 * @var string
+	 */
     private $type;
+
+	/**
+	 * @var bool
+	 */
     private $numberMath;
 
+	/**
+	 * OperatorNode constructor.
+	 * @param $type
+	 * @param bool $numberMath
+	 */
     public function __construct($type, $numberMath=false)
     {
         $this->type = $type;
@@ -26,12 +38,8 @@ class OperatorNode extends Node
     public static function parse(ParserInterface $parser)
     {
         if ($parser->accept(Token::T_OP)) {
-            if ((
-                $parser->getCurrentToken()->getValue() === '+' &&
-                $parser->getScope()->getLastChild() instanceof VariableNode ||
-                $parser->getScope()->getLastChild() instanceof NumberNode) && (
-                $parser->getNextToken()->getType() === Token::T_VAR ||
-                $parser->getNextToken()->getType() === Token::T_NUMBER)
+            if (($parser->getCurrentToken()->getValue() === '+' && $parser->getScope()->getLastChild() instanceof NumberNode) &&
+                $parser->getNextToken()->getType() === Token::T_NUMBER
             ) {
                 $parser->insert(new static($parser->getCurrentToken()->getValue(), true));
                 $parser->advance();
@@ -49,14 +57,20 @@ class OperatorNode extends Node
     public function compile(CompilerInterface $compiler)
     {
         if ($this->type === '+') {
+
             if ($this->numberMath) {
+
                 $compiler->write(' + ');
             } else {
                 $compiler->write(' . ');
             }
+
         } elseif ($this->type === '?') {
+
             $compiler->write(' ?: ');
+
         } else {
+
             $compiler->write(' '.$this->type.' ');
         }
     }
