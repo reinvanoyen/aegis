@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class RawNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class RawNode extends Node
 {
     public static function parse(ParserInterface $parser)
@@ -20,7 +25,7 @@ class RawNode extends Node
             $parser->traverseUp();
 
             if (! ExpressionNode::parse($parser)) {
-                $parser->syntaxError('Unexpected token' . $parser->getCurrentToken());
+                $parser->syntaxError('Unexpected token' . $parser->getCurrentToken() . ', expected expression');
             }
             $parser->setAttribute();
 
