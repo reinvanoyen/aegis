@@ -151,7 +151,7 @@ class Parser implements ParserInterface
     public function expect(int $type, $value = null) : bool
     {
         if (!$this->accept($type, $value)) {
-            $this->syntaxError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken());
+            $this->syntaxError('Expected '.Token::getStringRepresentation($type, $value).' got '.$this->getCurrentToken());
         }
 
         return true;
@@ -168,7 +168,7 @@ class Parser implements ParserInterface
     public function expectNext(int $type, $value = null) : bool
     {
         if (!$this->acceptNext($type, $value)) {
-            throw new ParseError('Expected '.strtoupper($type.' '.$value).' got '.$this->getCurrentToken(), $this->getCurrentToken()->getLine());
+	        $this->syntaxError('Expected '.Token::getStringRepresentation($type, $value).' got '.$this->getNextToken());
         }
 
         return true;

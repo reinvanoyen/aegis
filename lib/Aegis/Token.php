@@ -50,7 +50,7 @@ final class Token
     const REGEX_T_IDENT = '[a-zA-Z\-\_\/]'; // a-z A-Z - _ /
     const REGEX_T_OP = '[\+\-\*\?]'; // + - * ?
     const REGEX_T_NUMBER = '[0-9.]'; // 0 1 2 3 4 5 6 7 8 9 .
-    const REGEX_T_SYMBOL = '[\(\)\,\[\]\$\>\<]'; // ( ) , [ ]
+    const REGEX_T_SYMBOL = '[\(\)\,\[\]\$\>\<]'; // ( ) , [ ] $ > <
     const REGEX_T_VAR = '^[a-zA-Z._-]+'; // a-z A-Z _ -
     const REGEX_T_VAR_START = '\@'; // @
     const REGEX_T_STRING_DELIMITER = '[\"\']'; // " '
@@ -65,7 +65,7 @@ final class Token
     const T_NUMBER = 7;
     const T_SYMBOL = 8;
 
-    private static $tokenTypes = [
+    private static $tokenTypeNames = [
         self::T_TEXT => 'T_TEXT',
         self::T_OPENING_TAG => 'T_OPENING_TAG',
         self::T_CLOSING_TAG => 'T_CLOSING_TAG',
@@ -81,12 +81,13 @@ final class Token
      * Token constructor.
      * @param $type
      * @param $value
+     * @param string $source
      * @param int $line
      * @throws InvalidTokenType
      */
-    public function __construct($type, $value, $source = '', $startLine = 0, $endLine = 0, $startPosition = 0, $endPosition = 0)
+    public function __construct(int $type, string $value, string $source = '', int $startLine = 0, int $endLine = 0, int $startPosition = 0, int $endPosition = 0)
     {
-        if (!isset(self::$tokenTypes[$type])) {
+        if (!isset(self::$tokenTypeNames[$type])) {
             throw new InvalidTokenType($type);
         }
 
@@ -110,11 +111,7 @@ final class Token
      */
     public function getName() : string
     {
-        if (isset(self::$tokenTypes[ $this->type ])) {
-            return self::$tokenTypes[ $this->type ];
-        }
-
-        return 'T_UNKNOWN';
+    	return self::getNameByType($this->type);
     }
 
     /**
@@ -197,10 +194,10 @@ final class Token
             $this->getType() !== self::T_OPENING_TAG &&
             $this->getType() !== self::T_CLOSING_TAG
         ) {
-            return strtoupper($this->getName()).'('.$this->getValue().')'."\n";
+            return self::getStringRepresentation($this->getType(), $this->getValue());
         }
 
-        return strtoupper($this->getName());
+        return $this->getName();
     }
 
     /**
@@ -210,4 +207,27 @@ final class Token
     {
         return $this->source ?: $this->getValue();
     }
+
+	/**
+	 * @param int $type
+	 * @return StringNode
+	 */
+	public static function getNameByType(int $type) : string
+	{
+		if (isset(self::$tokenTypeNames[ $type ])) {
+			return self::$tokenTypeNames[ $type ];
+		}
+
+		return 'T_UNKNOWN';
+	}
+
+	/**
+	 * @param int $type
+	 * @param string $value
+	 * @return string
+	 */
+	public static function getStringRepresentation(int $type, $value = '') : string
+	{
+		return self::getNameByType($type) . '(' . $value . ')';
+	}
 }
