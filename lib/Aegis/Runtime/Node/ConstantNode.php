@@ -18,7 +18,16 @@ class ConstantNode extends Node
 
     public function __construct($value)
     {
-        $this->value = $value;
+	    switch ($value) {
+		    case 'zero':
+			    $value = 0;
+			    break;
+		    case 'pi':
+			    $value = M_PI;
+			    break;
+	    }
+
+	    $this->value = $value;
     }
 
     public function getValue()
@@ -31,7 +40,9 @@ class ConstantNode extends Node
         if (
             $parser->accept(Token::T_IDENT, 'false') ||
             $parser->accept(Token::T_IDENT, 'true') ||
-            $parser->accept(Token::T_IDENT, 'null')
+            $parser->accept(Token::T_IDENT, 'null') ||
+            $parser->accept(Token::T_IDENT, 'zero') ||
+            $parser->accept(Token::T_IDENT, 'pi')
         ) {
             $parser->insert(new static($parser->getCurrentToken()->getValue()));
             $parser->advance();
