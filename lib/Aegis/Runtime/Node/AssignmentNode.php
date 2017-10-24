@@ -16,7 +16,7 @@ class AssignmentNode extends Node
 {
     public static function parse(ParserInterface $parser)
     {
-        if ($parser->accept(Token::T_IDENT, 'set')) {
+        if ($parser->accept(Token::T_IDENT, 'let')) {
             $parser->insert(new static());
             $parser->advance();
             $parser->traverseUp();
@@ -25,6 +25,9 @@ class AssignmentNode extends Node
                 $parser->syntaxError('Unexpected token' . $parser->getCurrentToken() . ', expected variable');
             }
             $parser->setAttribute();
+
+	        $parser->expect(Token::T_IDENT, 'be');
+	        $parser->advance();
 
             if (! ExpressionNode::parse($parser)) {
                 $parser->syntaxError('Unexpected token' . $parser->getCurrentToken());
