@@ -1,3 +1,3 @@
-{{ set @title "Assignment test" }}
-{{ set @output @title + ' works' }}
+{{ let @title be "Assignment test" }}
+{{ let @output be @title + ' works' }}
 {{ @output }}

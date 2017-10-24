@@ -7,6 +7,11 @@ use Aegis\ParserInterface;
 use Aegis\Token;
 use Aegis\Node;
 
+/**
+ * Class LogicalOperatorNode
+ * @package Aegis\Runtime\Node
+ * @author Rein Van Oyen <reinvanoyen@gmail.com>
+ */
 class LogicalOperatorNode extends Node
 {
     private $type;
@@ -29,9 +34,8 @@ class LogicalOperatorNode extends Node
             return true;
         }
 
-        if (
-            $parser->accept(Token::T_IDENT, 'not')
-        ) {
+        if ($parser->accept(Token::T_IDENT, 'not')) {
+
             if ($parser->acceptNext(Token::T_IDENT, 'equals')) {
                 $parser->insert(new static('neq'));
                 $parser->advance();
@@ -50,16 +54,22 @@ class LogicalOperatorNode extends Node
 
     public function compile(CompilerInterface $compiler)
     {
-        if ($this->type === 'neq') {
-            $compiler->write(' !== ');
-        } elseif ($this->type === 'or') {
-            $compiler->write(' || ');
-        } elseif ($this->type === 'not') {
-            $compiler->write(' ! ');
-        } elseif ($this->type === 'and') {
-            $compiler->write(' && ');
-        } elseif ($this->type === 'equals') {
-            $compiler->write(' === ');
-        }
+	    switch ($this->type) {
+		    case 'neq':
+		        $compiler->write(' !== ');
+		        break;
+		    case 'or':
+			    $compiler->write(' || ');
+			    break;
+		    case 'not':
+			    $compiler->write(' ! ');
+			    break;
+		    case 'and':
+			    $compiler->write(' && ');
+			    break;
+		    case 'equals':
+			    $compiler->write(' === ');
+			    break;
+	    }
     }
 }
