@@ -235,4 +235,4 @@ Feel free to contribute to Aegis, any help is greatly appreciated. Please keep y
 your code with unit tests.
 
 ### License
-Aegis is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Aegis is open-sourced software licensed under the [BSD-3-Clause](https://github.com/reinvanoyen/aegis/blob/master/LICENSE).
