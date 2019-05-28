@@ -8,17 +8,17 @@ use \Aegis\Template;
  */
 class AssignmentTest extends PHPUnit_Framework_TestCase
 {
-	public function testAssignment()
-	{
-		Template::$templateDirectory = 'tests/templates/';
+    public function testAssignment()
+    {
+        Template::$templateDirectory = 'tests/templates/';
 
-		$tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
-		$tpl->setLexer(new \Aegis\Lexer());
-		$tpl->setParser(new \Aegis\Parser());
-		$tpl->setCompiler(new \Aegis\Compiler());
+        $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+        $tpl->setLexer(new \Aegis\Lexer());
+        $tpl->setParser(new \Aegis\Parser());
+        $tpl->setCompiler(new \Aegis\Compiler());
 
-		$expectedResult = 'Assignment test works';
+        $expectedResult = 'Assignment test works';
 
-		$this->assertEquals($expectedResult, $tpl->render('assignment-test'));
-	}
+        $this->assertEquals($expectedResult, $tpl->render('assignment-test'));
+    }
 }

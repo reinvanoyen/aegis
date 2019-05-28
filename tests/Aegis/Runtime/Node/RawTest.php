@@ -8,20 +8,20 @@ use \Aegis\Template;
  */
 class RawTest extends PHPUnit_Framework_TestCase
 {
-	public function testRaw()
-	{
-		Template::$templateDirectory = 'tests/templates/';
+    public function testRaw()
+    {
+        Template::$templateDirectory = 'tests/templates/';
 
-		$html = '<span data-name="test">test</span>';
+        $html = '<span data-name="test">test</span>';
 
-		$tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
-		$tpl->setLexer(new \Aegis\Lexer());
-		$tpl->setParser(new \Aegis\Parser());
-		$tpl->setCompiler(new \Aegis\Compiler());
-		$tpl->html = $html;
+        $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+        $tpl->setLexer(new \Aegis\Lexer());
+        $tpl->setParser(new \Aegis\Parser());
+        $tpl->setCompiler(new \Aegis\Compiler());
+        $tpl->html = $html;
 
-		$expectedResult = '<div>test</div><span data-name="test">test</span>';
+        $expectedResult = '<div>test</div><span data-name="test">test</span>';
 
-		$this->assertEquals($expectedResult, $tpl->render('raw-test'));
-	}
+        $this->assertEquals($expectedResult, $tpl->render('raw-test'));
+    }
 }

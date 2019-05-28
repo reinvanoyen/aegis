@@ -1,7 +1,7 @@
 #!/bin/sh
 
-cd ../
-phpunit
-php-cs-fixer fix ./ --level=psr2
+./vendor/bin/phpunit
+./vendor/bin/php-cs-fixer fix ./ --rules=@PSR2
 rm -Rf cache/
+rm -Rf demo/cache/
 rm -Rf tests/cache/

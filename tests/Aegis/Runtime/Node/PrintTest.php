@@ -8,22 +8,22 @@ use \Aegis\Template;
  */
 class PrintTest extends PHPUnit_Framework_TestCase
 {
-	public function testPrint()
-	{
-		Template::$templateDirectory = 'tests/templates/';
+    public function testPrint()
+    {
+        Template::$templateDirectory = 'tests/templates/';
 
-		$string = 'UOspIkq124MLd,shdfDRDFGbnjsjs,k,oao';
-		$number = 12;
+        $string = 'UOspIkq124MLd,shdfDRDFGbnjsjs,k,oao';
+        $number = 12;
 
-		$tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
-		$tpl->setLexer(new \Aegis\Lexer());
-		$tpl->setParser(new \Aegis\Parser());
-		$tpl->setCompiler(new \Aegis\Compiler());
-		$tpl->string = $string;
-		$tpl->number = $number;
+        $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+        $tpl->setLexer(new \Aegis\Lexer());
+        $tpl->setParser(new \Aegis\Parser());
+        $tpl->setCompiler(new \Aegis\Compiler());
+        $tpl->string = $string;
+        $tpl->number = $number;
 
-		$expectedResult = $string.' '.$number.' something';
+        $expectedResult = $string.' '.$number.' something';
 
-		$this->assertEquals($expectedResult, $tpl->render('print-test'));
-	}
+        $this->assertEquals($expectedResult, $tpl->render('print-test'));
+    }
 }

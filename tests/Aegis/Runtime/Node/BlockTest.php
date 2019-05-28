@@ -8,17 +8,17 @@ use \Aegis\Template;
  */
 class BlockTest extends PHPUnit_Framework_TestCase
 {
-	public function testBlock()
-	{
-		Template::$templateDirectory = 'tests/templates/';
+    public function testBlock()
+    {
+        Template::$templateDirectory = 'tests/templates/';
 
-		$tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
-		$tpl->setLexer(new \Aegis\Lexer());
-		$tpl->setParser(new \Aegis\Parser());
-		$tpl->setCompiler(new \Aegis\Compiler());
+        $tpl = new Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+        $tpl->setLexer(new \Aegis\Lexer());
+        $tpl->setParser(new \Aegis\Parser());
+        $tpl->setCompiler(new \Aegis\Compiler());
 
-		$expectedResult = 'it is amazingit is amazingit is amazing';
+        $expectedResult = 'it is amazingit is amazingit is amazing';
 
-		$this->assertEquals($expectedResult, $tpl->render('block-test'));
-	}
+        $this->assertEquals($expectedResult, $tpl->render('block-test'));
+    }
 }

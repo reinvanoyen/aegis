@@ -1,0 +1,1 @@
+<button>{{ slot "text" }}Click here{{ /slot }}</button>

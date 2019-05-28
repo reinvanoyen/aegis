@@ -38,7 +38,7 @@ class TokenStreamTest extends PHPUnit_Framework_TestCase
 
     public function testGetTokenShouldThrowException()
     {
-        $this->expectException(\Aegis\Error\NoTokenAtIndex::class);
+        $this->expectException(\Aegis\Exception\NoTokenAtIndex::class);
         $this->stream->getToken(3);
     }
 }
