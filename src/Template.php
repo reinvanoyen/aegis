@@ -160,7 +160,7 @@ class Template
     public function handleException($exception): void
     {
         if ($exception instanceof AegisError) {
-            require __DIR__.'Resources/views/exception.html.php';
+            require __DIR__.'/Resources/views/exception.html.php';
         } else {
             throw $exception;
         }
