@@ -2,9 +2,8 @@
 
 namespace Aegis;
 
-use Aegis\Contracts\ConfigInterface;
 use Aegis\Contracts\EngineInterface;
-use Aegis\Contracts\FilesystemInterface;
+use Aegis\Contracts\LoaderInterface;
 use Aegis\Contracts\RuntimeInterface;
 use Aegis\Exception\AegisError;
 
@@ -16,38 +15,33 @@ use Aegis\Exception\AegisError;
 class Template
 {
     /**
-     * @var ConfigInterface
+     * @var LoaderInterface $loader
      */
-    private $config;
+    private $loader;
 
     /**
-     * @var FilesystemInterface $filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var RuntimeInterface
+     * @var RuntimeInterface $runtime
      */
     private $runtime;
 
     /**
-     * @var EngineInterface
+     * @var EngineInterface $engine
      */
     private $engine;
 
     /**
      * Template constructor.
-     * @param ConfigInterface $config
+     * @param LoaderInterface $loader
      * @param EngineInterface $engine
      * @param RuntimeInterface $runtime
      */
-    public function __construct(ConfigInterface $config, FilesystemInterface $filesystem, EngineInterface $engine, RuntimeInterface $runtime)
+    public function __construct(LoaderInterface $loader, EngineInterface $engine, RuntimeInterface $runtime)
     {
-        $this->config = $config;
-        $this->filesystem = $filesystem;
+        $this->loader = $loader;
         $this->engine = $engine;
         $this->runtime = $runtime;
 
+        // Set a specialized exception handler
         set_exception_handler([$this, 'handleException']);
     }
 
@@ -67,13 +61,45 @@ class Template
     }
 
     /**
-     * @param string $tplName
-     * @param string $part
+     * @param string $templateName
+     * @param string|null $part
      * @return string
      */
-    public function render(string $tplName, string $part = null): string
+    public function render(string $templateName, string $part = null): string
     {
-        $filename = $this->config->get('directory').'/'.$tplName.'.'.$this->config->get('extension');
+        $templateKey = ($part ? $part.'/'.$templateName : $templateName);
+
+        // Check if we can fetch it from cache
+        if ($this->loader->isCached($templateKey)) {
+
+            // Execute the key we found in cache
+            return $this->execute($this->loader->getCacheKey($templateKey));
+        }
+
+        // Load the requested source
+        $source = $this->loader->get($templateKey);
+
+        // Evaluate the source
+        $result = $this->engine->evaluate($source);
+
+        // Get the right part
+        switch ($part) {
+            case 'head':
+                $result = $this->engine->getCompiler()->getHead();
+                break;
+            case 'body':
+                $result = $this->engine->getCompiler()->getBody();
+                break;
+        }
+
+        // Write it to the cache
+        $this->loader->setCache($templateKey, $result);
+
+        // Execute from cache
+        return $this->execute($this->loader->getCacheKey($templateKey));
+
+        /*
+        $filename = $this->config->get('directory').'/'.$templateName.'.'.$this->config->get('extension');
         $cacheFilename = $this->config->get('cache_directory').'/'.($part ? $part.'/' : '').md5($tplName).'.'.$this->config->get('extension').'.'.$this->config->get('cache_extension');
 
         if (!$this->filesystem->exists($filename)) {
@@ -100,6 +126,7 @@ class Template
         }
 
         return $this->execute($cacheFilename);
+        */
     }
 
     /**
@@ -133,7 +160,7 @@ class Template
     public function handleException($exception): void
     {
         if ($exception instanceof AegisError) {
-            require_once $this->config->get('exception_view');
+            require __DIR__.'Resources/views/exception.html.php';
         } else {
             throw $exception;
         }

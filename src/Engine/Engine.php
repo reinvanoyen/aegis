@@ -50,6 +50,22 @@ class Engine implements EngineInterface
     }
 
     /**
+     * @return LexerInterface
+     */
+    public function getLexer(): LexerInterface
+    {
+        return $this->lexer;
+    }
+
+    /**
+     * @return ParserInterface
+     */
+    public function getParser(): ParserInterface
+    {
+        return $this->parser;
+    }
+
+    /**
      * @return CompilerInterface
      */
     public function getCompiler(): CompilerInterface

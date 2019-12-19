@@ -7,7 +7,7 @@
             <!-- Header -->
             <div style="background-color: #eee; padding: 15px 25px; margin-bottom: 15px;">
                 <div style="width: 150px;">
-                    <?php require __DIR__.'/../svg/logo.svg'; ?>
+                    <?php require __DIR__ . '/../svg/logo.svg'; ?>
                 </div>
             </div>
             <!-- Exception content -->

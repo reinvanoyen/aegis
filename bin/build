@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./vendor/bin/phpunit
+# ./vendor/bin/phpunit
 ./vendor/bin/php-cs-fixer fix ./ --rules=@PSR2
 rm -Rf cache/
 rm -Rf demo/cache/
