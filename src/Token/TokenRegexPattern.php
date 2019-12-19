@@ -14,4 +14,5 @@ abstract class TokenRegexPattern
     const REGEX_T_VAR = '^[a-zA-Z._-]+'; // a-z A-Z _ -
     const REGEX_T_VAR_START = '\@'; // @
     const REGEX_T_STRING_DELIMITER = '[\"\']'; // " '
+    const REGEX_T_WHITESPACE = '\s';
 }

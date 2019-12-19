@@ -4,6 +4,7 @@ namespace Aegis\Highlighting;
 
 use Aegis\Token\Token;
 use Aegis\Lexer\TokenStream;
+use Aegis\Token\TokenType;
 
 /**
  * Class Highlighter
@@ -52,8 +53,13 @@ class Highlighter
     {
         $source = htmlspecialchars(($string !== false ? $string : $token->getSource()));
 
+        if ($token->getType() === TokenType::T_WHITESPACE) {
+            $source = str_replace(' ', '·', $source);
+            $source = str_replace("\t", ' → ', $source);
+        }
+
         if ($this->errorToken && $this->isSameToken($this->errorToken, $token)) {
-            return '<span style="padding: 0 5px; border-radius: 5px; background-color: '.HighlightColor::COLOR_ERROR_BG.'; color: '.HighlightColor::COLOR_ERROR_FG.';">' . $source . '</span>';
+            return '<span style="padding: 0 5px; border-radius: 5px; background-color: '.HighlightColor::COLOR_ERROR_BG.'; color: '.HighlightColor::COLOR_ERROR_FG.';">'.$source.'</span>';
         }
 
         return '<span style="color: '.$this->getHighlightColor($token).';">'.str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $source).'</span>';
@@ -82,36 +88,41 @@ class Highlighter
         $highlightedSource = '';
 
         foreach ($this->stream->getTokens() as $token) {
+
             if ($token->getStartLine() !== $currentLine) {
-                $highlightedSource .= '<div'.($currentLine === $this->errorToken->getStartLine() ? ' style="background-color: rgba(41, 98, 255, .3);"' : '').'>'; // Start of line
+
+                $highlightedSource .= '<div style="padding: 0 8px;'.($currentLine === $this->errorToken->getStartLine() ? ' background-color: '.HighlightColor::COLOR_ERROR_LINE_BG.';' : '').'">'; // Start of line
                 $currentLine = $token->getStartLine();
-                $highlightedSource .= '<strong style="display: inline-block; width: 20px; text-align: right; padding-right: 15px;">' . $currentLine . '</strong>';
+                $highlightedSource .= '<strong style="display: inline-block; width: 20px; text-align: right; padding-right: 15px;">'.$currentLine.'</strong>';
             }
 
             if ($token->isMultiline()) {
+
                 $tokenLines = explode("\n", $token->getSource());
                 $tokenLineCount = count($tokenLines);
 
                 foreach ($tokenLines as $index => $tokenLine) {
+
                     if ($token->getStartLine() !== $currentLine) {
-                        $highlightedSource .= '<div'.($currentLine === $this->errorToken->getStartLine() ? ' style="background-color: '.HighlightColor::COLOR_ERROR_LINE_BG.';"' : '').'>'; // Start of line
-                        $highlightedSource .= '<strong style="display: inline-block; width: 20px; text-align: right; padding-right: 15px;">' . $currentLine . '</strong>';
+
+                        $highlightedSource .= '<div style="padding: 0 8px;'.($currentLine === $this->errorToken->getStartLine() ? ' background-color: '.HighlightColor::COLOR_ERROR_LINE_BG.';"' : '').'">'; // Start of line
+                        $highlightedSource .= '<strong style="display: inline-block; width: 20px; text-align: right; padding-right: 15px;">'.$currentLine.'</strong>';
                     }
 
                     $highlightedSource .= $this->getHighlightedStringForToken($token, $tokenLine);
 
                     if ($index < $tokenLineCount - 1) {
-                        $highlightedSource .= '<span style="color: #555555;">↵</span>';
+                        $highlightedSource .= '<span style="color: '.HighlightColor::COLOR_T_WHITESPACE.';">↵</span>';
                         $highlightedSource .= '</div>'; // End of line
                         $currentLine++;
                     }
                 }
             } else {
-                $highlightedSource .= $this->getHighlightedStringForToken($token) . ' ';
+                $highlightedSource .= $this->getHighlightedStringForToken($token);
             }
         }
 
-        $htmlWrapper = '<div style="background-color: '.HighlightColor::COLOR_BG.'; color: '.HighlightColor::COLOR_FG.'; padding: 5px; border-radius: 5px; font-size: 13px; font-family: monospace;">';
+        $htmlWrapper = '<div style="background-color: '.HighlightColor::COLOR_BG.'; color: '.HighlightColor::COLOR_FG.'; padding: 8px 0; border-radius: 5px; font-size: 13px; font-family: monospace; line-height: 1.75;">';
         $htmlWrapper .= $highlightedSource;
         $htmlWrapper .= '</div>';
 

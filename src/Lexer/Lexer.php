@@ -95,6 +95,7 @@ class Lexer implements LexerInterface
      *
      * @param $input
      * @return TokenStream
+     * @throws \Aegis\Exception\InvalidTokenType
      */
     public function tokenize(string $input): TokenStream
     {
@@ -208,49 +209,78 @@ class Lexer implements LexerInterface
     private function lexInsideTag()
     {
         if (preg_match('@'.TokenRegexPattern::REGEX_T_CLOSING_TAG.'@', $this->currentChar) && preg_match('@'.TokenRegexPattern::REGEX_T_CLOSING_TAG.'@', $this->getNextChar())) {
+
+            // Lex closing tag
+
             $this->stream->addToken(new Token(TokenType::T_CLOSING_TAG, $this->currentChar . $this->getNextChar(), $this->currentChar . $this->getNextChar(), $this->line, $this->line, $this->getCurrentLinePosition(), $this->getCurrentLinePosition() + 2));
             $this->advanceCursor(2);
             $this->setMode(self::MODE_ALL);
-
             return;
+
+        } elseif(preg_match('@'.TokenRegexPattern::REGEX_T_WHITESPACE.'@', $this->currentChar)) {
+
+            // Lex whitespace
+
+            $this->stream->addToken(new Token(TokenType::T_WHITESPACE, $this->currentChar, $this->currentChar, $this->line, $this->line, $this->getCurrentLinePosition(), $this->getCurrentLinePosition() + 1));
+
         } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_OPENING_TAG.'@', $this->currentChar) && preg_match('@'.TokenRegexPattern::REGEX_T_OPENING_TAG.'@', $this->getNextChar())) {
 
             // Add text until now to the token stream
+
             if ($this->currentValue !== '') {
                 $this->stream->addToken(new Token(TokenType::T_TEXT, $this->currentValue, $this->currentValue, $this->modeStartLine, $this->line, $this->modeStartPosition, $this->getCurrentLinePosition()));
                 $this->currentValue = '';
             }
 
             // Add the opening tag to the stream
+
             $this->stream->addToken(new Token(TokenType::T_OPENING_TAG, $this->currentChar . $this->getNextChar(), $this->currentChar . $this->getNextChar(), $this->line, $this->line, $this->getCurrentLinePosition(), $this->getCurrentLinePosition() + 2));
             $this->advanceCursor(2);
             $this->setMode(self::MODE_INSIDE_TAG);
-
             return;
+
         } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_IDENT.'@', $this->currentChar)) {
-            $this->setMode(self::MODE_IDENT);
 
+            // Lex identifiers
+
+            $this->setMode(self::MODE_IDENT);
             return;
+
         } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_STRING_DELIMITER.'@', $this->currentChar)) {
+
+            // Lex string
+
             $this->modeStartChar = $this->currentChar;
             $this->setMode(self::MODE_STRING);
             $this->advanceCursor();
-
             return;
+
         } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_NUMBER.'@', $this->currentChar)) {
-            $this->setMode(self::MODE_NUMBER);
 
+            // Lex number
+
+            $this->setMode(self::MODE_NUMBER);
             return;
+
         } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_VAR_START.'@', $this->currentChar)) {
+
+            // Lex variables
+
             $this->setMode(self::MODE_VAR);
             $this->advanceCursor();
-
             return;
+
         } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_OP.'@', $this->currentChar)) {
-            $this->setMode(self::MODE_OP);
 
+            // Lex operators
+
+            $this->setMode(self::MODE_OP);
             return;
+
         } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_SYMBOL.'@', $this->currentChar)) {
+
+            // Lex symbols
+
             $this->stream->addToken(new Token(TokenType::T_SYMBOL, $this->currentChar, $this->currentChar, $this->line, $this->line, $this->getCurrentLinePosition(), $this->getCurrentLinePosition() + 1));
         }
 

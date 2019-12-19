@@ -13,6 +13,7 @@ abstract class TokenType
     const T_OP = 6;
     const T_NUMBER = 7;
     const T_SYMBOL = 8;
+    const T_WHITESPACE = 9;
 
     const TOKEN_TYPE_NAMES = [
         self::T_TEXT => 'T_TEXT',
@@ -24,5 +25,6 @@ abstract class TokenType
         self::T_OP => 'T_OP',
         self::T_NUMBER => 'T_NUMBER',
         self::T_SYMBOL => 'T_SYMBOL',
+        self::T_WHITESPACE => 'T_WHITESPACE',
     ];
 }

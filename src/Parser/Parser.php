@@ -140,6 +140,8 @@ class Parser implements ParserInterface
      */
     private function parseStatement(): void
     {
+        $this->skip(TokenType::T_WHITESPACE);
+
         foreach ($this->nodeCollection->getAll() as $node) {
             $node::parse($this);
         }
@@ -208,6 +210,8 @@ class Parser implements ParserInterface
      */
     public function accept(int $type, $value = null): bool
     {
+        $this->skipWhitespace();
+
         if ($this->getCurrentToken()->getType() === $type) {
             if ($value) {
                 return ($this->getCurrentToken()->getValue() === $value);
@@ -217,6 +221,13 @@ class Parser implements ParserInterface
         }
 
         return false;
+    }
+
+    private function skipWhitespace()
+    {
+        while ($this->getCurrentToken()->getType() === TokenType::T_WHITESPACE) {
+            $this->advance();
+        }
     }
 
     /**

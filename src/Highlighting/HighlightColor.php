@@ -13,8 +13,9 @@ final class HighlightColor
     const COLOR_T_OP = '#ffffff';
     const COLOR_T_NUMBER = '#69b7ff';
     const COLOR_T_SYMBOL = '#e0702c';
+    const COLOR_T_WHITESPACE = '#3c4877';
 
-    const COLOR_ERROR_BG = 'red';
+    const COLOR_ERROR_BG = '#cc1651';
     const COLOR_ERROR_FG = '#ffffff';
     
     const COLOR_BG = '#222944';
