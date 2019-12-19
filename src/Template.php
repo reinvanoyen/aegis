@@ -77,7 +77,7 @@ class Template
         }
 
         // Load the requested source
-        $source = $this->loader->get($templateKey);
+        $source = $this->loader->get($templateName);
 
         // Evaluate the source
         $result = $this->engine->evaluate($source);
@@ -97,36 +97,6 @@ class Template
 
         // Execute from cache
         return $this->execute($this->loader->getCacheKey($templateKey));
-
-        /*
-        $filename = $this->config->get('directory').'/'.$templateName.'.'.$this->config->get('extension');
-        $cacheFilename = $this->config->get('cache_directory').'/'.($part ? $part.'/' : '').md5($tplName).'.'.$this->config->get('extension').'.'.$this->config->get('cache_extension');
-
-        if (!$this->filesystem->exists($filename)) {
-            throw new AegisError('File not found '.$filename);
-        }
-
-        if (
-            !$this->filesystem->exists($cacheFilename) ||
-            $this->filesystem->modificationTime($filename) >= $this->filesystem->modificationTime($cacheFilename) ||
-            $this->config->get('debug')
-        ) {
-            $result = $this->engine->evaluate($this->filesystem->get($filename));
-
-            switch ($part) {
-                case 'head':
-                    $result = $this->engine->getCompiler()->getHead();
-                    break;
-                case 'body':
-                    $result = $this->engine->getCompiler()->getBody();
-                    break;
-            }
-
-            $this->filesystem->put($cacheFilename, $result);
-        }
-
-        return $this->execute($cacheFilename);
-        */
     }
 
     /**
