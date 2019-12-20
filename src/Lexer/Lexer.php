@@ -208,7 +208,10 @@ class Lexer implements LexerInterface
      */
     private function lexInsideTag()
     {
-        if (preg_match('@'.TokenRegexPattern::REGEX_T_CLOSING_TAG.'@', $this->currentChar) && preg_match('@'.TokenRegexPattern::REGEX_T_CLOSING_TAG.'@', $this->getNextChar())) {
+        if (
+            preg_match('@'.TokenRegexPattern::REGEX_T_CLOSING_TAG.'@', $this->currentChar) &&
+            preg_match('@'.TokenRegexPattern::REGEX_T_CLOSING_TAG.'@', $this->getNextChar())
+        ) {
 
             // Lex closing tag
 
@@ -262,7 +265,10 @@ class Lexer implements LexerInterface
             $this->setMode(self::MODE_NUMBER);
             return;
 
-        } elseif (preg_match('@'.TokenRegexPattern::REGEX_T_VAR_START.'@', $this->currentChar)) {
+        } elseif (
+            preg_match('@'.TokenRegexPattern::REGEX_T_VAR_START.'@', $this->currentChar) &&
+            preg_match('@'.TokenRegexPattern::REGEX_T_VAR.'@', $this->getNextChar())
+        ) {
 
             // Lex variables
 

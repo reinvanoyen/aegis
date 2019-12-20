@@ -55,14 +55,19 @@ class Highlighter
 
         if ($token->getType() === TokenType::T_WHITESPACE) {
             $source = str_replace(' ', '·', $source);
-            $source = str_replace("\t", ' → ', $source);
+            $source = str_replace("\t", '[ ⟶ ]', $source);
+        }
+
+        if ($token->getType() === TokenType::T_TEXT) {
+            $source = str_replace(' ', '<span style="color: '.HighlightColor::COLOR_T_WHITESPACE.';">·</span>', $source);
+            $source = str_replace("\t", '<span style="color: '.HighlightColor::COLOR_T_WHITESPACE.';">[ ⟶ ]</span>', $source);
         }
 
         if ($this->errorToken && $this->isSameToken($this->errorToken, $token)) {
             return '<span style="padding: 0 5px; border-radius: 5px; background-color: '.HighlightColor::COLOR_ERROR_BG.'; color: '.HighlightColor::COLOR_ERROR_FG.';">'.$source.'</span>';
         }
 
-        return '<span style="color: '.$this->getHighlightColor($token).';">'.str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $source).'</span>';
+        return '<span style="color: '.$this->getHighlightColor($token).';">'.$source.'</span>';
     }
 
     /**

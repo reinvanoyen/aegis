@@ -25,27 +25,7 @@ class Runtime implements RuntimeInterface
     /**
      * @var array
      */
-    private $slots = [];
-
-    /**
-     * @var array
-     */
     public $functions = [];
-
-    /**
-     * @var int
-     */
-    private $componentUId = 0;
-
-    /**
-     * @var int
-     */
-    private $previousComponentId = 0;
-
-    /**
-     * @var int
-     */
-    private $currentComponentId = 0;
 
     /**
      * Sets a variable
@@ -122,63 +102,6 @@ class Runtime implements RuntimeInterface
         foreach ($this->blocks[$id] as $callable) {
             $callable();
         }
-    }
-
-    /**
-     * Sets a slot
-     *
-     * @param $id
-     * @param $callable
-     * @return void
-     */
-    public function setSlot($id, $callable) : void
-    {
-        $this->slots[$this->currentComponentId][$id] = [$callable];
-    }
-
-    /**
-     * Yields a slot
-     *
-     * @param $id
-     * @param $callable
-     * @return void
-     */
-    public function yieldSlot($id, $callable) : void
-    {
-        if (! isset($this->slots[$this->currentComponentId][$id])) {
-            $this->slots[$this->currentComponentId][$id] = [$callable];
-        }
-    }
-
-    /**
-     * Executes the contents of a block
-     *
-     * @param $id
-     * @return void
-     */
-    public function getSlot($id) : void
-    {
-        foreach ($this->slots[$this->currentComponentId][$id] as $callable) {
-            $callable();
-        }
-    }
-
-    /**
-     * Creates a new component context
-     */
-    public function createComponentContext()
-    {
-        $this->componentUId++;
-        $this->previousComponentId = $this->currentComponentId;
-        $this->currentComponentId = $this->componentUId;
-    }
-
-    /**
-     * Rewinds the current component to the previous context
-     */
-    public function rewindComponentContext()
-    {
-        $this->currentComponentId = $this->previousComponentId;
     }
 
     /**
