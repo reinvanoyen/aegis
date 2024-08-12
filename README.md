@@ -5,7 +5,7 @@
   <h3 align="center">The flexible and extendable PHP templating language</h3>
 </p>
 
-[![Build Status](https://travis-ci.org/reinvanoyen/aegis.svg?branch=master)](https://travis-ci.org/reinvanoyen/aegis) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/35b1362434c841afbddf45179e19e6a2)](https://www.codacy.com/app/reinvanoyen/aegis?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reinvanoyen/aegis&amp;utm_campaign=Badge_Grade) [![Join the chat at https://gitter.im/reinvanoyen/aegis](https://badges.gitter.im/reinvanoyen/aegis.svg)](https://gitter.im/reinvanoyen/aegis?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/reinvanoyen/aegis.svg?branch=master)](https://travis-ci.org/reinvanoyen/aegis)
 
 ## Important: Experimental software
 
